@@ -16,6 +16,7 @@ declare var jQuery:any;
 })
 export class CartComponent implements OnInit {
   itemToDelete:any;
+  userInfo: any;
   buyerId:any;
   products:any = [];
   empty:boolean;
@@ -50,7 +51,10 @@ export class CartComponent implements OnInit {
     private toast:ToastrService, private Cart: CartService, private router:Router, private orders:OrdersService, private cartService:OrderService) { }
 
   ngOnInit() {
-    this.getCart();
+    this.userInfo = this.auth.getLoginData();
+    this.buyerId = this.userInfo['id'];
+    this.getTotal();
+    //this.getCart();
     //this.getItems()
   }
 
@@ -93,11 +97,29 @@ export class CartComponent implements OnInit {
   getTotal(){
     this.cartService.getCart( this.buyerId )
     .subscribe(
-      res=> {
-        this.total= res['subTotal'];
-        this.shipping = res['shipping'];
-        this.totalOtherFees = res['totalOtherFees']+res['uaeTaxes'];
-        this.totalWithShipping = res['total'];
+      cart=> {
+        console.log('cart', cart);
+        this.cart = cart;
+        this.shoppingCartId=cart['id']
+        this.products=cart['items'];
+        this.buyerId=cart['buyer']
+        this.lastMilteCost = cart['lastMileCost'];
+        this.firstMileCost = cart['firstMileCosts'];
+        this.sfsMargin = cart['sfsMargin'];
+        this.uaeTaxes = cart['uaeTaxes'];
+        this.customs = cart['customs'];
+        
+
+        
+        this.total= cart['subTotal'];
+        this.shipping = cart['shipping'];
+        this.totalOtherFees = cart['totalOtherFees']+cart['uaeTaxes'];
+        this.totalWithShipping = cart['total'];
+        this.empty=true;
+        this.showLoading=false;
+        if(cart['items'].length > 0){
+          this.empty = false;
+        }
       },
       error=> {
         console.log( error );
@@ -157,7 +179,7 @@ export class CartComponent implements OnInit {
     this.productService.updateData(this.shoppingEnpoint, items).subscribe(result => {
       // this.getItems()
       console.log( 'result', result );
-      this.getCart();
+      this.getTotal();
     }, error => {
       this.toast.error("Error updating cart!", "Error",{positionClass:"toast-top-right"} );
 

@@ -110,29 +110,38 @@ export class ConfirmationComponent implements OnInit {
   }
 
   getCart() {
-    this.Cart.cart.subscribe((cart: any) => {
-      console.log('Cart', cart);
-      if (cart && cart['items'] !== '') {
+    let cart = {
+      "buyer": this.info['id']
+    }
+    
+    this.product.saveData("shoppingcart", cart)
+    .subscribe(
+      cart=> {
+
         this.buyerId = cart['buyer'];
         this.apiShopID = cart['id'];
         this.products = cart['items'];
         this.totalAPI = cart['subTotal'];
         this.shipping = cart['shipping'];
         this.totalOtherFees = cart['totalOtherFees'] + cart['uaeTaxes'];
-        this.totalWithShipping = cart['total'];
+        this.totalWithShipping = cart['subTotal'];
         this.total = Math.trunc( this.totalWithShipping * 100 );
         console.log("Total", this.total);
         this.customerTotal = (this.totalWithShipping).toFixed(2);
-	// if we came from 3d secure url and its successfull, let's go to thankyou page and set the cart paid
-	console.log( 'clear cart', this.total );
+	      // if we came from 3d secure url and its successfull, let's go to thankyou page and set the cart paid
+	      console.log( 'clear cart', this.total );
       	if ( ( this.responseCode == '02000' && this.total > 0 ) || ( this.responseCode == '14000' && this.total > 0 ) ) {
-		console.log( 'clear cart', this.total );
+		      console.log( 'clear cart', this.total );
         	this.saveinApi(); // save payfort reponse
         	this.clearCart(); // set cart paid
         }
+      },
+      error=> {
+        console.log( error );
       }
-
-    });
+    )
+      
+    
   }
   getRealIp(){
 	this.httpO.get( 'https://jsonip.com/' )
@@ -201,7 +210,7 @@ export class ConfirmationComponent implements OnInit {
           result => {
           // set the new cart value
           this.Cart.setCart(result);
-	  setTimeout(() => {
+	        setTimeout(() => {
                   this.router.navigate(['/thanks']);
           }, 3000)
           //this.router.navigate(['/thanks']);
@@ -225,7 +234,7 @@ export class ConfirmationComponent implements OnInit {
       const body = {        
         'command': this.command,
         'access_code': 'Ddx5kJoJWr11sF6Hr6E4',
-	'device_fingerprint': finger.value,
+	      'device_fingerprint': finger.value,
         'merchant_identifier': this.merchantID,
         'merchant_reference': this.shoppingCartId,
         'currency': 'AED',
