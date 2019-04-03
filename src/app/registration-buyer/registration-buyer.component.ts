@@ -248,7 +248,7 @@ showError(e){
  
 submitStep1(){
   console.log(this.buyerForm.value);
-  if(this.buyerForm.valid){
+  if(this.buyerForm.valid && this.showEmailVerification == false){
     console.log("Valido");
     this.verifyMatch();
   }else{

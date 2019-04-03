@@ -110,18 +110,9 @@ export class ConfirmationComponent implements OnInit {
 
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-  async getCart() {
-    await new Promise((resolve, reject) => {
-=======
-  getCart() {
 
->>>>>>> e882bab... Remove observable from shopping process
-=======
   async getCart() {
     await new Promise((resolve, reject) => {
->>>>>>> 7bf4eff... Add async ngOninit on confirmation
     this.orderS.getCart(this.buyerId).subscribe(cart=> {
       console.log('Cart', cart);
       if (cart && cart['items'] !== '') {
@@ -143,22 +134,12 @@ export class ConfirmationComponent implements OnInit {
         	this.clearCart(); // set cart paid
         }
       }
-<<<<<<< HEAD
-<<<<<<< HEAD
-    }, error =>{
-      reject();
-    })
-  });
-=======
-    })
 
->>>>>>> e882bab... Remove observable from shopping process
-=======
     }, error =>{
       reject();
     })
   });
->>>>>>> 7bf4eff... Add async ngOninit on confirmation
+
   
   }
   getRealIp(){

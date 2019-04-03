@@ -42,7 +42,7 @@
               <div class="col-lg-6">
                   <div class="form-group input-group">
                       <span class="has-float-label">    
-                      <input id="email" type="email" class="form-control" placeholder="{{'Register.email' | translate}}" formControlName="email" [ngClass]="{'is-invalid':sellerForm.get('email').invalid && sellerForm.get('email').touched}" (change)="verifyEmail($event.target.value)">
+                      <input id="email" type="email" class="form-control" placeholder="{{'Register.email' | translate}}" formControlName="email" [ngClass]="{'is-invalid':sellerForm.get('email').invalid && sellerForm.get('email').touched && sellerForm.get('email').hasError('email')}" (change)="verifyEmail($event.target.value)">
                       <label for="email">{{'Register.email' | translate}}</label> 
                       <div class="EmailNotification" *ngIf="showEmailVerification">{{'Register.EmailNotification' | translate}}</div>
                       <div class="invalid-feedback" *ngIf="sellerForm.get('email').hasError('required')">{{'Register.email' | translate}} {{'Register.required' | translate}}.</div>
