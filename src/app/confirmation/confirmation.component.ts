@@ -144,6 +144,7 @@ export class ConfirmationComponent implements OnInit {
   }
   getRealIp(){
 	this.httpO.get( 'https://jsonip.com/' )
+	//this.http.get( 'user/public-ip' )
 	.subscribe(
       	  res=>{
           this.ip = res['ip'];
