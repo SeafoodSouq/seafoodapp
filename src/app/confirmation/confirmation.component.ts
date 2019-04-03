@@ -110,6 +110,7 @@ export class ConfirmationComponent implements OnInit {
 
   }
 
+
   async getCart() {
     await new Promise((resolve, reject) => {
     this.orderS.getCart(this.buyerId).subscribe(cart=> {
@@ -133,10 +134,12 @@ export class ConfirmationComponent implements OnInit {
         	this.clearCart(); // set cart paid
         }
       }
+
     }, error =>{
       reject();
     })
   });
+
   
   }
   getRealIp(){

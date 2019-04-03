@@ -260,6 +260,7 @@ export class SingleProductComponent implements OnInit {
     document.getElementById('input-text').style.display = 'none';
     document.getElementById('qty-text').style.display = 'block';
   }
+
       getCart() {
         this.cartService.getCart( this.idUser ).subscribe(
           cart=> { 
