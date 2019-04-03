@@ -140,6 +140,10 @@ export class ConfirmationComponent implements OnInit {
     })
   });
 
+<<<<<<< HEAD
+=======
+  
+>>>>>>> 9a0473c5400ef616c7c586ac2397503a6235ab9d
   }
   getRealIp(){
 	this.httpO.get( 'https://jsonip.com/' )
