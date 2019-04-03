@@ -242,6 +242,7 @@ export class SingleProductComponent implements OnInit {
     jQuery('#input-text').css('display', 'block');
     jQuery('#input-text').focus();
   }
+<<<<<<< HEAD
   getCart() {
    
     this.cartService.getCart( this.idUser ).subscribe(
@@ -252,6 +253,23 @@ export class SingleProductComponent implements OnInit {
       error=> {
         console.log( error );
       })
+=======
+
+
+  hideElements() {
+    document.getElementById('input-text').style.display = 'none';
+    document.getElementById('qty-text').style.display = 'block';
+  }
+      getCart() {
+        this.cartService.getCart( this.idUser ).subscribe(
+          cart=> { 
+            console.log("Cart", cart);
+            this.cart = cart;
+          },
+          error=> {
+            console.log( error );
+          })
+>>>>>>> 11c41f5db8ba95a21bc9c7b262c1e6b55847fa7a
   }
 
   increaseCount() {
