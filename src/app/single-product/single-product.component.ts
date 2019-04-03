@@ -237,23 +237,10 @@ export class SingleProductComponent implements OnInit {
       this.show = false;
     });
   }
-  showHide(id) {
-    jQuery('#' + id).css('display', 'none');
-    jQuery('#input-text').css('display', 'block');
-    jQuery('#input-text').focus();
+  showElements() {
+    document.getElementById('qty-text').style.display = 'none';
+    document.getElementById('input-text').style.display = 'block';
   }
-<<<<<<< HEAD
-  getCart() {
-   
-    this.cartService.getCart( this.idUser ).subscribe(
-      cart=> { 
-        console.log("Cart", cart);
-        this.cart = cart;
-      },
-      error=> {
-        console.log( error );
-      })
-=======
 
 
   hideElements() {
@@ -270,7 +257,6 @@ export class SingleProductComponent implements OnInit {
           error=> {
             console.log( error );
           })
->>>>>>> 11c41f5db8ba95a21bc9c7b262c1e6b55847fa7a
   }
 
   increaseCount() {
