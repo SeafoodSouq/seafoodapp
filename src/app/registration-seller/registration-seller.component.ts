@@ -218,8 +218,7 @@ btnText:any = 'Finish';
           //if return data it means that email is already used
           if(result['message']==true){
             this.showEmailVerification=true;
-            this.sellerForm.get('email').setErrors( {'incorrect': true} )
-  
+            this.sellerForm.get('email').setErrors({notUnique: true})
           }
           else{
             this.showEmailVerification=false
@@ -234,8 +233,9 @@ btnText:any = 'Finish';
   //Validate step 1 FORM
   submitStep1(){
     console.log(this.sellerForm.value);
-    if(this.sellerForm.valid){
-      (this.sellerForm.get('password').value != this.sellerForm.get('rePassword').value ) ? this.sellerForm.get('rePassword').setErrors( {MatchPassword: true} ) : this.next();
+    if(this.sellerForm.valid && this.showEmailVerification == false){
+      console.log("Es valido");
+      (this.sellerForm.get('password').value != this.sellerForm.get('rePassword').value) ? this.sellerForm.get('rePassword').setErrors( {MatchPassword: true} ) : this.next();
     }else{
       console.log("Invalid");
       this.validateAllFormFields(this.sellerForm);
