@@ -106,7 +106,7 @@ import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.componen
 import { CookiesPolicyComponent } from './cookies-policy/cookies-policy.component';
 import { CitiManagmentComponent } from './citi-managment/citi-managment.component';
 import { EditAccountComponent } from './edit-account/edit-account.component';
-import {TooltipModule} from 'ng2-tooltip-directive';
+import { TooltipModule } from 'ng2-tooltip-directive';
 import { ngfModule } from 'angular-file';
 import { NgxLoadingModule, ngxLoadingAnimationTypes } from 'ngx-loading';
 import { FilternumberPipe } from './filternumber.pipe';
@@ -117,81 +117,260 @@ import { Select2Module } from 'ng2-select2';
 import { RegistrationSellerComponent } from './registration-seller/registration-seller.component';
 import { NonsellerRouterService } from './services/nonseller-router.service';
 import { TitleService } from './title.service';
+import { AppPreloadingStrategy } from './app_preloading_strategy';
 
 const appRoutes: Routes = [
-  { path: '', component: HomeComponent },
-  { path: 'home', redirectTo: '/' },
-  { path: 'register', component: RegistrationBuyerComponent },
-  { path: 'register-seller', component:  RegistrationSellerComponent},
-  { path: 'login', component: LoginComponent },
-  { path: 'add-product', component: AddProductComponent, canActivate: [SellerRouterService] },
-  { path: 'fish-type/:category/:page', component: ArchiveProductsComponent, canActivate: [BuyerRouterService] },
-  { path: 'search/:search/:page', component: SearchComponent, canActivate: [BuyerRouterService] },
-  { path: 'product/:id', component: SingleProductComponent, canActivate: [NonsellerRouterService]  },
-  { path: 'product-categories', component: FishComponent, canActivate: [AdminRouterService] },
-  { path: 'edit-product/:id', component: EditProductComponent, canActivate: [SellerRouterService] },
-  { path: 'account', component: EditAccountComponent, canActivate: [RouterProtectionService] },
-  { path: 'my-products', component: MyProductsComponent, canActivate: [SellerRouterService] },
-  { path: 'manage-products', component: MyProductsComponent, canActivate: [AdminRouterService] },
-  { path: 'cart', component: CartComponent, canActivate: [RouterProtectionService] },
-  { path: 'verification/:userid/:id', component: ConfirmationEmailComponent },
-  { path: 'store/:id', component: SingleStoreComponent, canActivate: [RouterProtectionService] },
-  { path: 'featured-products', component: FeaturedProductsComponent, canActivate: [AdminRouterService] },
-  { path: 'featured-seller', component: FeaturedSellerComponent, canActivate: [AdminRouterService] },
-  { path: 'featured-types', component: FeaturedTypesComponent, canActivate: [AdminRouterService] },
-  { path: 'fish-types-menu', component: FishTypeMenuComponent, canActivate: [AdminRouterService] },
-  { path: 'admin', component: AdministratorComponent, canActivate: [AdminRouterService] },
-  { path: 'favorites', component: FavoritesComponent, canActivate: [BuyerRouterService] },
-  { path: 'tracking', component: TrackingComponent },
-  { path: 'products/:query/:page', component: ProductsComponent, canActivate: [RouterProtectionService] },
-  { path: 'seller', component: SellerComponent, canActivate: [AdminRouterService] },
-  { path: 'buyer', component: BuyerComponent, canActivate: [AdminRouterService] },
-  { path: 'orders', component: OrdersComponent, canActivate: [RouterProtectionService] },
-  { path: 'orders-items/:id', component: OrdersItemsComponent, canActivate: [RouterProtectionService] },
-  { path: 'comments', component: CommentsComponent, canActivate: [AdminRouterService] },
-  { path: 'recovery-password/:code', component: RecoveryPasswordComponent },
-  { path: 'verify-users', component: VerifyUserComponent, canActivate: [AdminRouterService] },
-  { path: 'recent-purchases', component: RecentPurchasesComponent, canActivate: [SellerRouterService] },
-  { path: 'order-purchase/:item', component: OrderPurchaseComponent, canActivate: [SellerRouterService] },
-  { path: 'chart', component: ChartComponent, canActivate: [AdminRouterService] },
-  { path: 'documents', component: DocumentsComponent, canActivate: [RouterProtectionService] },
-  { path: 'tracking-code/:item', component: TrackingCodeComponent, canActivate: [RouterProtectionService] },
-  { path: 'browse', component: BrowseComponent },
-  { path: 'sfspay', component: SfsPayComponent },
-  { path: 'help', component: HelpComponent },
-  { path: 'contact-us', component: ContactUsComponent },
-  { path: 'guides', component: GuidesComponent },
-  { path: 'terms-conditions', component: TermsConditionsComponent },
-  { path: 'privacy-policy', component: PrivacyPolicyComponent },
-  { path: 'cookies-policy', component: CookiesPolicyComponent },
-  { path: 'about-us', component: AboutComponent },
-  { path: 'advanced-search', component: AdvancedSearchComponent, canActivate: [BuyerRouterService] },
-  { path: 'shipping-rates', component: ShippingRatesComponent, canActivate: [AdminRouterService] },
-  { path: 'pricing-charges', component: PricingChargesComponent, canActivate: [AdminRouterService] },
-  { path: 'orders-shipped', component: AdminOrdersShippedComponent, canActivate: [AdminRouterService] },
-  { path: 'orders-arrived', component: AdminOrderArrivedComponent, canActivate: [AdminRouterService] },
-  { path: 'seller-fulfills-orders', component: AdminOrdersComponent, canActivate: [AdminRouterService] },
-  { path: 'orders-out-for-delivery', component: AdminOrderOutDeliveryComponent, canActivate: [AdminRouterService] },
-  { path: 'orders-delivered', component: AdminOrderDeliveredComponent, canActivate: [AdminRouterService] },
-  { path: 'payment-management', component: PaymentsComponent, canActivate: [AdminRouterService] },
-  { path: 'manage-orders', component: ManageOrdersComponent, canActivate: [AdminRouterService] },
-  { path: 'logistic-management', component: AdminLogisticManagmentComponent, canActivate: [AdminRouterService] },
-  { path: 'repayments', component: RepaymentsComponent, canActivate: [AdminRouterService] },
-  { path: 'refunds', component: RefundsComponent, canActivate: [AdminRouterService] },
-  { path: 'refund-cases', component: RefundCasesComponent, canActivate: [AdminRouterService] },
-  { path: 'reviewcart', component: ReviewcartComponent, canActivate: [BuyerRouterService] },
-  { path: 'checkout', component: CheckoutComponent, canActivate: [BuyerRouterService] },
-  { path: 'confirmation', component: ConfirmationComponent, canActivate: [BuyerRouterService] },
-  { path: 'thanks', component: ThanksComponent, canActivate: [BuyerRouterService] },
-  { path: 'items-status', component: ItemsByStatusComponent, canActivate: [BuyerRouterService] },
-  { path: 'pending-products', component: PendingProductsComponent, canActivate: [AdminRouterService] },
-  { path: 'historical-orders', component: CanceledDeliveredItemsComponent, canActivate: [BuyerRouterService] },
-  { path: 'products-list/page/:number', component: ProductListComponent, canActivate: [AdminRouterService] },
-  { path: 'manage-countries', component: AdminCountriesComponent, canActivate: [AdminRouterService] },
-  { path: 'manage-shipping-cities', component: ShippingByCityComponent, canActivate: [AdminRouterService] },
-  { path: 'manage-store-trimming', component: ManageStoreTrimmingComponent, canActivate: [SellerRouterService] },
-  { path: 'port-loading-management', component: CitiManagmentComponent, canActivate: [AdminRouterService] },
-  {path: 'forgot-password', component: ForgotPasswordComponent}
+  {
+    path: '', component: HomeComponent,
+    data: { preload: false, delay: true },
+  },
+  {
+    path: 'home', redirectTo: '/',
+    data: { preload: false, delay: true }
+  },
+  {
+    path: 'register', component: RegistrationBuyerComponent,
+    data: { preload: false, delay: true }
+  },
+  {
+    path: 'register-seller',
+    component: RegistrationSellerComponent,
+    data: { preload: false, delay: true }
+  },
+  {
+    path: 'login',
+    component: LoginComponent,
+    data: { preload: false, delay: true }
+  },
+  {
+    path: 'add-product',
+    component: AddProductComponent,
+    canActivate: [SellerRouterService],
+    data: { preload: false, delay: true }
+  },
+  {
+    path: 'fish-type/:category/:page',
+    component: ArchiveProductsComponent,
+    canActivate: [BuyerRouterService],
+    data: { preload: false, delay: true }
+  },
+  {
+    path: 'search/:search/:page',
+    component: SearchComponent,
+    canActivate: [BuyerRouterService],
+    data: { preload: false, delay: true }
+  },
+  {
+    path: 'product/:id',
+    component: SingleProductComponent,
+    canActivate: [NonsellerRouterService],
+    data: { preload: false, delay: true }
+  },
+  {
+    path: 'product-categories',
+    component: FishComponent, canActivate: [AdminRouterService],
+    data: { preload: false, delay: true }
+  },
+  {
+    path: 'edit-product/:id',
+    component: EditProductComponent,
+    canActivate: [SellerRouterService],
+    data: { preload: false, delay: true }
+  },
+  {
+    path: 'account',
+    component: EditAccountComponent,
+    canActivate: [RouterProtectionService],
+    data: { preload: false, delay: true }
+  },
+  {
+    path: 'my-products',
+    component: MyProductsComponent,
+    canActivate: [SellerRouterService],
+    data: { preload: false, delay: true }
+  },
+  {
+    path: 'manage-products',
+    component: MyProductsComponent,
+    canActivate: [AdminRouterService],
+    data: { preload: false, delay: true }
+  },
+  {
+    path: 'cart',
+    component: CartComponent,
+    canActivate: [RouterProtectionService],
+    data: { preload: false, delay: true }
+  },
+  {
+    path: 'verification/:userid/:id',
+    component: ConfirmationEmailComponent,
+    data: { preload: true, delay: false }
+  },
+  {
+    path: 'store/:id',
+    component: SingleStoreComponent,
+    canActivate: [RouterProtectionService],
+    data: { preload: false, delay: true }
+  },
+  {
+    path: 'featured-products',
+    component: FeaturedProductsComponent,
+    canActivate: [AdminRouterService],
+    data: { preload: false, delay: true }
+  },
+  {
+    path: 'featured-seller',
+    component: FeaturedSellerComponent,
+    canActivate: [AdminRouterService],
+    data: { preload: false, delay: true }
+  },
+  {
+    path: 'featured-types',
+    component: FeaturedTypesComponent,
+    canActivate: [AdminRouterService],
+    data: { preload: false, delay: true }
+  },
+  {
+    path: 'fish-types-menu',
+    component: FishTypeMenuComponent,
+    canActivate: [AdminRouterService],
+    data: { preload: false, delay: true }
+  },
+  {
+    path: 'admin',
+    component: AdministratorComponent,
+    canActivate: [AdminRouterService],
+    data: { preload: false, delay: true }
+  },
+  {
+    path: 'favorites',
+    component: FavoritesComponent,
+    canActivate: [BuyerRouterService],
+    data: { preload: false, delay: true }
+  },
+  {
+    path: 'tracking',
+    component: TrackingComponent,
+    data: { preload: false, delay: true }
+  },
+  {
+    path: 'products/:query/:page',
+    component: ProductsComponent,
+    canActivate: [RouterProtectionService],
+    data: { preload: false, delay: true }
+  },
+  {
+    path: 'seller',
+    component: SellerComponent,
+    canActivate: [AdminRouterService],
+    data: { preload: false, delay: true }
+  },
+  {
+    path: 'buyer',
+    component: BuyerComponent,
+    canActivate: [AdminRouterService],
+    data: { preload: false, delay: true }
+  },
+  {
+    path: 'orders',
+    component: OrdersComponent,
+    canActivate: [RouterProtectionService],
+    data: { preload: false, delay: true }
+  },
+  {
+    path: 'orders-items/:id',
+    component: OrdersItemsComponent,
+    canActivate: [RouterProtectionService],
+    data: { preload: false, delay: true }
+  },
+  { path: 'comments', component: CommentsComponent, canActivate: [AdminRouterService],
+  data: { preload: false, delay: true } },
+  { path: 'recovery-password/:code', component: RecoveryPasswordComponent,
+  data: { preload: true, delay: false } },
+  { path: 'verify-users', component: VerifyUserComponent, canActivate: [AdminRouterService],
+  data: { preload: true, delay: false } },
+  { path: 'recent-purchases', component: RecentPurchasesComponent, canActivate: [SellerRouterService],
+  data: { preload: false, delay: true } },
+  { path: 'order-purchase/:item', component: OrderPurchaseComponent, canActivate: [SellerRouterService],
+  data: { preload: false, delay: true } },
+  { path: 'chart', component: ChartComponent, canActivate: [AdminRouterService],
+  data: { preload: false, delay: true } },
+  { path: 'documents', component: DocumentsComponent, canActivate: [RouterProtectionService],
+  data: { preload: false, delay: true } },
+  { path: 'tracking-code/:item', component: TrackingCodeComponent, canActivate: [RouterProtectionService],
+  data: { preload: false, delay: true } },
+  { path: 'browse', component: BrowseComponent,
+  data: { preload: false, delay: true } },
+  { path: 'sfspay', component: SfsPayComponent,
+  data: { preload: false, delay: true } },
+  { path: 'help', component: HelpComponent,
+  data: { preload: false, delay: true } },
+  { path: 'contact-us', component: ContactUsComponent,
+  data: { preload: false, delay: true } },
+  { path: 'guides', component: GuidesComponent,
+  data: { preload: false, delay: true } },
+  { path: 'terms-conditions', component: TermsConditionsComponent,
+  data: { preload: false, delay: true } },
+  { path: 'privacy-policy', component: PrivacyPolicyComponent,
+  data: { preload: false, delay: true } },
+  { path: 'cookies-policy', component: CookiesPolicyComponent,
+  data: { preload: false, delay: true } },
+  { path: 'about-us', component: AboutComponent,
+  data: { preload: false, delay: true } },
+  { path: 'advanced-search', component: AdvancedSearchComponent, canActivate: [BuyerRouterService],
+  data: { preload: false, delay: true } },
+  { path: 'shipping-rates', component: ShippingRatesComponent, canActivate: [AdminRouterService],
+  data: { preload: false, delay: true } },
+  { path: 'pricing-charges', component: PricingChargesComponent, canActivate: [AdminRouterService],
+  data: { preload: false, delay: true } },
+  { path: 'orders-shipped', component: AdminOrdersShippedComponent, canActivate: [AdminRouterService],
+  data: { preload: false, delay: true } },
+  { path: 'orders-arrived', component: AdminOrderArrivedComponent, canActivate: [AdminRouterService],
+  data: { preload: false, delay: true } },
+  { path: 'seller-fulfills-orders', component: AdminOrdersComponent, canActivate: [AdminRouterService],
+  data: { preload: false, delay: true } },
+  { path: 'orders-out-for-delivery', component: AdminOrderOutDeliveryComponent, canActivate: [AdminRouterService],
+  data: { preload: false, delay: true } },
+  { path: 'orders-delivered', component: AdminOrderDeliveredComponent, canActivate: [AdminRouterService],
+  data: { preload: false, delay: true } },
+  { path: 'payment-management', component: PaymentsComponent, canActivate: [AdminRouterService],
+  data: { preload: false, delay: true } },
+  { path: 'manage-orders', component: ManageOrdersComponent, canActivate: [AdminRouterService],
+  data: { preload: false, delay: true } },
+  { path: 'logistic-management', component: AdminLogisticManagmentComponent, canActivate: [AdminRouterService],
+  data: { preload: false, delay: true } },
+  { path: 'repayments', component: RepaymentsComponent, canActivate: [AdminRouterService],
+  data: { preload: false, delay: true } },
+  { path: 'refunds', component: RefundsComponent, canActivate: [AdminRouterService],
+  data: { preload: false, delay: true } },
+  { path: 'refund-cases', component: RefundCasesComponent, canActivate: [AdminRouterService],
+  data: { preload: false, delay: true } },
+  { path: 'reviewcart', component: ReviewcartComponent, canActivate: [BuyerRouterService],
+  data: { preload: false, delay: true } },
+  { path: 'checkout', component: CheckoutComponent, canActivate: [BuyerRouterService],
+  data: { preload: false, delay: true } },
+  { path: 'confirmation', component: ConfirmationComponent, canActivate: [BuyerRouterService],
+  data: { preload: false, delay: true } },
+  { path: 'thanks', component: ThanksComponent, canActivate: [BuyerRouterService],
+  data: { preload: false, delay: true } },
+  { path: 'items-status', component: ItemsByStatusComponent, canActivate: [BuyerRouterService],
+  data: { preload: false, delay: true } },
+  { path: 'pending-products', component: PendingProductsComponent, canActivate: [AdminRouterService],
+  data: { preload: false, delay: true } },
+  { path: 'historical-orders', component: CanceledDeliveredItemsComponent, canActivate: [BuyerRouterService],
+  data: { preload: false, delay: true } },
+  { path: 'products-list/page/:number', component: ProductListComponent, canActivate: [AdminRouterService],
+  data: { preload: false, delay: true } },
+  { path: 'manage-countries', component: AdminCountriesComponent, canActivate: [AdminRouterService],
+  data: { preload: false, delay: true } },
+  { path: 'manage-shipping-cities', component: ShippingByCityComponent, canActivate: [AdminRouterService],
+  data: { preload: false, delay: true } },
+  { path: 'manage-store-trimming', component: ManageStoreTrimmingComponent, canActivate: [SellerRouterService],
+  data: { preload: false, delay: true } },
+  { path: 'port-loading-management', component: CitiManagmentComponent, canActivate: [AdminRouterService],
+  data: { preload: false, delay: true } },
+  { path: 'forgot-password', component: ForgotPasswordComponent,
+  data: { preload: false, delay: true } }
 ];
 
 @NgModule({
@@ -279,7 +458,9 @@ const appRoutes: Routes = [
   ],
   imports: [
     BrowserModule,
-    RouterModule.forRoot(appRoutes),
+    RouterModule.forRoot(appRoutes, {
+      preloadingStrategy: AppPreloadingStrategy
+    }),
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
@@ -304,8 +485,9 @@ const appRoutes: Routes = [
     NgProgressModule,
     Select2Module
 
-    ],
+  ],
   providers: [
+    AppPreloadingStrategy,
     AuthenticationService,
     MenuItems,
     IsLoginService,
@@ -322,8 +504,8 @@ const appRoutes: Routes = [
     CountriesService,
     PricingChargesService,
     TitleService,
-    {provide: OWL_DATE_TIME_LOCALE, useValue: 'en'},
-    OrderService,{
+    { provide: OWL_DATE_TIME_LOCALE, useValue: 'en' },
+    OrderService, {
       provide: HTTP_INTERCEPTORS,
       useClass: Interceptor,
       multi: true,
