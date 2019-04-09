@@ -23,7 +23,7 @@
   </div>
 </div> 
 
-<div class="gray-bg" *ngIf="!isLoggedIn">
+<div class="gray-bg" >
     <div class="container-fluid">
         <div class="row bordered-row">
           <div class="col-lg-12 text-center custom-section">
@@ -37,10 +37,10 @@
           <div class="col-lg-12">
               <ul class="nav nav-tabs" id="myTab" role="tablist">
                   <li class="nav-item">
-                    <a class="nav-link active" id="buy-tab" data-toggle="tab" href="#buy" role="tab" aria-controls="buy" aria-selected="true">Buy with us</a>
+                    <a *ngIf="!isLoggedIn" class="nav-link active" id="buy-tab" data-toggle="tab" href="#buy" role="tab" aria-controls="buy" aria-selected="true">Buy with us</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" id="sell-tab" data-toggle="tab" href="#sell" role="tab" aria-controls="sell" aria-selected="false">Sell with us</a>
+                    <a *ngIf="!isLoggedIn" class="nav-link" id="sell-tab" data-toggle="tab" href="#sell" role="tab" aria-controls="sell" aria-selected="false">Sell with us</a>
                   </li>
                 
                 </ul>
