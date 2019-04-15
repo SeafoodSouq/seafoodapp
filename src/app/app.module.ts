@@ -10,10 +10,6 @@ import { NonsellerRouterService } from './services/nonseller-router.service';
 
 import { Routes, RouterModule } from '@angular/router';
 
-// import { TranslateModule, TranslateLoader, TranslateStaticLoader, TranslatePipe, TranslateService } from 'ng2-translate';
-// import { Http } from '@angular/http';
-
-// import ngx-translate and the http loader
 import { TranslateLoader, TranslateModule, TranslatePipe } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
