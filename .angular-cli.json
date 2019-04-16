@@ -10,7 +10,13 @@
       "assets": [
         "assets",
         "favicon.ico",
-        ".htaccess"
+        ".htaccess",
+        "static/about.html",
+        "static/careers.html",
+        "static/contact-us.html",
+        "static/footer.html",
+        "static/header.html",
+        "static/faq.html"
       ],
       "index": "index.html",
       "main": "main.ts",
