@@ -1,0 +1,82 @@
+<footer>
+ 
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col">
+                <strong>Company</strong>
+                <ul>
+                  <li><a routerLink="/sfspay">SFSPay</a></li>
+                  <li><a routerLink="#">Careers</a></li>
+                  <li><a routerLink="/about-us">About</a></li>
+                </ul>
+              </div>
+              <div class="col">
+                  <strong>Connect</strong>      
+                    <ul class="list-inline footer-icons">
+                        <li ><a href="https://www.facebook.com/seafoodsouq/" target="_blank">Facebook</a></li>
+                        <li ><a href="https://twitter.com/SeafoodSouq" target="_blank">Twitter</a></li>
+                        <li><a href="https://www.instagram.com/seafoodsouq/" target="_blank">Instagram</a></li>
+                      </ul>
+                </div>
+            <div class="col">
+              <img class="logo" src="../../../assets/svg/sfs-logo.svg" alt="Logo">
+              <p>Warehouse 10, 58 St </p>
+              <p>Quoz Industrial Area 3</p>
+              <p>Dubai, United Arab Emirates</p> 
+              <div> <a href="mailto:hello@seafoodsouq.com ">hello@seafoodsouq.com </a></div>
+              <div><a href="tel:+971042683521">+971042683521</a></div>
+            </div>
+           
+            <div class="col">
+                <strong>Support</strong>
+                <ul>
+                  <li><a routerLink="/guides">Guides</a></li>
+                  <li><a routerLink="/hep">Help</a></li>
+                  <li><a routerLink="/faq">FAQ</a></li>
+                </ul>
+              </div>
+              <div class="col">
+                  <strong>Policies</strong>
+                  <ul>
+                    <li><a routerLink="/terms-conditions">Terms &amp; Conditions</a></li>
+                    <li><a routerLink="/privacy-policy">Privacy Policy</a></li>
+                    <li><a routerLink="/cookies-policy">Cookies </a></li>
+                  </ul>
+                </div>
+                
+          </div>
+    </div>
+   
+  </footer>
+  <div class="sub-footer">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <ul class="list-inline footer-logos">
+            <li class="list-inline-item"><img src="../../../assets/svg/truste-pay-logo.svg" alt=""></li>
+            <li class="list-inline-item"><img src="../../../assets/norton.png" alt=""></li>
+            <li class="list-inline-item"><img src="../../../assets/svg/visa-pay-logo.svg" alt=""></li>
+            <li class="list-inline-item"><img src="../../../assets/mastercard.png" alt=""></li>
+          </ul>
+        </div>
+        <div class="col-md-6 text-right">
+          <ul class="copyright">
+            <li class="list-inline-item">
+                <select class="language" (change)="changeLanguage($event)">
+                    <option value="{{lang}}">{{lang}}</option>
+                    <option *ngIf="lang=='ar'; else ar" value="en">English</option>
+                    <ng-template #ar>
+                      <option value="ar">Arab</option>
+                    </ng-template>
+                  </select>
+            </li>
+            <li class="list-inline-item">
+              <p><sup>&copy;</sup> 2019</p>
+            </li>
+          </ul>
+           
+        </div>
+      </div>
+    </div>
+  </div>

@@ -5,9 +5,6 @@ RewriteEngine On
     RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} -d
     RewriteRule ^ - [L]
 
-    RewriteCond %{REQUEST_FILENAME}.html -f
-    RewriteRule !.*\.html$ %{REQUEST_FILENAME}.html [L]
-
     # If the requested resource doesn't exist, use index.html
 RewriteRule ^ /index.html
 </IfModule>
