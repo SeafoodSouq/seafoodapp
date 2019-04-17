@@ -98,6 +98,7 @@ export class AddProductComponent implements OnInit {
   trimmings = [];
   parts = [];
   ProcessingParts: any;
+  disablePreparation: boolean = false;
   showWholeOptions: boolean = false;
   showProcessingParts: boolean = false;
   hsCode: FormControl;
@@ -581,6 +582,23 @@ export class AddProductComponent implements OnInit {
     switch (level) {
       case 0:
         selectedType = this.parentSelectedType.value;
+	if ( selectedType === '5bda35c078b3140ef5d31f9a' ) {
+          
+          this.disablePreparation = true;
+          this.preparationOptions = [
+            'Not Applicable'
+          ];
+          this.myform.controls['preparation'].setValue(this.preparationOptions[0]);
+	  this.myform.controls['preparation'].disable();
+        } else {
+	  this.preparationOptions = [
+            'Filleted',
+            'Head On Gutted',
+            'Head Off Gutted '
+          ];
+          this.disablePreparation = false;
+	  this.myform.controls['preparation'].enable();
+        }
         break;
 
       case 1:
@@ -591,13 +609,14 @@ export class AddProductComponent implements OnInit {
           this.myform.controls['preparation'].setValue(this.preparationOptions[0]);
 
         } else {
+	  if ( !this.disablePreparation ) {
           this.preparationOptions = [
             'Filleted',
             'Head On Gutted',
             'Head Off Gutted '
           ];
           this.myform.controls['preparation'].setValue(this.preparationOptions[0]);
-
+	  }
         }
         break;
 
