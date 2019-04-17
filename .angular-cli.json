@@ -16,7 +16,8 @@
         "static/contact-us.html",
         "static/footer.html",
         "static/header.html",
-        "static/faq.html"
+        "static/faq.html",
+        "static/static.scss"        
       ],
       "index": "index.html",
       "main": "main.ts",
@@ -30,13 +31,16 @@
         "../node_modules/ngx-toastr/toastr.css",
         "../node_modules/font-awesome/css/font-awesome.css",
         "../node_modules/aos/dist/aos.css" ,
-      "../src/assets/css/intlTelInput.css"     ],
+        "../src/assets/css/intlTelInput.css",
+        "../src/static/static.scss"
+         ],
       "scripts": [
         "../node_modules/bigslide/dist/bigSlide.js",
         "../node_modules/bootstrap/dist/js/bootstrap.min.js",
         "../node_modules/aos/dist/aos.js",
         "../src/assets/js/intlTelInput.js",
-        "../src/assets/js/utils.js"
+        "../src/assets/js/utils.js",
+        "../src/static/static.js"
           ],
       "environmentSource": "environments/environment.ts",
       "environments": {
