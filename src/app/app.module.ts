@@ -399,7 +399,7 @@ export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
 
-@NgModule({
+export const ngModule:NgModule = {
   declarations: [
     MenuNavComponent,
     AppComponent,
@@ -453,5 +453,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     // TranslateService
   ],
   bootstrap: [AppComponent]
-})
+}
+
+@NgModule(ngModule)
 export class AppModule { }

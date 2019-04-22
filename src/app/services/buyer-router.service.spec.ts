@@ -5,11 +5,11 @@ import { BuyerRouterService } from './buyer-router.service';
 describe('BayerRouterService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [BayerRouterService]
+      providers: [BuyerRouterService]
     });
   });
 
-  it('should be created', inject([BayerRouterService], (service: BayerRouterService) => {
+  it('should be created', inject([BuyerRouterService], (service: BuyerRouterService) => {
     expect(service).toBeTruthy();
   }));
 });
