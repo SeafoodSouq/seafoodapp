@@ -43,6 +43,9 @@ import { ProductManagmentComponent } from './product-managment/product-managment
 import { AccountComponent } from './account/account.component';
 import { ToastrService } from './toast.service';
 
+//For testing with jest
+import { RouterTestingModule } from '@angular/router/testing';
+import {APP_BASE_HREF} from '@angular/common';
 
 const appRoutes: Routes = [
   {
@@ -399,7 +402,7 @@ export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
 
-export const ngModule:NgModule = {
+const ngModule:NgModule = {
   declarations: [
     MenuNavComponent,
     AppComponent,
@@ -457,3 +460,9 @@ export const ngModule:NgModule = {
 
 @NgModule(ngModule)
 export class AppModule { }
+
+//for testing with jest
+let ngModuleTest = ngModule;
+ngModuleTest.imports.push(RouterTestingModule);
+ngModuleTest.providers.push({provide: APP_BASE_HREF, useValue: '/'});
+export const ngModuleTestApp = ngModuleTest;
