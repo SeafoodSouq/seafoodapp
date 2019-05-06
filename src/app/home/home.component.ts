@@ -44,6 +44,9 @@ export class HomeComponent implements OnInit {
   
   async ngOnInit() {
   jQuery('body').addClass('home-header');
+   jQuery('#carouselExampleIndicators').carousel({
+		interval : false
+	});
 	var canScroll = 1;
 	function pauseScroll(){
 		console.log("GOT HERE");
