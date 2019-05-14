@@ -77,10 +77,14 @@ export class CheckoutComponent implements OnInit {
 
   ngOnInit() {
     this.env = environment;
+    this.accessToken = this.env.accessToken;
+    this.merchantID = this.env.merchantID;
+    this.apiPass = this.env.apiPass;
     //this.addFingerPrintScript();
     // bypass payfort, payfort only works in main domain
     if ( this.env.payfort ) {
-      this.formAction = 'https://checkout.PayFort.com/FortAPI/paymentPage';
+      this.formAction = 'https://checkout.PayFort.com/FortAPI/paymentPage';  //live
+      this.formAction = 'https://sbcheckout.PayFort.com/FortAPI/paymentPage'; //dev
 
      
     } else {

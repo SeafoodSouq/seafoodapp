@@ -43,8 +43,6 @@ export class ConfirmationComponent implements OnInit {
   };
   token: any;
   info: any;
-  payFortApi: any = 'https://sbpaymentservices.payfort.com/FortAPI/paymentApi';
-  // payFortApi = 'https://apiseafood.senorcoders.com/payfort/'
   description: any;
   buyerId: any;
   apiShopID: any;
@@ -81,6 +79,9 @@ export class ConfirmationComponent implements OnInit {
 
   async ngOnInit() {    
     this.env = environment;
+    this.accessToken = this.env.accessToken;
+    this.merchantID = this.env.merchantID;
+    this.apiPass = this.env.apiPass;
     // bypass payfort, payfort only works in main domain
     if ( this.env.payfort ) {
       this.route.queryParams.subscribe(params => {
@@ -255,8 +256,8 @@ export class ConfirmationComponent implements OnInit {
       this.generateSignature();
       const body = {        
         'command': this.command,
-        'access_code': 'Ddx5kJoJWr11sF6Hr6E4',
-	'device_fingerprint': finger.value,
+        'access_code': this.accessToken,
+	      'device_fingerprint': finger.value,
         'merchant_identifier': this.merchantID,
         'merchant_reference': this.shoppingCartId,
         'currency': 'AED',
@@ -267,13 +268,13 @@ export class ConfirmationComponent implements OnInit {
         'customer_email': this.email,
         'amount': (this.total).toString(),
         'order_description': this.description,
-	'customer_ip': this.ip
+	      'customer_ip': this.ip
       };
       console.log( 'payfort body', JSON.stringify( body ) ) ;
 
       // bypass payfort, payfort only works in main domain
       if ( this.env.payfort ) {
-      this.http.post(`payfort/authorization?command=${this.command}&customer_ip=${this.ip}&access_code=chArgcTLiDtoP5wO1hFh&merchant_identifier=${this.merchantID}&merchant_reference=${this.shoppingCartId}&currency=AED&language=en&token_name=${this.token}&signature=${this.signature}&settlement_reference=Seafoods&customer_email=${this.email}&amount=${this.total}&order_description=${this.description}`, { 'device_fingerprint': finger.value } )
+      this.http.post(`payfort/authorization?command=${this.command}&customer_ip=${this.ip}&access_code=${this.accessToken}&merchant_identifier=${this.merchantID}&merchant_reference=${this.shoppingCartId}&currency=AED&language=en&token_name=${this.token}&signature=${this.signature}&settlement_reference=Seafoods&customer_email=${this.email}&amount=${this.total}&order_description=${this.description}`, { 'device_fingerprint': finger.value } )
       //this.http.post( `${API}payfort/authorization`, body )
       .subscribe(res => {
         console.log(res);

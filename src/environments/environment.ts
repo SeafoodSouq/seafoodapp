@@ -11,6 +11,12 @@ export const environment = {
 	cdnURL:"https://d66z88a3oqo8j.cloudfront.net",
 	// apiURL:"http://localhost:7000/",
 	// apiURLImg:"http://localhost:7000",
+	accessToken: "chArgcTLiDtoP5wO1hFh",
+	merchantID: "xqNrOYgH",
+	apiPass: "bafgiwugfiwgfyyf",
+	dev_accessToken: "Ddx5kJoJWr11sF6Hr6E4",
+	dev_merchantID: "aZCWXhqJ",
+	dev_apiPass: "bafgiwugfiwgfyyf",
   countries:[
 	    {name: "Afghanistan", code: "AF"},
 	    {name: "Åland Islands", code: "AX"},

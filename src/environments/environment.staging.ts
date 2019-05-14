@@ -4,7 +4,12 @@ export const environment = {
   apiURL:"https://stagingapi.seafoodsouq.com/",
 	apiURLImg:"https://stagingapi.seafoodsouq.com",
 	cdnURL:"https://staging.seafoodsouq.com",
-
+	accessToken: "chArgcTLiDtoP5wO1hFh",
+	merchantID: "xqNrOYgH",
+	apiPass: "bafgiwugfiwgfyyf",
+	dev_accessToken: "Ddx5kJoJWr11sF6Hr6E4",
+	dev_merchantID: "aZCWXhqJ",
+	dev_apiPass: "bafgiwugfiwgfyyf",
 	// apiURL:"http://localhost:7000/",
   // apiURLImg:"http://localhost:7000",
   countries:[
