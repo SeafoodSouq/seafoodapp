@@ -84,7 +84,7 @@ export class CheckoutComponent implements OnInit {
     // bypass payfort, payfort only works in main domain
     if ( this.env.payfort ) {
       this.formAction = 'https://checkout.PayFort.com/FortAPI/paymentPage';  //live
-      this.formAction = 'https://sbcheckout.PayFort.com/FortAPI/paymentPage'; //dev
+      //this.formAction = 'https://sbcheckout.PayFort.com/FortAPI/paymentPage'; //dev
 
      
     } else {

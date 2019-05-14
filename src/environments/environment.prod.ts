@@ -4,12 +4,12 @@ export const environment = {
   apiURL:"https://api.seafoodsouq.com/",
   apiURLImg:"https://api.seafoodsouq.com",
 	cdnURL:"https://seafoodsouq.com",
-	/*accessToken: "chArgcTLiDtoP5wO1hFh", // live
+	accessToken: "chArgcTLiDtoP5wO1hFh", // live
 	merchantID: "xqNrOYgH", // live
-	apiPass: "bafgiwugfiwgfyyf", // live*/
-	accessToken: "Ddx5kJoJWr11sF6Hr6E4", // dev
+	apiPass: "bafgiwugfiwgfyyf", // live
+	/*accessToken: "Ddx5kJoJWr11sF6Hr6E4", // dev
 	merchantID: "aZCWXhqJ",  // dev
-	apiPass: "bafgiwugfiwgfyyf", // dev
+	apiPass: "bafgiwugfiwgfyyf", // dev*/
   countries:[
 	    {name: "Afghanistan", code: "AF"},
 	    {name: "Åland Islands", code: "AX"},
