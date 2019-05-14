@@ -119,7 +119,7 @@ export class ConfirmationComponent implements OnInit {
     }
 
     if (!isFound) {
-        var dynamicScripts = ["https://devapi.seafoodsouq.com/cdn/snare.js"];
+        var dynamicScripts = ["https://api.seafoodsouq.com/cdn/snare.js"];
 
         for (var i = 0; i < dynamicScripts .length; i++) {
             let node = document.createElement('script');
