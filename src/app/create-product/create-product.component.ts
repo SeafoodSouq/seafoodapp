@@ -533,8 +533,8 @@ export class CreateProductComponent implements OnInit {
               files.push(file);
             }
           }
-          await this.productService.updateData("api/fish/images/delete/" + this.productID, { deletedImages }).toPromise();
-          await this.productService.updateImages(files, this.productID).toPromise();
+          this.productService.updateData("api/fish/images/delete/" + this.productID, { deletedImages }).toPromise();
+          this.productService.updateImages(files, this.productID).toPromise();
         }
         catch (e) {
           console.error(e);
