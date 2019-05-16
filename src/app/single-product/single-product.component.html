@@ -67,9 +67,9 @@
               <div class="tab-pane fade show active" id="nav-price" role="tabpanel" aria-labelledby="nav-price-tab">
 
                 <div class="convert-row">Converted from USD <span>AED</span></div>
-                <div class="dashed-row"><span class="name-row">Acceptable Spoilage</span>
+                <!-- <div class="dashed-row"><span class="name-row">Acceptable Spoilage</span>
                   <div class="separator-dashed"></div> <span class="value-row">{{mortalityRate}}%</span>
-                </div>
+                </div> -->
                 <div class="dashed-row" *ngIf="FXRateFees/currentExchangeRate!==0"><span class="name-row">FX Rate
                     Fee</span>
                   <div class="separator-dashed"></div> <span
@@ -96,7 +96,7 @@
                     class="value-row">{{(delivered/currentExchangeRate).toFixed(2)}}</span>
                 </div>
                 <div class="dashed-row" *ngIf="charges && charges.finalPrice"><span class="name-row big-font">Total
-                    Price</span>
+                    Delivered Price</span>
                   <div class="separator-dashed"></div> <span
                     class="value-row big-font">{{(charges.finalPrice/currentExchangeRate).toFixed(2)}}</span>
                 </div>
