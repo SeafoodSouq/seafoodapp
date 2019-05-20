@@ -1,3 +1,5 @@
+@import "../../variables.scss";
+
 #hero{
     min-height: 100vh;
     height: auto;
@@ -63,7 +65,7 @@
         }
      }
     .side-dark-gray{
-        background-color: #7484AA;
+        background-color: $light_blue;
         .nav-link{
             color: #f7f8f9 !important;
             display: initial;
@@ -84,7 +86,7 @@
                 font-size: 28px;
                 letter-spacing: 0.5px;
                 line-height: 34px;
-                color: #F7F8F9;
+                color: $white;
                 text-transform: uppercase;
                 margin-bottom: 20px;
             }
@@ -98,15 +100,15 @@
                 font-size: 16px;
                 letter-spacing: 0.15px;
                 line-height: 19px;
-                color: #F7F8F9;
+                color: $white;
                 margin-bottom: 20px;
             }
             button{
                 border-radius: 2px;
                 background: none;
-                border: 1px solid #F7F8F9;
+                border: 1px solid $white;
                 text-transform: uppercase;
-                color: #F7F8F9;
+                color: $white;
                 text-transform: uppercase;
                 font-family: 'Josefin Sans', sans-serif;
                 font-weight: 300;
@@ -118,8 +120,8 @@
                 height: 50px;
                 transition: all .2s ease-in-out;
                 &:hover{
-                    background: #F7F8F9;
-                    color: #7484AA;
+                    background: $white;
+                    color: $light_blue;
                 }
             }
         }
@@ -135,11 +137,11 @@
 
 #nav_content_light{
     p{
-        font-family: 'Josefin Sans', sans-serif;
-        font-weight: 300;
-        font-size: 12px;
+        font-family: 'Open Sans', sans-serif;
+        font-weight: 400;
+        font-size: 14px;
         line-height: 14px;
-        color: #9A9EA8;
+        color: $gray;
         margin: 0 20px;
         display: none;
         @media screen and (max-width: 992px){
@@ -191,7 +193,7 @@
     }
     h2{
         font-size: 1.5rem;
-        color: #885053 !important;
+        color: $red !important;
         margin-top: 20px;
         font-family: 'Roboto', sans-serif Medium;
         
