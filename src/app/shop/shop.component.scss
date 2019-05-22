@@ -21,6 +21,7 @@
               margin-bottom: 10px;
               .row{
                 align-items: center;
+                min-height: 33px;
                 flex-wrap: nowrap;
                 .col-md-10{
                     width: 80%;
@@ -647,6 +648,9 @@ width: 100%;
           line-height: 19px;
           color: $dark_blue;
         }
+        label{
+          padding-left: 12px;
+        }
        
       }
 
@@ -663,8 +667,9 @@ width: 100%;
             width: 100%;
           }
           form{
-            display: inline-block;
+            display: inline-flex;
              width: 100%;
+             align-items: center;
           }
         }
       }
