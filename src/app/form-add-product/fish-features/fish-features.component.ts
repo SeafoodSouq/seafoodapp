@@ -4,7 +4,7 @@ import { NgIf, NgClass } from '@angular/common';
 import { ProductService } from '../../services/product.service';
 import { AuthenticationService } from '../../services/authentication.service';
 import { ToastrService } from '../../toast.service';
-
+declare var jQuery;
 @Component({
   selector: 'fish-features',
   templateUrl: './fish-features.component.html',
@@ -36,7 +36,8 @@ export class FishFeaturesComponent implements OnInit {
   public treatments = [];
 
   constructor(public parentForm: FormGroupDirective, private productService: ProductService,
-    private auth: AuthenticationService, private toast: ToastrService) { }
+    private auth: AuthenticationService, private toast: ToastrService) { 
+    }
 
   ngOnInit() {
     this.createFormGroup();
@@ -100,7 +101,7 @@ export class FishFeaturesComponent implements OnInit {
     this.features.addControl('features', new FormGroup({
       headOffWeight: new FormControl('0-1kg', Validators.required),
       headOnWeight: new FormControl('0-1kg', Validators.required),
-      acceptableSpoilageRate: new FormControl('', Validators.required),
+      acceptableSpoilageRate: new FormControl('', Validators.nullValidator),
       raised: new FormControl('', Validators.required),
       treatment: new FormControl('', Validators.required),
       // preparation: new FormControl("", Validators.required),
@@ -111,10 +112,12 @@ export class FishFeaturesComponent implements OnInit {
     }));
 
     this.parentForm.form.controls.product.valueChanges.subscribe(it => {
-      if (it.speciesSelected === '5bda361c78b3140ef5d31fa4') {
-        this.hideTrimModal = false;
-      } else {
-        this.hideTrimModal = true;
+      if (it.speciesSelected !== undefined && it.speciesSelected !== null) {
+        if (it.speciesSelected === '5bda361c78b3140ef5d31fa4') {
+          this.hideTrimModal = false;
+        } else {
+          this.hideTrimModal = true;
+        }
       }
 
       // let value = it.speciesSelected;
@@ -140,28 +143,6 @@ export class FishFeaturesComponent implements OnInit {
 
     // this.checkPriceForm();
   }
-
-  // private checkPriceForm() {
-  //   if (this.parentForm.form.controls.price !== undefined) {
-  //     this.parentForm.form.controls.price.valueChanges.subscribe(ig => {
-  //       let keys = Object.keys(ig);
-  //       keys = keys.filter(it => {
-  //         if (
-  //           it === 'headAction' ||
-  //           it === 'weights' ||
-  //           it === 'example' ||
-  //           it.includes(this.identifier) === true
-  //         ) return false;
-  //         return ig[it] === true;
-  //       });
-  //       if (keys.length > 1) {
-  //         this.head = 'both';
-  //       }
-  //     });
-  //   } else {
-  //     setTimeout(this.checkPriceForm.bind(this), 3000);
-  //   }
-  // }
 
   private getwholeFishWeight() {
     this.productService.getData("wholefishweight").subscribe(it => {
@@ -272,7 +253,7 @@ export class FishFeaturesComponent implements OnInit {
   }
 
   public isDefault(part, trim) {
-    let data; 
+    let data;
     // console.log("isDefault", part, trim, this.trimmingsModal);
     this.trimmingsModal.forEach(res => {
       if (res.type.length > 0) {
@@ -295,7 +276,7 @@ export class FishFeaturesComponent implements OnInit {
       if (res.type.length > 0) {
 
         if (trim == res.type[0].name) {
-          if (res.type[0].defaultProccessingParts && res.type[0].defaultProccessingParts.includes(part) || (res.processingParts && res.processingParts.name == part) ) {
+          if (res.type[0].defaultProccessingParts && res.type[0].defaultProccessingParts.includes(part) || (res.processingParts && res.processingParts.name == part)) {
             data = true
           }
         }

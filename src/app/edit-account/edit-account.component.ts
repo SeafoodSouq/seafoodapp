@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { AuthenticationService } from '../services/authentication.service';
 import { FormGroup, FormControl, FormControlName, Validators } from '@angular/forms';
 import { environment } from '../../environments/environment';
@@ -6,6 +6,7 @@ import { ProductService } from '../services/product.service';
 import { ToastrService } from '../toast.service';
 import { NgProgress } from 'ngx-progressbar';
 import { Router } from '@angular/router';
+import { CountriesService } from '../services/countries.service';
 declare var jQuery:any;
 
 @Component({
@@ -25,10 +26,9 @@ export class EditAccountComponent implements OnInit {
   buyerCountry: FormControl;
   buyerAddress: FormControl;
   buyerCity: FormControl;
-  countries=environment.countries;
-  password:any = "";
-  repassword:string;
-  currentPassword:string;
+  countries:any =[];
+  password:FormControl;
+  currentPassword:FormControl;
   sellerForm: FormGroup;
   sellerFirstName: FormControl;
   sellerLastName: FormControl;
@@ -56,13 +56,21 @@ export class EditAccountComponent implements OnInit {
   fileHero:any = [];
   heroEndpoint:any = 'api/store/hero/';
   logoEndpoint:any = 'api/store/logo/';
+  regex:string='(?=.*)(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9_]).{8,20}$';
   public loading = false;
+  rePassword: FormControl;
+  passwordForm: FormGroup;
 
 
 
 
   constructor(private auth: AuthenticationService, private rest: ProductService, 
-    private toast:ToastrService, public ngProgress: NgProgress, private router:Router) {
+    private toast:ToastrService, public ngProgress: NgProgress, private router:Router,
+    private countryService: CountriesService) {
+      jQuery(document).ready(function () {
+      jQuery('.js-example-basic-single').select2();
+    });
+
   }
 
   
@@ -71,6 +79,8 @@ export class EditAccountComponent implements OnInit {
     this.createFormControls();  
     this.createBuyerForm();
     this.createSellerForm();
+    this.createPasswordForm();
+    this.getCountries();
    this.getPersonalData();
     console.log(this.info.role);
     if(this.info['role'] == 1){
@@ -93,7 +103,7 @@ export class EditAccountComponent implements OnInit {
     this.buyerFirstName = new FormControl('', [Validators.required]);
     this.buyerLastName = new FormControl('',[Validators.required]);
     this.buyerEmail = new FormControl('', [Validators.email, Validators.required]);
-    this.buyerPhoneNumber = new FormControl('', [Validators.required, Validators.pattern('[0-9]+')]);
+    this.buyerPhoneNumber = new FormControl('', [Validators.required, Validators.pattern('^[+]*[(]{0,1}[0-9 ]{1,4}[)]{0,1}[-\s\./0-9 ]*$')]);
     this.buyerCompanyName = new FormControl('',[Validators.required]);
     this.buyerTypeBusiness = new FormControl('',[Validators.required]);
     this.buyerCountry = new FormControl('',[Validators.required]);
@@ -102,7 +112,7 @@ export class EditAccountComponent implements OnInit {
     this.sellerFirstName = new FormControl('', [Validators.required]);
     this.sellerLastName = new FormControl('',[Validators.required]);
     this.sellerEmail = new FormControl('', [Validators.email, Validators.required]);
-    this.sellerPhoneNumber = new FormControl('', [Validators.required, Validators.pattern('[0-9]+')]);
+    this.sellerPhoneNumber = new FormControl('', [Validators.required, Validators.pattern('^[+]*[(]{0,1}[0-9 ]{1,4}[)]{0,1}[-\s\./0-9 ]*$')]);
     this.sellerCompanyName = new FormControl('', [Validators.required]);
     this.sellerTrade = new FormControl('', [Validators.required]);
     this.sellerCompanyType = new FormControl('', [Validators.required]);
@@ -115,8 +125,10 @@ export class EditAccountComponent implements OnInit {
     this.SellerProductsIntered = new FormControl('', [Validators.required]);
     this.sellerContactNumber = new FormControl('', [Validators.required, Validators.pattern('[0-9]+')]);
     this.sellerCurrencyTrade = new FormControl('', [Validators.required]);
-    this.sellerStoreDescription= new FormControl('', [Validators.required]);
-
+    this.sellerStoreDescription= new FormControl('', [Validators.nullValidator]);
+    this.password = new FormControl('',[Validators.required, Validators.pattern(this.regex)]);
+    this.rePassword = new FormControl('',[Validators.required]);
+    this.currentPassword = new FormControl('',[Validators.required]);
   }
 
   createBuyerForm(){
@@ -135,6 +147,7 @@ export class EditAccountComponent implements OnInit {
   }, {
     updateOn: 'submit'
   });
+
   }
 
   createSellerForm(){
@@ -161,17 +174,26 @@ export class EditAccountComponent implements OnInit {
   });
   }
 
+  createPasswordForm(){
+    this.passwordForm = new FormGroup({
+      password:this.password,
+      rePassword:this.rePassword,
+      currentPassword: this.currentPassword
+    }, {
+      updateOn: 'submit'
+    })
+  }
+
   setValues(){
     this.buyerForm.controls['firstName'].setValue(this.info.firstName);
     this.buyerForm.controls['lastName'].setValue(this.info.lastName);
     this.buyerForm.controls['email'].setValue(this.info.email);
-    this.buyerForm.controls['country'].setValue(this.info.dataExtra['country']);
     this.buyerForm.controls['address'].setValue(this.info.dataExtra['Address']);
     this.buyerForm.controls['city'].setValue(this.info.dataExtra['City']);
     this.buyerForm.controls['telephone'].setValue(this.info.dataExtra['tel']);
     this.buyerForm.controls['companyName'].setValue(this.info.dataExtra['companyName']);
-    this.buyerForm.controls['typeBusiness'].setValue(this.info.dataExtra['typeBusiness']);
-   
+    this.buyerForm.controls['typeBusiness'].setValue(this.info.dataExtra['typeBusiness']); 
+    this.buyerForm.controls['country'].setValue('AE');
 
   }
 
@@ -211,9 +233,27 @@ export class EditAccountComponent implements OnInit {
       this.updateAccount(this.info);
     }else{
       this.validateAllFormFields(this.buyerForm);
+      this.scrollToError();
     }
   }
 
+  scrollTo(el: Element): void {
+    if(el) { 
+      console.log("el", el);
+     el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+ }
+ 
+ scrollToError(): void {
+   let that:any = this;
+  setTimeout(function(){
+    const firstElementWithError = document.querySelector('.is-invalid');
+    console.log("HTMLElement", firstElementWithError);
+    that.scrollTo(firstElementWithError);
+   }, 500);
+
+ 
+ }
   updateSeller(){
     if(this.sellerForm.valid){
       console.log("Valido");
@@ -238,6 +278,7 @@ export class EditAccountComponent implements OnInit {
       this.updateAccount(this.info);
     }else{
       this.validateAllFormFields(this.sellerForm);
+      this.scrollToError();
     }
   }
 
@@ -273,25 +314,43 @@ export class EditAccountComponent implements OnInit {
     })
   }
 
+  handleSubmit(){
+    jQuery('#submit-btn').trigger('click');
+  }
 
   updatePassword(){
-    
-    if(this.repassword == this.password){
-      this.rest.updatePassword(this.info.email,this.currentPassword,this.password).subscribe(
+   console.log(this.passwordForm.value);
+    if(this.passwordForm.valid){
+      console.log("Formulario Valido");
+      this.verifyMatch();
+    }else{
+      console.log("FOrmulario invalido");
+      this.validateAllFormFields(this.passwordForm);
+    }
+   
+}
+verifyMatch(){
+  let password = this.passwordForm.get('password').value; // to get value in input tag
+       let confirmPassword = this.passwordForm.get('rePassword').value; // to get value in input tag
+        if(password != confirmPassword) {
+            // console.log('false');
+            this.passwordForm.get('rePassword').setErrors( {MatchPassword: true} )
+        } else{
+         this.handleRequest();
+        }
+}
+
+handleRequest(){
+      this.rest.updatePassword(this.info.email,this.currentPassword.value,this.password.value).subscribe(
         result=>{
           this.toast.success('Password has been changed successfully!', "Error",{positionClass:"toast-top-right"} );
-          this.currentPassword='';
-          this.password="";
-          this.repassword='';
+        
         },error=>{
           console.log(error)
           this.toast.error('Something wrong happened. Maybe your current password is not the correct one', "Error",{positionClass:"toast-top-right"} );
         }
       )
-    }
-    else{
-      this.toast.error('Password and Repeat password not matched', "Error",{positionClass:"toast-top-right"} );
-    }
+    
 }
 
 async getStoreData(){
@@ -396,4 +455,14 @@ readFile(files, id){
   }
 }
 
+getCountries() {
+  this.countryService.getCountries().subscribe(
+    result => {
+      this.countries = result;
+    },
+    error => {
+      console.log(error);
+    }
+  );
+}
 }

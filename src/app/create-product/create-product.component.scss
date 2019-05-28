@@ -1,3 +1,4 @@
+@import "../../variables.scss";
 
 #blah{
 	max-width: 100%;
@@ -25,23 +26,23 @@
         font-size: 28px;
         line-height: 45px;
         letter-spacing: 0.5px;
-        color: #7484AA;
+        color: $light_blue;
         text-transform: uppercase;
         margin: 0 auto;
-        margin-bottom: 100px;
+        // margin-bottom: 100px;
         @media screen and (max-width: 768px) {
             font-size: 28px !important;
           }
         span{
-            border-bottom: 1px solid #7484AA;
-            padding-bottom: 15px;
+            border-bottom: 1px solid $light_blue;
+            // padding-bottom: 15px;
         }
     }
 
     .btn-save{
-        border: 1px solid #7484AA;
+        border: 1px solid $light_blue;
         text-transform: uppercase;
-        color: #7484AA;
+        color: $light_blue;
         font-family: 'Josefin Sans', sans-serif;
         font-weight: 300;
         letter-spacing: 0.5px;
@@ -63,8 +64,8 @@
       }
 
       .btn-save:hover{
-        background: #7484AA !important;
-        border: 1px solid #7484AA !important;
+        background: $dark_blue !important;
+        border: 1px solid $dark_blue !important;
         color: #ffffff !important;
     }
 
@@ -72,3 +73,6 @@
 
 }
 
+fish-form, fish-features{
+    width: 100%;
+}

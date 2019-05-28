@@ -75,6 +75,8 @@ export class ConfirmationComponent implements OnInit {
         resolve(true);
       });
 
+     
+
     }
 
   async ngOnInit() {    

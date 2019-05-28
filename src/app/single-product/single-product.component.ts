@@ -71,7 +71,8 @@ export class SingleProductComponent implements OnInit {
   processingCountry: any;
   countries: any = [];
   types: any = '';
-  mortalityRate: any;
+  perBox:any;
+  // mortalityRate: any;
   wholeFishWeight: any = null;
   options: Options = {
     floor: 1,
@@ -215,7 +216,12 @@ export class SingleProductComponent implements OnInit {
       this.count = this.max;
       this.value = this.count;
       this.getPricingCharges();
-    } else {
+    } else if(this.count < this.min){
+      this.count = this.min;
+      this.value = this.count;
+      this.getPricingCharges();
+    }
+    else {
       this.value = this.count;
       this.getPricingCharges();
     }
@@ -272,6 +278,7 @@ export class SingleProductComponent implements OnInit {
       this.price = data['price'] ? data['price'].description : "";
       this.category = data['type'] ? data['type'].name : '';
       this.show = true;
+      this.perBox = data['perBox'];
       this.priceValue = data['price'] ? data['price'].value : 0;
       this.priceType = this.currency; // data['price'].type;
       this.measurement = data['weight'].type;
@@ -279,7 +286,7 @@ export class SingleProductComponent implements OnInit {
       this.storeId = data['store'].id;
       this.storeName = data['store'].name;
       this.brandname = data['brandname'];
-      this.mortalityRate = data['acceptableSpoilageRate'] || 0; //Para mantener compatibilidad con productos nuevos
+      // this.mortalityRate = data['acceptableSpoilageRate'] || 0; //Para mantener compatibilidad con productos nuevos
       if (data['raised'] && data['raised'] !== '') {
         this.raised = data['raised'];
       } else {
@@ -412,8 +419,13 @@ export class SingleProductComponent implements OnInit {
       this.toast.success('Product added to the cart!', 'Product added', { positionClass: 'toast-top-right' });
 
     }, err => {
-      if (err.error) {
+      console.log('err', err  );
+      if( err.hasOwnProperty('error') ){
+        this.toast.error( err.error.message, 'Seafood Souq', { positionClass: 'toast-top-right' });
+      } else if ( err.error ) {
         this.toast.error('An error has occurred', err.error.message, { positionClass: 'toast-top-right' });
+      } else {
+        this.toast.error('An error has occurred', 'Seafood Souq', { positionClass: 'toast-top-right' });
       }
     });
   }

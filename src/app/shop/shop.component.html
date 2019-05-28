@@ -4,17 +4,17 @@
       <div class="container-fluid">
           <ng-template #customLoadingTemplate>
               <div class="row">
-                <div class="wave-loader" style="background-color: #F7F8F9; z-index: 999999; height: 100px; position:fixed;">
+                <div class="wave-loader" style="background-color: #F9FCFF; z-index: 999999; height: 100px; position:fixed;">
                   <div class="wave-loading"></div>
                 </div>
                 
               </div>
-            </ng-template>
-            <ngx-loading [show]="loading" [config]="{ fullScreenBackdrop: true}" [template]="customLoadingTemplate">
+            </ng-template> 
+            <ngx-loading [show]="loading" [config]="{ fullScreenBackdrop: true, backdropBackgroundColour: 'transparent'}" [template]="customLoadingTemplate">
             </ngx-loading>
         <div class="row">
           <div class="col-md-10">
-            <h2>FILTER <span *ngIf="!showClear">SEAFOOD</span> </h2>
+            <h2>FILTER <span *ngIf="!showClear">YOUR SEARCH</span> </h2>
             <ul class="list-inlint filter-pills" [hidden]="!showClear">
               <li class="list-inline-item" id="pill-category">
                 <button (click)="destroyPillCat()"><span>{{tmpCatName}}</span>  <img src="../../assets/svg/close-white.svg" alt=""></button>
@@ -54,7 +54,7 @@
   </div>
 
   <div class="filter-content collapse" id="filterCollapse2">
-    <div class="container">
+    <div class="container second-collapse-container">
       <div class="row">
         <div class="col-md-3 filter-col">
           <h4>ORDER AMOUNT (KG)</h4>
@@ -80,7 +80,7 @@
           <div class="col-md-12 text-right">
             <button class="btn-transparent" (click)="showLess()">
                 <img src="../../assets/svg/arrow-up.svg" alt="">
-                SEE LESS
+               LESS FILTERS
             </button>
           </div>
         </div>
@@ -128,7 +128,7 @@
         <div class="col filter-col">
             <h4>COUNTRY</h4>
             <div class="form-group">
-                <input  #myInput type="text" class="type-input" placeholder="Type..." [(ngModel)]="name" (input)="filterItem(myInput.value)">
+                <input *ngIf="filteredItems.lenght > 5"  #myInput type="text" class="type-input" placeholder="Type..." [(ngModel)]="name" (input)="filterItem(myInput.value)">
                 <div *ngFor="let country of filteredItems; let i=index" class="custom-list">
                     <input [disabled]="disabledInputs" *ngIf="i<5" type="radio"  name="country" id="{{country.code}}" [value]="country.code">
                     <label *ngIf="i<5" for="{{country.code}}">{{country.name}}</label>
@@ -178,7 +178,7 @@
         <div class="col-md-12 text-right">
           <button class="btn-transparent" (click)="showMore()">
               <img src="../../assets/svg/arrow-down.svg" alt="">
-              SEE MORE
+              MORE FILTERS
           </button>
         </div>
       </div>
@@ -195,20 +195,18 @@
               <h1 class="notfound">{{'Products.no-result' | translate}}</h1>
             </div>
 
-          <div  *ngFor="let product of products; let i=index" class="col-xl-4 col-lg-4 col-md-6 coming-{{product.cooming_soon}} {{product.type}} {{removeSpaces(product.country)}} {{i}} {{product.variation.id }} {{product.id}} category-{{product.type}} {{product.variation.max}}">
+          <div  *ngFor="let product of products; let i=index" class="col-xl-4 col-lg-4 col-md-6 coming-{{product.cooming_soon}} {{product.type}} {{removeSpaces(product.country)}} {{i}} {{product.variation.id }} {{product.id}} category-{{product.type}} {{product.variation.max}} {{product.variation.min}}">
               <div class="single-product-box">
                   <div class="product-header">
                    <div class="row">
                      <div class="col-md-10">
-                       <div>
-                          <span id="qty-kg-{{product.variation.id}}" class="qty-kg" (click)="hideMe(product.variation.id)"><span *ngIf="!product.qty">{{product.variation.min}}</span> {{product.qty}} kg</span>  
-                          <input placeholder="type kg..."  id="edit-qty-{{product.variation.id}}" class="qty-number" type="number"  (change)="manualInput(product.variation.max, product.variation.id, product.type)" (focusout)="showSpan(product.variation.id)">
-                       </div>
+                     
                        
                         <form>
-                            <span class="amount-span"style="margin-right: 5px;">{{product.variation.min}}</span>
-                            <input id="range-{{product.variation.id}}" name="foo" type="range" class="product-range" [value]="product.variation.min" [min]="product.variation.min" [max]="product.variation.max"  (input)="showRangeVal(product.variation.id, i)" (change)="getRange(product.variation.id, product.type)">
-                            <span class="amount-span" style="margin-left: 5px;">{{product.variation.max}}</span>
+                            <span class="amount-span"style="margin-right: 5px;">min <br> {{product.variation.min}}</span>
+                            <input *ngIf="product.perBox != true" type="number" id="amount-{{product.variation.id}}" placeholder="enter weight..." class="qty-number" (change)="manualInput(product.variation.max, product.variation.min, product.variation.id, product.type)">
+                            <input *ngIf="product.perBox == true" type="number" id="amount-{{product.variation.id}}" placeholder="enter boxes..." class="qty-number" (change)="manualInput(product.variation.max, product.variation.min, product.variation.id, product.type)">
+                            <span class="amount-span" style="margin-left: 5px;">max <br> {{product.variation.max}}</span>
                             <label id="delivere-price-{{product.variation.id}}"><span>(delivered/kg)</span> AED 12.99</label>
                         </form>
                       </div>
@@ -263,9 +261,11 @@
             <div class="col-md-6">
               <h4>{{product?.fish?.name}} - {{product?.fishPreparation[0]?.name}} <span *ngIf="product?.fishPreparation[0]?.id === '5c93bff065e25a011eefbcc2'">- {{product?.wholeFishWeight[0]?.name}} </span></h4>
               <div class="cart-slide-range">
-                  <span class="qty-kg"> {{product?.quantity?.value}} kg</span>  
                   <form>
-                      <input disabled  name="foo" type="range" class="product-range">
+                      <span class="amount-span" style="margin-right: 5px;">{{product.variation.min}}</span>
+                      <input *ngIf="product.fish?.perBox != true" disabled  name="foo" type="text" class="qty-number" value="{{product?.quantity?.value}} kg">
+                      <input *ngIf="product.fish?.perBox == true" disabled  name="foo" type="text" class="qty-number" value="{{product?.quantity?.value / product.fish?.boxWeight}} boxes">
+                      <span class="amount-span" style="margin-left: 5px;">{{product.variation.max}}</span>
                       <label>{{getTotalxItem(product.quantity.value, product.fishCharges.variation.price) | currency: 'AED'}}</label>
                   </form>
               </div>
@@ -292,7 +292,7 @@
               <button (click)="closeCart()" class="btn-transparent">CONTINUE SHOPPING</button>
             </div>
             <div class="col-md-6 text-right">
-                <button class="btn-transparent" routerLink="/cart">VIEW MY CART</button>
+                <button class="btn-transparent" (click)="goToCart()">VIEW MY CART</button>
               </div>
         </div>
       </div>

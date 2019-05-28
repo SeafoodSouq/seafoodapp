@@ -1,14 +1,15 @@
 //Para en la seleccion en featured
+@import "../../../variables.scss";
 
 .square{
     width: 22px;
     height: 22px;
     display: inline-block;
-    border: 1px solid #3E4E75;
+    border: 1px solid $dark_blue;
     border-radius: 3px;
 }
 .square.select{
-    background-color: #3E4E75;
+    background-color: $dark_blue;
 }
 
 .not-found-grid{
@@ -69,7 +70,7 @@
     font-size: 28px;
     line-height: 45px;
     letter-spacing: 0.5px;
-    color: #7484AA;
+    color: $light_blue;
     text-transform: uppercase;
     margin: 100px auto;
     @media screen and (max-width: 768px) {
@@ -77,12 +78,14 @@
 
       }
     span{
-        border-bottom: 1px solid #7484AA;
+        border-bottom: 1px solid $light_blue;
         padding-bottom: 15px;
 
     }
 }
-
+.selectionable{
+    cursor: pointer !important;
+}
 .fish-group{
     label{
         display: flex;
@@ -93,10 +96,10 @@
             font-size: 21px;
             letter-spacing: 0.5px;
             line-height: 31px;
-            color: #7484AA;
+            color: $light_blue;
             font-weight: 300;
             &.select{
-            color: #3E4E75;
+            color: $dark_blue;
             font-weight: 400;   
             cursor: pointer;
             margin-right: 10px;
@@ -124,7 +127,7 @@
                 font-family: 'Open Sans', sans-serif;
                 font-size: 21px;
                 line-height: 31px;
-                color: #3E4E75;
+                color: $dark_blue;
                 vertical-align: bottom;
                 margin-left: 10px;
             }
@@ -160,7 +163,7 @@
     }
 
     .manage-link{
-        color: #7484AA !important;
+        color: $light_blue !important;
         font-family: 'Open Sans', sans-serif;
         font-weight: 300;
         font-size: 16px;
@@ -174,16 +177,15 @@
     input.form-control, textarea.form-control{
         background: none !important;
         border: 0;
-        border-bottom: solid 2px #9A9EA8 !important;
+        border-bottom: solid 2px $gray !important;
         border-radius: 0 !important;
-        color: #3E4E75 !important;
+        color: $dark_blue !important;
         font-size: 21px;
-        line-height: 0;
         font-weight: 300;
         font-family: 'Open Sans', sans-serif;
         padding: 0 !important;
         &.ng-invalid.ng-touched{
-            border-bottom: solid 2px #885053 !important;
+            border-bottom: solid 2px $red !important;
 
         }
         @media screen and (max-width: 768px) {
@@ -199,10 +201,10 @@
         background: none !important;
         border-radius: 0 !important;
         border: 0;
-        border-bottom: solid 2px #9A9EA8 !important;
+        border-bottom: solid 2px $gray !important;
         -webkit-appearance: none;
         -webkit-border-radius: 0px;
-        color: #3E4E75 !important;
+        color: $dark_blue !important;
         font-size: 21px;
         font-weight: 300;
         font-family: 'Open Sans', sans-serif;
@@ -210,7 +212,7 @@
         outline: none !important;
         background: url('../../../assets/svg/chevron-down.svg') no-repeat 100% 50% !important;
         &.ng-invalid.ng-touched{
-            border-bottom: solid 2px #885053 !important;
+            border-bottom: solid 2px $red !important;
 
         }
         @media screen and (max-width: 768px) {
@@ -219,18 +221,18 @@
           }
     }
     input.form-control.is-invalid{
-        border-bottom: solid 2px #885053;
+        border-bottom: solid 2px $red;
 
     }
     input:focus{
         outline: none !important;
         box-shadow: none !important;
-        border-bottom: solid 2px #3E4E75 !important;
+        border-bottom: solid 2px $dark_blue !important;
 
     }
     input.form-control:disabled, select.form-control:disabled{
-        color: #9A9EA8 !important;
-        border-bottom: solid 2px #9A9EA8 !important;
+        color: $gray !important;
+        border-bottom: solid 2px $gray !important;
 
     }
   
@@ -243,7 +245,7 @@
         line-height: 28px;
         letter-spacing: normal;
         text-align: left;
-        color: #9A9EA8 !important;
+        color: $gray !important;
         padding-left: 0 !important;
         font-weight: 300 !important;
         top: .3em !important;
@@ -252,7 +254,7 @@
 
           }
         .red{
-            color: #9A9EA8;
+            color: $gray;
             font-size: 0.8em;
         
         }
@@ -261,7 +263,7 @@
     .has-float-label label{
         font-size: 16px !important;
         left: 0 !important;
-        color: #3E4E75 !important;
+        color: $dark_blue !important;
         line-height: 28px !important;
         font-style: normal !important;
         font-weight: 300 !important;
@@ -271,14 +273,18 @@
 
           }
         .red{
-            color: #3E4E75;
+            color: $dark_blue;
             font-size: 0.8em;
         
         }
     }
+    .select-float-label label{
+        top: -1.8em !important;
+
+    }
 
     .has-float-label label.disabled-label{
-        color: #9A9EA8 !important;
+        color: $gray !important;
     }
     .form-control:placeholder-shown:not(:focus)+*{
      font-size: inherit; 
@@ -297,7 +303,7 @@
     .modal-content{
         border-radius: 10px;
         .modal-header{
-            background: #F7F8F9;
+            background: $white;
             padding: 50px;
             display: flex;
             align-items: center;
@@ -318,7 +324,7 @@
             }
             h5.modal-title{
                 font-family: 'Josefin Sans', sans-serif;
-                color: #7484AA;
+                color: $light_blue;
                 font-size: 21px;
                 line-height: 28px;
                 letter-spacing: 1px;
@@ -328,7 +334,7 @@
         }
         span.types, span.partsModal{
             font-family: 'Open Sans', sans-serif;
-            color: #7484AA;
+            color: $light_blue;
             font-size: 16px;
             letter-spacing: 0.5px;
             line-height: 24px;
@@ -385,12 +391,12 @@
         padding-top: 5px;
         letter-spacing: normal;
         text-align: left !important;
-        color: #885053 !important;
+        color: $red !important;
     }
 }
 .has-danger{
     input.form-control, select.form-control{
-        border-bottom: solid 2px #885053 !important;
+        border-bottom: solid 2px $red !important;
     
     }
 }

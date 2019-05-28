@@ -53,14 +53,14 @@
 		</div>
 		<div class="row">
 			<div class="col" style="text-align: center;">
-				<span class="btn-red-a previous" (click)="previousPageSearch()"
+				<span class="btn-red-a previous" (click)="previousPage()"
 					*ngIf="showPrvPS">{{'Products.previous' | translate}}</span>
 				<span *ngFor="let number of paginationNumbers" class="numberPage pink-btn"
 					[ngClass]="{'active': page==number}" (click)="getPendingUsersWithPagination(number)">{{number+1}}</span>
-				<span class="btn-red-a next" (click)="nextPageSearch()"
+				<span class="btn-red-a next" (click)="nextPage()"
 					*ngIf="showNextPS">{{'Products.next' | translate}}</span>
 			</div>
-		</div>
+		</div> 
 	</div>
 </div>
 <ng-template #noInfo>
@@ -152,7 +152,7 @@
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title">Denie User</h5>
+				<h5 class="modal-title">Deny User</h5>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>

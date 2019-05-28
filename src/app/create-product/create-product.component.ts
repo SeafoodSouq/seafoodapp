@@ -52,7 +52,7 @@ export class CreateProductComponent implements OnInit {
   private productID = "";
   private user: any = {};
   private ready = false;
-
+  public loadingDetails = false;
   public eventsSubject: Subject<any> = new Subject<any>();
 
   private product: any = {};
@@ -60,6 +60,7 @@ export class CreateProductComponent implements OnInit {
   public currentPrincingCharges: any;
 
   public createProduct = true;
+  public speciesSelected = "";
 
   constructor(
     private productService: ProductService,
@@ -110,9 +111,6 @@ export class CreateProductComponent implements OnInit {
     if (this.productID !== '' && this.currentExchangeRate !== 0) {
       this.getDetails();
     }
-    if(this.productID!==""){
-      this.getUser();
-    }
   }
 
   private getUser() {
@@ -120,15 +118,15 @@ export class CreateProductComponent implements OnInit {
     this.productService.getData("user/" + loginData["id"]).subscribe(it => {
       console.log("user", it);
       this.user = it;
-      if(this.user["role"]!==0){
+      if (this.user["role"] !== 0) {
         this.disableInputs();
       }
     });
   }
 
-  private disableInputs(){
+  private disableInputs() {
     let product = (this.myform.controls.product as FormGroup).controls;
-    let features = (this.myform.controls.features as FormGroup).controls;
+    // let features = (this.myform.controls.features as FormGroup).controls;
     product.name.disable();
     product.country.disable();
     product.processingCountry.disable();
@@ -139,13 +137,15 @@ export class CreateProductComponent implements OnInit {
     product.speciesSelected.disable();
     product.subSpeciesSelected.disable();
     product.descriptorSelected.disable();
-    features.acceptableSpoilageRate.disable();
-    features.raised.disable();
-    features.treatment.disable();
+    // features.acceptableSpoilageRate.disable();
+    product.raised.disable();
+    product.treatment.disable();
     // features.wholeFishAction.disable();
   }
 
   private async getDetails() {
+    if (this.loadingDetails === true) return;
+    this.loadingDetails = true;
     this.loading = true;
     let parent = await this.getParent();
     console.log("parent", parent, this.productID);
@@ -165,23 +165,29 @@ export class CreateProductComponent implements OnInit {
             averageUnitWeight: data["boxWeight"],
             parentSelectedType: parent["level0"] ? parent["level0"].id : "",
             speciesSelected: parent["level1"] ? parent["level1"].id : '',
-            subSpeciesSelected: data["type"].id,
-            descriptorSelected: data["descriptor"] ? data["descriptor"].id : '',
-            seller_sku: data["seller_sku"] || '',
+            subSpeciesSelected: parent["level2"] ? parent["level2"].id : '',
+            descriptorSelected: data["descriptor"] ? data["descriptor"] : '',
+            seller_sku: data["seller_sku"] || '', 
             hsCode: data["hsCode"],
             minimunorder: data["minimumOrder"],
             maximumorder: data["maximumOrder"],
-            imagesSend: images.forForm
-          };
-
-          let features = {
+            imagesSend: images.forForm,
             price: data["price"] ? (data["price"].value / this.currentExchangeRate).toFixed(2) : 0,
-            acceptableSpoilageRate: data["acceptableSpoilageRate"] || "",
+            // acceptableSpoilageRate: data["acceptableSpoilageRate"] || "",
             raised: data["raised"].id || "",
             treatment: data["treatment"].id || "",
             head: data["head"] || "on",
             wholeFishAction: data["wholeFishAction"]
-          };
+          }; console.log("product", product);
+
+          // let features = {
+          //   price: data["price"] ? (data["price"].value / this.currentExchangeRate).toFixed(2) : 0,
+          //   // acceptableSpoilageRate: data["acceptableSpoilageRate"] || "",
+          //   raised: data["raised"].id || "",
+          //   treatment: data["treatment"].id || "",
+          //   head: data["head"] || "on",
+          //   wholeFishAction: data["wholeFishAction"]
+          // };
 
           let price = {
             headAction: data["headAction"],
@@ -189,7 +195,7 @@ export class CreateProductComponent implements OnInit {
 
           // let varit = this.reingenieriaVariations(data, data["variations"]);
           // features = Object.assign(features, varit.features);
-          this.setValue({ product, features, price });
+          this.setValue({ product, price });
           let we: any = {};
           we.isTrimms = data["isTrimms"];
           we.weights = data["weights"];
@@ -198,10 +204,12 @@ export class CreateProductComponent implements OnInit {
           we.wholeFishAction = data["wholeFishAction"];
           console.log(we);
           this.emitEventToChild(we);
+          this.speciesSelected = parent["level1"] ? parent["level1"].id : ''
         }
         catch (e) {
           console.error(e);
         }
+        this.getUser();
 
         this.loading = false;
         this.ngProgress.done();
@@ -296,22 +304,13 @@ export class CreateProductComponent implements OnInit {
   }
 
 
-  async generateSKU() {
-    const parentType = this.myform.value.product.parentSelectedType;
+  // getContentForSKU() {
+  //   const parentType = this.myform.value.product.parentSelectedType;
 
-    await new Promise((resolve, reject) => {
-      this.productService.generateSKU(this.store[0].id, parentType, parentType, this.myform.value.product.processingCountry).subscribe(
-        result => {
-          this.seafood_sku = result as any;
-          resolve();
-        },
-        error => {
-          console.log(error);
-          reject();
-        }
-      );
-    });
-  }
+  //   return {
+  //     store: this.store[0].id, parentType, parentType, this.myform.value.product.processingCountry
+  //   };
+  // }
 
   async onSubmit() {
     this.showError = true;
@@ -326,12 +325,30 @@ export class CreateProductComponent implements OnInit {
       }
     }
 
+
+
     if (this.myform.valid) {
       console.log(this.myform.value);
       let value = this.myform.value,
         product = value.product,
-        features = value.features,
+        features = product,
         pricing = value.price;
+
+      product.speciesSelected = product.speciesSelected || this.speciesSelected;
+
+      //Para checkar si hay imagenes
+      if (product.imagesSend === '') {
+        this.loading = false;
+        this.ngProgress.done();
+        return this.toast.error('Add the images of your product', 'Error', { positionClass: 'toast-top-right' });
+      } else {
+        let imagesSend = JSON.parse(product.imagesSend);
+        if (imagesSend.length === 0) {
+          this.loading = false;
+          this.ngProgress.done();
+          return this.toast.error('Add the images of your product', 'Error', { positionClass: 'toast-top-right' });
+        }
+      }
 
       //Para checkar si hay imagen default
       if (product.images !== undefined && product.images !== '') {
@@ -451,11 +468,11 @@ export class CreateProductComponent implements OnInit {
         return this.toast.error('You have to add at least one price', 'Error', { positionClass: 'toast-top-right' });
       }
 
-      await this.generateSKU();
       // this.ngProgress.start();
-      let priceAED = Number(value.features.price).toFixed(2);
+      // let priceAED = Number(features.price).toFixed(2);
       const data: any = {
-
+        parentType: product.parentSelectedType,
+        "specie": product.speciesSelected,
         'type': product.subSpeciesSelected,
         'descriptor': product.descriptorSelected === '' ? null : product.descriptorSelected,
         'store': this.store[0].id,
@@ -478,7 +495,7 @@ export class CreateProductComponent implements OnInit {
         boxWeight: product.averageUnitWeight,
         'minimumOrder': product.minimunorder,
         'maximumOrder': product.maximumorder,
-        "acceptableSpoilageRate": features.acceptableSpoilageRate,
+        // "acceptableSpoilageRate": features.acceptableSpoilageRate,
         'raised': features.raised,
         'treatment': features.treatment,
         'seller_sku': product.seller_sku,
@@ -498,7 +515,7 @@ export class CreateProductComponent implements OnInit {
       console.log(data);
       if (this.productID !== "") {
         this.productService.updateData('api/variations', data).subscribe(result => {
-        this.uploadImagesAction(product, result);
+          this.uploadImagesAction(product, result);
         });
       } else {
         this.productService.saveData('api/variations/add', data).subscribe(result => {
@@ -508,7 +525,7 @@ export class CreateProductComponent implements OnInit {
       // this.loading = false;
       // this.ngProgress.done();
     } else {
-      this.toast.error('All fields are required', 'Error', { positionClass: 'toast-top-right' });
+      this.toast.error('Complete the required fields', 'Error', { positionClass: 'toast-top-right' });
       this.loading = false;
       this.ngProgress.done();
     }
@@ -529,6 +546,7 @@ export class CreateProductComponent implements OnInit {
         try {
           //La imagen primary siempre se vuelve a subir
           let files: File[] = [];
+
           for (let image of images) {
             let file = this.blobToFile(this.b64toBlob(image.src, "image/jpg"), new Date().getTime().toString() + "-" + this.productID);
             if (image.type === "primary") {
@@ -538,8 +556,9 @@ export class CreateProductComponent implements OnInit {
               files.push(file);
             }
           }
-          await this.productService.updateData("api/fish/images/delete/" + this.productID, { deletedImages }).toPromise();
-          await this.productService.updateImages(files, this.productID).toPromise();
+          //secondary images are uploaded on background
+          this.productService.updateData("api/fish/images/delete/" + this.productID, { deletedImages }).toPromise();
+          this.productService.updateImages(files, this.productID).toPromise();
         }
         catch (e) {
           console.error(e);
@@ -579,7 +598,8 @@ export class CreateProductComponent implements OnInit {
           files.push(file);
         }
       }
-      await this.saveImages(productID, 'secundary', files);
+      //secondary images are uploaded on background
+      this.saveImages(productID, 'secundary', files);
     }
     catch (e) {
       console.error(e);

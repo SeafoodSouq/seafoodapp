@@ -80,10 +80,13 @@ export class ShopComponent implements OnInit {
   constructor(private auth: AuthenticationService, private productService: ProductService, 
     private sanitizer: DomSanitizer, private toast: ToastrService, private cartService: OrderService, 
     private countryservice: CountriesService, private router: Router) {
-  }
+    }
   async ngOnInit() {
     //GET current user info to be used to get current cart of the user
     this.userInfo = this.auth.getLoginData();
+    if(this.userInfo == null){
+      this.router.navigate(["/"]);
+    }
     this.buyerId = this.userInfo['id'];
     this.getCart();
     this.getProducts(100, 1);
@@ -130,9 +133,10 @@ export class ShopComponent implements OnInit {
         let item = array.filter(obj => {
           return obj.id == jQuery(this).val();
         })
-        value[i] = item[0]['name'] + " ";
+        value[i] = item[0]['name'];
       });
-      jQuery('#' + id + ' button span').html(value);
+      let string = value.join(", ");
+      jQuery('#' + id + ' button span').html(string);
       jQuery('#' + id).css('display', 'inline-block');
     }
     else {
@@ -395,20 +399,24 @@ export class ShopComponent implements OnInit {
           console.log("Max", parseInt(classes[10]));
           if(val > parseInt(classes[10])){
             console.log("es mayor al max", parseInt(classes[10]));
-            jQuery('#range-' + classes[7]).val(parseInt(classes[10]));
+            jQuery('#amount-' + classes[7]).val(parseInt(classes[10]));
             this.products[classes[6]].qty = classes[10];
+
+          }else if(val < parseInt(classes[11])){
+            jQuery('#amount-' + classes[7]).val(parseInt(classes[11]));
+            this.products[classes[6]].qty = classes[11];
 
           }else{
             console.log("es menor al max");
 
-            jQuery('#range-' + classes[7]).val(val);
+            jQuery('#amount-' + classes[7]).val(val);
             this.products[classes[6]].qty = val;
 
 
           }
-          this.moveBubble(classes[7]);
-          jQuery('#edit-qty-' + classes[7]).css('display', 'none');
-          jQuery('#qty-kg-' + classes[7]).css('display', 'block');
+          // this.moveBubble(classes[7]);
+          // jQuery('#edit-qty-' + classes[7]).css('display', 'none');
+          // jQuery('#qty-kg-' + classes[7]).css('display', 'block');
           this.showQty = true;
           this.getShippingRates(val, classes[8], classes[7], classes[6]);
         }
@@ -428,20 +436,20 @@ export class ShopComponent implements OnInit {
     this.productService.getData(`api/fish/${id}/variation/${variation}/charges/${weight}/true`).subscribe(result => {
      this.tmpPrice = result['price'];
       const priceTByWeight = result['finalPrice'] / Number(parseFloat(weight));
-      const priceT: any = Number(priceTByWeight.toFixed(2)).toString();
+      const priceT: any = priceTByWeight.toFixed(2);
       const calcFinalPrice:any = Number(parseFloat(result['weight'])) * Number(parseFloat(result['variation']['price']));
-      const finalPrice:any = Number(calcFinalPrice.toFixed(2)).toString();
+      const finalPrice:any = calcFinalPrice.toFixed(2);
       const label = document.getElementById('delivere-price-' + variation);
       const btn = document.getElementById('btn-add-' + variation);
-      jQuery('#product-price-' + variation).html("AED " + Number(parseFloat(result['variation']['price']).toFixed(2)) + ' / kg');
+      jQuery('#product-price-' + variation).html("AED " + finalPrice);
       if (result.hasOwnProperty('message')) {
         label.innerHTML = result['message'];
       }
       else {
-        label.innerHTML = '<span class="delivered-small-span">(delivered/kg)</span> <br> AED ' + priceT;
+        label.innerHTML = 'AED ' + priceT + '<span class="delivered-small-span"> (delivered/kg)</span>';
       }
       (label as HTMLElement).style.display = 'inline-block';
-      (label as HTMLElement).style.marginTop = '-34px';
+      (label as HTMLElement).style.whiteSpace = 'nowrap';
       (label as HTMLElement).style.textAlign = 'center';
       (btn as HTMLElement).style.display = 'block';
       this.isChange[id] = {status: true, kg: weight};
@@ -470,9 +478,10 @@ export class ShopComponent implements OnInit {
       await this.getCart();
       this.openCart();
     }, err => {
+      console.log("error",err);
       if (err.error) {
         this.isDisabled = false;
-        this.toast.error('An error has occurred', err.error.message, { positionClass: 'toast-top-right' });
+        this.toast.error( err.error.message, 'An error has occurred', { positionClass: 'toast-top-right' });
       }
     });
   }
@@ -485,12 +494,14 @@ export class ShopComponent implements OnInit {
     input.focus();
   }
   //Functino to enter manual kg
-  manualInput(max, variation, type) {
-    let val: any = jQuery('#edit-qty-' + variation).val();
+  manualInput(max, min, variation, type) {
+    let val: any = jQuery('#amount-' + variation).val();
   
 
     if (val > max) {
       val = max;
+    } else if(val < min){
+      val = min;
     }
     this.comparePrices(type, val);
     
@@ -763,9 +774,14 @@ export class ShopComponent implements OnInit {
   getTotalxItem(count, price) {
     return count * price;
   }
-  checkout() {
+  checkout() { 
     this.closeCart();
     this.router.navigate(['/reviewcart'], { queryParams: { shoppingCartId: this.shoppingCartId } });
+  }
+
+  goToCart(){
+    this.closeCart();
+    this.router.navigate(['/cart']);
   }
   deleteItem(i, id) {
     this.productService.deleteData(`itemshopping/${id}`).subscribe(result => {

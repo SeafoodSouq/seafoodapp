@@ -92,7 +92,7 @@
         <div class="col-lg-6">
           <div class="form-group input-group" >
               <span class="has-float-label"> 
-            <select id="country" class="form-control" formControlName="country" [ngClass]="{'is-invalid':buyerForm.get('country').invalid && buyerForm.get('country').touched}">
+            <select disabled id="country" class="form-control" formControlName="country" [ngClass]="{'is-invalid':buyerForm.get('country').invalid && buyerForm.get('country').touched}">
              <option value="{{country.code}}" *ngFor="let country of countries">{{country.name}}</option>
             </select>
             <label for="country">{{'Account.country' | translate}}<span class="field-status red">*</span></label>
@@ -114,12 +114,22 @@
 
         <div class="col-lg-12">
           <div class="form-group input-group" style="max-width:975px;">
-              <span class="has-float-label"> 
-            <input id="city" placeholder="{{'Account.City' | translate}}" type="text" class="form-control" placeholder="{{'Account.City' | translate}}" formControlName="city" [ngClass]="{'is-invalid':buyerForm.get('city').invalid && buyerForm.get('city').touched}">
+            <span class="has-float-label select-float-label">    
+              <select id="city" class="form-control js-example-basic-single" style="width: 100%" formControlName="city" [ngClass]="{'is-invalid':buyerForm.get('city').invalid && buyerForm.get('city').touched}">
+                <option value="">Select an Emirate...</option>
+                <option value="Dubai">Dubai</option>
+                <option value="Abu Dhabi">Abu Dhabi</option>
+                <option value="Ajman">Ajman</option>
+                <option value="Fujairah">Fujairah</option>
+                <option value="Ras Al Khaimah">Ras Al Khaimah</option>
+                <option value="Sharjah">Sharjah</option>
+                <option value="Umm Al Quwain">Umm Al Quwain</option>
+              </select> 
+              <label for="city">Emirate</label> 
+              <div class="invalid-feedback" *ngIf="buyerForm.get('city').hasError('required')"> Emirate {{'Register.required' | translate}}.</div>
 
-            <label for="city">{{'Account.City' | translate}}<span class="field-status red">*</span></label>
-            <div class="invalid-feedback" *ngIf="buyerForm.get('city').hasError('required')">{{'Account.city' | translate}} {{'Register.required' | translate}}.</div>
-              </span>
+        </span>  
+             
           </div>
         </div>
 
@@ -216,8 +226,10 @@
           <div class="form-group input-group" style="max-width:975px;">
               <span class="has-float-label">
                <input type="text" id="desc" placeholder="Company Description" class="form-control" formControlName="storeDescription" [ngClass]="{'is-invalid':sellerForm.get('storeDescription').invalid && sellerForm.get('storeDescription').touched}">
-              <label for="desc">Company Description <span class="field-status red">*</span></label>
-              <div class="invalid-feedback" *ngIf="sellerForm.get('storeDescription').hasError('required')">Company Description is required.</div>
+              <label for="desc">Company Description 
+                <!-- <span class="field-status red">*</span> -->
+              </label>
+              <!-- <div class="invalid-feedback" *ngIf="sellerForm.get('storeDescription').hasError('required')">Company Description is required.</div> -->
               </span>
             </div>
          
@@ -226,7 +238,7 @@
         <div class="col-md-6">
           <div class="form-group input-group">
               <span class="has-float-label">
-            <select id="type" disabled class="form-control" formControlName="companyType" [ngClass]="{'is-invalid':sellerForm.get('companyType').invalid && sellerForm.get('companyType').touched}">
+            <select id="type" disabled class="form-control"  formControlName="companyType" [ngClass]="{'is-invalid':sellerForm.get('companyType').invalid && sellerForm.get('companyType').touched}">
               <option value="Producer">Producer</option>
               <option value="Processor">Processor </option>
               <option value="Trader">Trader</option>
@@ -240,7 +252,7 @@
         <div class="col-md-6">
           <div class="form-group input-group">
               <span class="has-float-label">
-            <select id="country" disabled class="form-control" formControlName="country" [ngClass]="{'is-invalid':sellerForm.get('country').invalid && sellerForm.get('country').touched}">
+            <select id="country" disabled class="form-control"  formControlName="country" [ngClass]="{'is-invalid':sellerForm.get('country').invalid && sellerForm.get('country').touched}">
               <option value="">{{'Register.country' | translate}}</option>
                <option *ngFor="let country of countries" value="{{country.name}}">{{country.name}}</option>
             </select>
@@ -383,31 +395,38 @@
                 <img src="../../assets/svg/close.svg" alt="">
               </button>
           <h5 class="modal-title">CHANGE PASSWORD</h5>
-          <button type="button" class="close" (click)="updatePassword()">
+          <button type="submit" class="close" (click)="handleSubmit()">
               <img src="../../assets/svg/check.svg" alt="">
             </button>
         </div>
         <div class="modal-body">
-         <form (submit)="updatePassword()">
+         <form [formGroup]="passwordForm" (submit)="updatePassword()" >
             <div class="form-group input-group">
                 <span class="has-float-label">
-                    <input type="password" placeholder="{{'Account.current' | translate}}" class="form-control" id="current" [(ngModel)]="currentPassword" [ngModelOptions]="{standalone: true}">
+                    <input type="password" placeholder="{{'Account.current' | translate}}" class="form-control" id="current" formControlName="currentPassword" [ngClass]="{'is-invalid':passwordForm.get('currentPassword').invalid && passwordForm.get('currentPassword').touched}">
   
               <label for="current">{{'Account.current' | translate}}</label>
+              <div class="invalid-feedback" *ngIf="passwordForm.get('currentPassword').hasError('required')"> {{'Register.rePassword' | translate}} {{'Register.required' | translate}}.</div>
+
               </span>
             </div>
             <div class="form-group input-group">
                 <span class="has-float-label">
-             <input type="password" placeholder="{{'Account.new' | translate}}" class="form-control" id="pass" [(ngModel)]="password" [ngModelOptions]="{standalone: true}">
+             <input type="password" placeholder="{{'Account.new' | translate}}" class="form-control" id="pass" formControlName="password" [ngClass]="{'is-invalid':passwordForm.get('password').invalid && passwordForm.get('password').touched}">
               <label for="pass">{{'Account.new' | translate}}</label>
+              <div class="invalid-feedback" *ngIf="passwordForm.get('password').hasError('password') || passwordForm.get('password').hasError('required')">{{'Register.password' | translate}} {{'Register.required' | translate}}.</div>	
+              <div class="invalid-feedback" *ngIf="passwordForm.get('password').errors?.pattern">{{'Register.passwordPatternError' | translate}}</div>
             </span>
             </div>
             <div class="form-group input-group">
                 <span class="has-float-label">
-              <input type="password" placeholder="{{'Account.repeat' | translate}}" class="form-control" id="rep" [(ngModel)]="repassword" [ngModelOptions]="{standalone: true}">
+              <input type="password" placeholder="{{'Account.repeat' | translate}}" class="form-control" id="rep" formControlName="rePassword" [ngClass]="{'is-invalid':passwordForm.get('rePassword').invalid && passwordForm.get('rePassword').touched}">
               <label for="rep">{{'Account.repeat' | translate}}</label>
+              <div class="invalid-feedback" *ngIf="passwordForm.get('rePassword').hasError('required')"> {{'Register.rePassword' | translate}} {{'Register.required' | translate}}.</div>
+              <div class="invalid-feedback" *ngIf="passwordForm.controls.rePassword.errors?.MatchPassword"> Passwords not match</div>
            </span>
             </div>
+            <button id="submit-btn" style="visibility:hidden;"  type="submit">submit</button>
           </form>
         </div>
       </div>

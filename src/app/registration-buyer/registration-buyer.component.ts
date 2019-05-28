@@ -39,7 +39,11 @@ btnText:any = 'register to buy';
 
   constructor(private auth: AuthenticationService, 
     private countryService: CountriesService, private toast:ToastrService,
-    private router:Router) { }
+    private router:Router) {
+      jQuery(document).ready(function () {
+        jQuery('.js-example-basic-single').select2();
+      });
+     }
  
   ngOnInit() {
     this.createFormControls();
@@ -84,8 +88,8 @@ btnText:any = 'register to buy';
 
   //Create control for each form field
   createFormControls(){ 
-    this.firstName = new FormControl('', [Validators.required]);
-    this.lastName = new FormControl('',[Validators.required]);
+    this.firstName = new FormControl('', [Validators.required]); 
+    this.lastName = new FormControl('',[Validators.required]); 
     this.location = new FormControl('', [Validators.required]);
     this.emailForm = new FormControl('',[Validators.required, Validators.email]);
     this.password = new FormControl('',[Validators.required, Validators.pattern(this.regex)]);
@@ -277,6 +281,26 @@ submitStep1(){
     console.log("Invalido");
     this.validateAllFormFields(this.buyerForm);
     this.showError("Please fix all required fields");
+    this.scrollToError();
   }
+}
+
+
+scrollTo(el: Element): void {
+  if(el) { 
+    console.log("el", el);
+   el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+scrollToError(): void {
+ let that:any = this;
+setTimeout(function(){
+  const firstElementWithError = document.querySelector('.is-invalid');
+  console.log("HTMLElement", firstElementWithError);
+  that.scrollTo(firstElementWithError);
+ }, 500);
+
+
 }
 }

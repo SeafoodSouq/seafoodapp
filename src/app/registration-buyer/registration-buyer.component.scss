@@ -1,4 +1,5 @@
 
+@import "../../variables.scss";
 
   .input-group{
     max-width: 300px;
@@ -10,11 +11,10 @@
     input.form-control, textarea.form-control{
         background: none !important;
         border: 0;
-        border-bottom: solid 1px #9A9EA8 !important;
+        border-bottom: solid 1px $gray !important;
         border-radius: 0 !important;
-        color: #3E4E75 !important;
+        color: $dark_blue !important;
         font-size: 21px;
-        line-height: 0;
         font-weight: 300;
         font-family: 'Open Sans', sans-serif;
         padding: 0 !important;
@@ -31,10 +31,10 @@
         background: none !important;
         border-radius: 0 !important;
         border: 0;
-        border-bottom: solid 1px #9A9EA8 !important;
+        border-bottom: solid 1px $gray !important;
         -webkit-appearance: none;
         -webkit-border-radius: 0px;
-        color: #3E4E75 !important;
+        color: $dark_blue !important;
         font-size: 21px;
         font-weight: 300;
         font-family: 'Open Sans', sans-serif;
@@ -44,18 +44,18 @@
        
     }
     input.form-control.is-invalid{
-        border-bottom: solid 1px #885053 !important;
+        border-bottom: solid 1px $red !important;
 
     }
     input:focus{
         outline: none !important;
         box-shadow: none !important;
-        border-bottom: solid 1px #3E4E75 !important;
+        border-bottom: solid 1px $dark_blue !important;
 
     }
     input.form-control:disabled, select.form-control:disabled{
-        color: #9A9EA8 !important;
-        border-bottom: solid 1px #9A9EA8 !important;
+        color: $gray !important;
+        border-bottom: solid 1px $gray !important;
 
     }
   
@@ -68,13 +68,13 @@
         line-height: 28px;
         letter-spacing: normal;
         text-align: left;
-        color: #9A9EA8 !important;
+        color: $gray !important;
         padding-left: 0 !important;
         font-weight: 300 !important;
         top: .3em !important;
       
         .red{
-            color: #9A9EA8;
+            color: $gray;
             font-size: 0.8em;
         
         }
@@ -83,7 +83,7 @@
     .has-float-label label{
         font-size: 16px !important;
         left: 0 !important;
-        color: #3E4E75 !important;
+        color: $dark_blue !important;
         line-height: 28px !important;
         font-style: normal !important;
         font-weight: 300 !important;
@@ -94,14 +94,17 @@
 
           }
         .red{
-            color: #3E4E75;
+            color: $dark_blue;
             font-size: 0.8em;
         
         }
     }
+    .select-float-label label{
+        top: -1.8em !important;
 
+    }
     .has-float-label label.disabled-label{
-        color: #9A9EA8 !important;
+        color: $gray !important;
     }
     .form-control:placeholder-shown:not(:focus)+*{
      font-size: inherit; 
@@ -115,9 +118,9 @@
   button{
     border-radius: 2px;
     background: none;
-    border: 1px solid #7484AA;
+    border: 1px solid $light_blue;
     text-transform: uppercase;
-    color: #7484AA;
+    color: $light_blue;
     text-transform: uppercase;
     font-family: 'Josefin Sans', sans-serif;
     font-weight: 300;
@@ -129,7 +132,7 @@
     height: 50px;
     transition: all .2s ease-in-out;
     &:hover{
-        background: #7484AA;
+        background: $dark_blue;
         color: #f7f8f9;
     }
 }
@@ -168,7 +171,7 @@
     font-size: 18px;
     letter-spacing: 0.5px;
     line-height: 21px;
-    color: #F7F8F9;
+    color: $white;
     width: auto;
     height: auto;
     cursor: pointer;
@@ -189,10 +192,10 @@
   line-height: 19px;
   letter-spacing: normal;
   text-align: left;
-  color: #9A9EA8 !important;
+  color: $gray !important;
   letter-spacing: initial !important;
   a{
-    color: #7484AA !important;
+    color: $light_blue !important;
 }
 }
 
@@ -213,7 +216,7 @@
   line-height: 1.17;
   letter-spacing: normal;
   text-align: left !important;
-  color: #885053 !important;
+  color: $red !important;
 }
 
 
@@ -236,7 +239,7 @@
         font-size: 28px;
         line-height: 34px;
         letter-spacing: 0.5px;
-        color: #7484AA;
+        color: $light_blue;
         text-transform: uppercase;
         margin: 50px auto;
         @media screen and (max-width: 768px) {
@@ -244,7 +247,7 @@
     
           }
         span{
-            border-bottom: 1px solid #7484AA;
+            border-bottom: 1px solid $light_blue;
             padding-bottom: 15px;
     
         }
@@ -258,3 +261,4 @@
 .padding-0{
     padding: 0;
 }
+

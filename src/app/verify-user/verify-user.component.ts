@@ -85,7 +85,7 @@ export class VerifyUserComponent implements OnInit {
     
   }
 
-  getPendingUsersWithPagination(index) {
+  public getPendingUsersWithPagination(index) {
 
     this.buyers = [];
     this.sellers = [];
@@ -135,6 +135,20 @@ export class VerifyUserComponent implements OnInit {
     }
   }
 
+  public nextPage() {
+    this.paginationNumbers = [];
+    this.page++;
+    this.getPendingUsersWithPagination(this.page);
+  }
+
+  public previousPage() {
+    this.paginationNumbers = [];
+      if (this.page > 1) {
+        this.page--;
+      }
+      this.getPendingUsersWithPagination(this.page);
+  }
+
   splitUsers() {
     this.users.forEach(element => {
       if (element.role == 2) {
@@ -150,7 +164,7 @@ export class VerifyUserComponent implements OnInit {
         result => {
           this.id = '';
           jQuery('#confirm').modal('hide')
-          this.toast.success('User has been accepted', 'Well Done', { positionClass: "toast-top-right" })
+          this.toast.success('The user has been accepted', 'Well Done', { positionClass: "toast-top-right" })
           this.getPendingUsers();
         },
         e => {
@@ -167,7 +181,7 @@ export class VerifyUserComponent implements OnInit {
 
     this.auth.deniedUser(`user/status/${this.selectedUser}/denied`, this.deniedUser.value).subscribe(
       result => {
-        this.toast.success('User has been refuse', 'Well Done', { positionClass: "toast-top-right" })
+        this.toast.success('The user has been refuse', 'Well Done', { positionClass: "toast-top-right" })
         this.getPendingUsers();
         jQuery("#deniedUser").modal('hide');
       },

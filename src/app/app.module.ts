@@ -58,7 +58,8 @@ const appRoutes: Routes = [
   },
   {
     path: 'add-product',
-    loadChildren: 'app/create-product/create-product.module#CreateProductModule'
+    loadChildren: 'app/create-product/create-product.module#CreateProductModule',
+    canActivate: [SellerRouterService]
   },
   {
     path: 'fish-type/:category/:page',
@@ -128,7 +129,7 @@ const appRoutes: Routes = [
   {
     path: 'my-products',
     loadChildren: 'app/my-products/my-products.module#MyProductsModule',
-    canActivate: [SellerRouterService]
+    canActivate: []
   },
   {
     path: 'recent-purchases',
@@ -212,7 +213,7 @@ const appRoutes: Routes = [
   {
     path: 'shop',
     loadChildren: 'app/shop/shop.module#ShopModule',
-    canActivate: [RouterProtectionService]
+    canActivate: []
   },
   {
     path: 'seller',

@@ -1,13 +1,15 @@
+@import "../../variables.scss";
+
 #carouselExampleIndicators{
   height: 100vh;
   .row{
     flex-wrap: nowrap;
   }
   .light-gray-section{
-    background: #7484AA;
+    background: $light_blue;
   }
   .dark-gray-section{
-    background: #3E4E75;
+    background: $dark_blue;
   }
   .background-rules{
     background-position: center !important;
@@ -36,7 +38,9 @@
       @media screen and (max-width: 1200px){
         background:linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('../../assets/slides/slide1.jpg');
         video{
-          display: none;
+          display: none !important;
+          height: 0;
+          width: 0
         }
       }
     }
@@ -129,7 +133,7 @@
     align-items: center;
     flex-wrap: nowrap;
     a{
-      color: #F7F8F9 !important;
+      color: $white !important;
       padding: 20px 25px;
       img.logo{
           max-width: 100%;
@@ -180,11 +184,11 @@
     height: 12px;
     border-radius: 50%;
     background: transparent;
-    border: 1px solid #F7F8F9;
+    border: 1px solid $white;
     opacity: 1;
     margin: 20px 3px;
     &.active{
-      background: #F7F8F9;
+      background: $white;
     }
   }
   @media screen and (max-width: 992px) {
@@ -204,7 +208,7 @@
       line-height: 25px;
       margin: 0;
       margin-bottom: 10px;
-      color: #F7F8F9;
+      color: $white;
       text-transform: uppercase;
       @media screen and (max-width: 992px) {
        font-size: 16px;
@@ -214,12 +218,12 @@
     h1{
       font-family: 'Josefin Sans', sans-serif;
       font-weight: 300;
-      font-size: 38px;
+      font-size: 28px;
       letter-spacing: 0.5px;
       line-height: 45px;
       margin: 0;
       margin-bottom: 10px;
-      color: #F7F8F9;
+      color: $white;
       text-transform: uppercase;
       @media screen and (max-width: 992px) {
         font-size: 28px;
@@ -229,7 +233,7 @@
     p{
       font-family: 'Josefin Sans', sans-serif;
       font-weight: 300;
-      color: #F7F8F9;
+      color: $white;
       font-style: italic;
       letter-spacing: 0.25px;
       line-height: 25px;
@@ -249,10 +253,10 @@
       font-size: 16px;
       letter-spacing: 0.5px;
       line-height: 50px;
-      color: #F7F8F9;
+      color: $white;
       margin: 10px 0;
       &:hover{
-        background: #F7F8F9;
+        background: $white;
         color: #5C9EAD;
       }
       @media screen and (max-width: 992px) {
@@ -276,10 +280,10 @@
     a{
       font-family: 'Josefin Sans', sans-serif;
       font-weight: 100;
-      font-size: 38px;
+      font-size: 28px;
       letter-spacing: 0.5px;
       line-height: 45px;
-      color: #F7F8F9;
+      color: $white;
       text-decoration: none !important;
       text-transform: uppercase;
       img{
@@ -369,7 +373,7 @@
       justify-content: center;
       a.nav-link{
         display: initial;
-        color: #F7F8F9 !important;
+        color: $white !important;
         padding: 0;
         margin: 0;
         text-transform: uppercase !important;
@@ -379,3 +383,34 @@
   }
 }
 
+.desktop-next-btn{
+  display: none;
+  position: absolute;
+  right: -12px;
+  bottom: -35px;
+  background: no-repeat;
+  border: none;
+  transition: all .2s ease-in-out;
+
+}
+
+.desktop-prev-btn{
+  display: none;
+  position: absolute;
+  top: -35px;
+  right: -12px;
+  background: no-repeat;
+  border: none;
+  transition: all .2s ease-in-out;
+
+  img{
+    transform: rotateX(180deg);
+  }
+}
+
+.carousel-indicators:hover{
+  .desktop-next-btn, .desktop-prev-btn{
+    display: initial;
+  }
+
+}

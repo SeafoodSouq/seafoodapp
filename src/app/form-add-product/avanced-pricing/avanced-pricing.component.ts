@@ -223,11 +223,14 @@ export class AvancedPricingComponent implements OnInit {
     //Para conocer el maximo y minimo del product
     this.parentForm.form.controls.product.valueChanges.subscribe(it => {
       //Para elegir los slides que se muestran si es salmon o no
-      this.speciesSelected = it.speciesSelected
-      if (this.speciesSelected === '5bda361c78b3140ef5d31fa4' && this.wholeFishAction === false) {
-        this.hideTrimesSlides = false;
-      } else {
-        this.hideTrimesSlides = true;
+      if (it.speciesSelected) {
+        this.speciesSelected = it.speciesSelected;
+        // console.log(this.speciesSelected === '5bda361c78b3140ef5d31fa4', it);
+        if (this.speciesSelected === '5bda361c78b3140ef5d31fa4' && this.wholeFishAction === false) {
+          this.hideTrimesSlides = false;
+        } else {
+          this.hideTrimesSlides = true;
+        }
       }
 
       //Para asinar el maximo y minimo de slides
@@ -305,13 +308,13 @@ export class AvancedPricingComponent implements OnInit {
 
         }
 
-        this.refreshSlider();
       }
+      this.refreshSlider();
 
     });
 
     //Para mostrar el advance pricing
-    this.parentForm.form.controls.features.valueChanges.subscribe(it => {
+    this.parentForm.form.controls.product.valueChanges.subscribe(it => {
       this.head = it.head;
       if (it.head === 'both') {
         // if (this.showPricingValue === false) this.showPricingValue = true;
@@ -329,7 +332,7 @@ export class AvancedPricingComponent implements OnInit {
       } else {
         this.hideTrimesSlides = true;
       }
-      if (this.wholeFishAction === false && this.priceEnableChange === true) {
+      if (this.wholeFishAction === false && this.priceEnableChange === true && this.speciesSelected !== '5bda361c78b3140ef5d31fa4') {
         this.priceEnableChange = false;
         this.proccessWeightsFilleted();
         console.log("agregue filleted");
@@ -456,6 +459,12 @@ export class AvancedPricingComponent implements OnInit {
             arr.push(this.weights.on[k][0].idVariation);
           this.setValue({ variationsDeleted: JSON.stringify(arr) });
         }
+        //Para eliminarlo del formulario, slides
+        try {
+          (this.parentForm.form.controls.price as FormGroup)
+            .removeControl(k + this.identifier);
+        }
+        catch (e) { console.error(e); }
       } else {
         if (this.productID !== "" &&
           this.weights.off[k] !== undefined &&
@@ -471,10 +480,17 @@ export class AvancedPricingComponent implements OnInit {
             arr.push(this.weights.off[k][0].idVariation);
           this.setValue({ variationsDeleted: JSON.stringify(arr) });
         }
+        //Para eliminarlo del formulario, slides
+        try {
+          (this.parentForm.form.controls.price as FormGroup)
+            .removeControl(k + this.identifier);
+        }
+        catch (e) { console.error(e); }
       }
 
     }
 
+    //Para los que se van agregar
     keys = Object.keys(weights);
     keys = keys.filter(it => {
       if (
@@ -499,7 +515,7 @@ export class AvancedPricingComponent implements OnInit {
 
     for (let k of keys) {
       if (data[k] === undefined) {
-        data[k] = [{ min: this.options.floor, max: this.options.ceil, price: 45, options: Object.assign({}, this.options) }];
+        data[k] = [{ min: this.options.floor, max: this.options.ceil, price: "", options: Object.assign({}, this.options) }];
         try {
           (this.parentForm.form.controls.price as FormGroup)
             .addControl(k + this.identifier, new FormGroup(this.controlsArray(data[k])));
@@ -525,7 +541,7 @@ export class AvancedPricingComponent implements OnInit {
 
     for (let k of keys) {
       if (this.trimWeights[k] === undefined) {
-        this.trimWeights[k] = [{ min: this.options.floor, max: this.options.ceil, price: 45, options: Object.assign({}, this.options) }];
+        this.trimWeights[k] = [{ min: this.options.floor, max: this.options.ceil, price: "", options: Object.assign({}, this.options) }];
         try {
           (this.parentForm.form.controls.price as FormGroup)
             .addControl(k + this.identifierTrim, new FormGroup(this.controlsArray(this.trimWeights[k])));
@@ -571,7 +587,7 @@ export class AvancedPricingComponent implements OnInit {
     //asi que simplemente se rrecorre el arry asigna 
     //los slides
     if (this.weightsFilleted.length === 0) {
-      this.weightsFilleted = [{ min: this.options.floor, max: this.options.ceil, price: 45, options: Object.assign({}, this.options) }];
+      this.weightsFilleted = [{ min: this.options.floor, max: this.options.ceil, price: "", options: Object.assign({}, this.options) }];
     }
     try {
       (this.parentForm.form.controls.price as FormGroup)
@@ -772,7 +788,7 @@ export class AvancedPricingComponent implements OnInit {
 
   public addPricing() {
     console.log(this.headAction, this.keySelect);
-    let price = isNaN(this.valueExample) == false ? Number(this.valueExample) : "";
+    let price = this.valueExample && this.valueExample.toString() !== "" && isNaN(this.valueExample) === false ? Number(this.valueExample) : "";
     let it = { min: this.exampleValues.min, max: this.exampleValues.max, price, options: this.options };
     let index = 0;
     if (this.headAction === true) {
@@ -800,7 +816,7 @@ export class AvancedPricingComponent implements OnInit {
   }
 
   public addPricingTrim() {
-    let price = isNaN(this.valueExample) == false ? Number(this.valueExample) : 0;
+    let price = this.valueExample && this.valueExample.toString() !== "" && isNaN(this.valueExample) == false ? Number(this.valueExample) : "";
     let it = { min: this.exampleValues.min, max: this.exampleValues.max, price, options: this.options };
     let index = 0;
     this.trimWeights[this.keySelectTrim].push(it);
@@ -823,7 +839,7 @@ export class AvancedPricingComponent implements OnInit {
   }
 
   public addPricingFilleted() {
-    let price = isNaN(this.valueExample) == false ? Number(this.valueExample) : 0;
+    let price = this.valueExample && this.valueExample.toString() !== "" && isNaN(this.valueExample) == false ? Number(this.valueExample) : "";
     let it = { min: this.exampleValues.min, max: this.exampleValues.max, price, options: this.options };
     let index = 0;
     this.weightsFilleted.push(it);
@@ -1045,9 +1061,13 @@ export class AvancedPricingComponent implements OnInit {
   }
 
   public getControl(key, i) {
-    if (((this.parentForm.form.controls.price as FormGroup).controls[key + this.identifier] as FormGroup)
-      .controls[i] === undefined) {
+    if (
+      !(this.parentForm.form.controls.price as FormGroup).controls[key + this.identifier] &&
+      ((this.parentForm.form.controls.price as FormGroup).controls[key + this.identifier] as FormGroup)
+        .controls[i] === undefined
+    ) {
       console.log(key, i, (this.parentForm.form.controls.price as FormGroup).controls[key + this.identifier]);
+      return new FormControl();
     }
     return ((this.parentForm.form.controls.price as FormGroup).controls[key + this.identifier] as FormGroup)
       .controls[i];
