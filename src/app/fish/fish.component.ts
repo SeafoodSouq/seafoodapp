@@ -6,7 +6,7 @@ import { ViewChild, ElementRef } from '@angular/core';
 
 declare var jQuery: any;
 import { environment } from '../../environments/environment';
-@ViewChild('categoryImageInput', {static: true})
+@ViewChild('categoryImageInput')
 @Component({
   selector: 'app-add-category',
   templateUrl: './fish.component.html',
