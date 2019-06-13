@@ -24,7 +24,7 @@ export class FishFormComponent implements OnInit {
   private eventsSubscription: Subscription;
   sellerInfo: any;
   
-  @ViewChild('myInput', { static: true })
+  @ViewChild('myInput')
   myInputVariable: ElementRef;
   public product: FormGroup;
   public countries = [];

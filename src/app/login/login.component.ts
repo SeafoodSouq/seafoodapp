@@ -16,7 +16,7 @@ import { environment } from '../../environments/environment';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
-  @ViewChild("emailInput", { static: true }) nameField: ElementRef;
+  @ViewChild("emailInput") nameField: ElementRef;
   loginForm: FormGroup;
   forgotForm: FormGroup;
   showForm: boolean = false;
