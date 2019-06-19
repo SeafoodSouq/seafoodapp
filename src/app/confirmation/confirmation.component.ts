@@ -21,7 +21,6 @@ declare var jQuery;
   styleUrls: ['./confirmation.component.scss']
 })
 export class ConfirmationComponent implements OnInit {
-  loadAPI: Promise<any>;
   shoppingCartId: any;
   accessToken: any = 'chArgcTLiDtoP5wO1hFh';//'Ddx5kJoJWr11sF6Hr6E4';
   merchantID: any = 'xqNrOYgH';//'aZCWXhqJ';
@@ -76,10 +75,6 @@ export class ConfirmationComponent implements OnInit {
       this.httpO = new HttpClient(handler);
       
 
-      this.loadAPI = new Promise((resolve) => {
-        this.loadScript();
-        resolve(true);
-      });
 
      
 
@@ -116,29 +111,6 @@ export class ConfirmationComponent implements OnInit {
     this.getPersonalData();
     await this.getCart();
   }
-  public loadScript() {        
-    var isFound = false;
-    var scripts = document.getElementsByTagName("script")
-    for (var i = 0; i < scripts.length; ++i) {
-        if (scripts[i].getAttribute('src') != null && scripts[i].getAttribute('src').includes("snare")) {
-            isFound = true;
-        }
-    }
-
-    if (!isFound) {
-        var dynamicScripts = ["https://devapi.seafoodsouq.com/cdn/snare.js"];
-
-        for (var i = 0; i < dynamicScripts .length; i++) {
-            let node = document.createElement('script');
-            node.src = dynamicScripts [i];
-            node.type = 'text/javascript';
-            node.async = false;
-            node.charset = 'utf-8';
-            document.getElementsByTagName('head')[0].appendChild(node);
-        }
-
-    }
-}
   
   async getCart() {
     await new Promise((resolve, reject) => {
