@@ -186,12 +186,13 @@ export class ConfirmationComponent implements OnInit {
 //    .subscribe(
 //	res=>{
 	 // this.ip = res['ip'];
-	  console.log( 'real', this.ip );
+	  /*console.log( 'real', this.ip );
 	  const finger: HTMLInputElement = <HTMLInputElement>document.getElementById( 'device_fingerprint' );
-	  console.log('finger', finger.value);
+	  console.log('finger', finger.value);*/
 
 	  //const string = `${this.apiPass}access_code=${this.accessToken}amount=${this.total}command=${this.command}currency=AEDcustomer_email=${this.info['email']}customer_ip=${this.ip}device_fingerprint=${finger.value}language=enmerchant_identifier=${this.merchantID}merchant_reference=${this.shoppingCartId}order_description=${this.description}settlement_reference=Seafoodstoken_name=${this.token}${this.apiPass}`;
-	  const string = `${this.apiPass}access_code=${this.accessToken}amount=${this.total}command=${this.command}currency=AEDcustomer_email=${this.info['email']}customer_ip=${this.ip}device_fingerprint=${finger.value}language=enmerchant_identifier=${this.merchantID}merchant_reference=${this.shoppingCartId}order_description=${this.description}token_name=${this.token}${this.apiPass}`;
+    //const string = `${this.apiPass}access_code=${this.accessToken}amount=${this.total}command=${this.command}currency=AEDcustomer_email=${this.info['email']}customer_ip=${this.ip}device_fingerprint=${finger.value}language=enmerchant_identifier=${this.merchantID}merchant_reference=${this.shoppingCartId}order_description=${this.description}token_name=${this.token}${this.apiPass}`;
+    const string = `${this.apiPass}access_code=${this.accessToken}amount=${this.total}command=${this.command}currency=AEDcustomer_email=${this.info['email']}customer_ip=${this.ip}language=enmerchant_identifier=${this.merchantID}merchant_reference=${this.shoppingCartId}order_description=${this.description}token_name=${this.token}${this.apiPass}`;
 	  console.log(string);
 	  // var string = `${this.apiPass}access_code=${this.accessToken}amount=${this.amount}command=AUTHORIZATIONcurrency=AEDcustomer_email=${this.info['email']}language=enmerchant_identifier=${this.merchantID}merchant_reference=${this.shoppingCartId}${this.apiPass}`;
 	  // this.apiPass + 'access_code='+this.accessToken+'language=enmerchant_identifier='+this.merchantID+'merchant_reference='+this.shoppingCartId+'command=AUTHORIZATIONamount='+ this.total +'=AEDcustomer_email=' + this.info['email'] + this.apiPass;
@@ -253,13 +254,12 @@ export class ConfirmationComponent implements OnInit {
     );
   }
     submit() {
-      const finger: HTMLInputElement = <HTMLInputElement>document.getElementById( 'device_fingerprint' );
-      console.log('finger', finger.value);
+      //const finger: HTMLInputElement = <HTMLInputElement>document.getElementById( 'device_fingerprint' );
+      //console.log('finger', finger.value);
       this.generateSignature();
       const body = {        
         'command': this.command,
         'access_code': this.accessToken,
-	      'device_fingerprint': finger.value,
         'merchant_identifier': this.merchantID,
         'merchant_reference': this.shoppingCartId,
         'currency': 'AED',
@@ -277,26 +277,26 @@ export class ConfirmationComponent implements OnInit {
       // bypass payfort, payfort only works in main domain
       if ( this.env.payfort ) {
       //this.http.post(`payfort/authorization?command=${this.command}&customer_ip=${this.ip}&access_code=${this.accessToken}&merchant_identifier=${this.merchantID}&merchant_reference=${this.shoppingCartId}&currency=AED&language=en&token_name=${this.token}&signature=${this.signature}&settlement_reference=Seafoods&customer_email=${this.email}&amount=${this.total}&order_description=${this.description}`, { 'device_fingerprint': finger.value } )
-      this.http.post(`payfort/authorization?command=${this.command}&customer_ip=${this.ip}&access_code=chArgcTLiDtoP5wO1hFh&merchant_identifier=${this.merchantID}&merchant_reference=${this.shoppingCartId}&currency=AED&language=en&token_name=${this.token}&signature=${this.signature}&customer_email=${this.email}&amount=${this.total}&order_description=${this.description}`, { 'device_fingerprint': finger.value } )
+      this.http.post(`payfort/authorization?command=${this.command}&customer_ip=${this.ip}&access_code=chArgcTLiDtoP5wO1hFh&merchant_identifier=${this.merchantID}&merchant_reference=${this.shoppingCartId}&currency=AED&language=en&token_name=${this.token}&signature=${this.signature}&customer_email=${this.email}&amount=${this.total}&order_description=${this.description}`, { } )
       //this.http.post( `${API}payfort/authorization`, body )
       .subscribe(res => {
         console.log(res);
         if (res['status'] === '20') {
-	  console.log( '3ds url', res['3ds_url'] );
-	  if ( res['response_code'] === '20064' ) {
-		this.toast.success( res['response_message'], 'Seafoodsouq', {positionClass: 'toast-top-right'} );
-		console.log( '3ds url', res['3ds_url'] );
-		setTimeout(() => {
-		   window.location.assign( res['3ds_url'] );
-                }, 5000)
-		//window.location.assign( res['3ds_url'] );
-	
-	  } else {
+          console.log( '3ds url', res['3ds_url'] );
+          if ( res['response_code'] === '20064' ) {
+          this.toast.success( res['response_message'], 'Seafoodsouq', {positionClass: 'toast-top-right'} );
+          console.log( '3ds url', res['3ds_url'] );
+          setTimeout(() => {
+            window.location.assign( res['3ds_url'] );
+                      }, 5000)
+          //window.location.assign( res['3ds_url'] );
+        
+          } else {
           //this.saveinApi();
           //this.clearCart();
           }
        } else {
-	   this.toast.error(res['response_message'] + ' , You will be redirected and please fill your billing information again!', '', {positionClass: 'toast-top-right'} );
+	        this.toast.error(res['response_message'] + ' , You will be redirected and please fill your billing information again!', '', {positionClass: 'toast-top-right'} );
           this.saveinApi(); // save payfort reponse
           setTimeout(() => {
             this.router.navigate(['/checkout'],  {queryParams: {shoppingCartId: this.params.shoppingCart, creditIssue: true}});
