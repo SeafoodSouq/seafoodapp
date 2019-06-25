@@ -24,13 +24,13 @@
                       <h1 class="gray-title" ><span>SHIPPING DETAILS</span></h1>
                     </div>
               </div>
-            <form ngNativeValidate (ngSubmit)="goToNextPage()">
+            <form ngNativeValidate (ngSubmit)="goToNextPage()" [formGroup]='myForm'>
               <div class="row">
                   
                   <div class="col-lg-6">
                       <div class="form-group input-group">
                           <span class="has-float-label">  
-                              <input type="text" placeholder="First Name...*" class="form-control" id="first" name="first_name" required >
+                              <input type="text" placeholder="First Name...*" formControlName='firstName1' class="form-control" id="first" name="first_name" required >
                               <label for="first">First Name...*</label>
                           </span>
                           
@@ -39,7 +39,7 @@
                   <div class="col-lg-6">
                       <div class="form-group input-group">
                           <span class="has-float-label">  
-                              <input type="text" placeholder="Last Name...*" class="form-control" id="last" name="last_name" required >
+                              <input type="text" placeholder="Last Name...*" formControlName='lastName1' class="form-control" id="last" name="last_name" required >
                               <label for="last">Last Name...*</label>
                           </span>
                           
@@ -48,7 +48,7 @@
                   <div class="col-lg-6">
                       <div class="form-group input-group">
                           <span class="has-float-label">  
-                              <input type="text" placeholder="Company Name...*" class="form-control" id="company" name="company" required >
+                              <input type="text" placeholder="Company Name...*" formControlName='companyName1' class="form-control" id="company" name="company" required >
                               <label for="company">Company Name...*</label>
                           </span>
                           
@@ -57,7 +57,7 @@
                   <div class="col-lg-6">
                       <div class="form-group input-group">
                           <span class="has-float-label">  
-                              <input type="text" placeholder="Street Address...*" class="form-control" id="street" name="street" required >
+                              <input type="text" placeholder="Street Address...*" formControlName='street1' class="form-control" id="street" name="street" required >
                               <label for="street">Street Address...*</label>
                           </span>
                           
@@ -66,7 +66,7 @@
                   <div class="col-lg-6">
                       <div class="form-group input-group">
                           <span class="has-float-label">  
-                              <input type="text" placeholder="Town/City...*" class="form-control" id="city" name="city" required >
+                              <input type="text" placeholder="Town/City...*" formControlName='city1' class="form-control" id="city" name="city" required >
                               <label for="city">Town/City...*</label>
                           </span>
                           
@@ -76,7 +76,7 @@
                   <div class="col-lg-6">
                       <div class="form-group input-group">
                           <span class="has-float-label">  
-                              <input type="text" placeholder="Country...*" class="form-control" id="ct" name="ct" required >
+                              <input type="text" placeholder="Country...*" formControlName='country1' class="form-control" id="ct" name="ct" required >
                               <label for="ct">Country...*</label>
                           </span>
                           
@@ -87,8 +87,7 @@
               <div class="row">
                 <div class="col-lg-12 text-center">
                       <div class="form-check custom-control custom-checkbox mr-sm-2">
-                        <input type="checkbox" class="custom-control-input" id="exampleCheck1"  [(ngModel)]="checked"
-                        [ngModelOptions]="{standalone: true}">
+                        <input type="checkbox" class="custom-control-input" id="exampleCheck1"  formControlName="sameAsBillingAddress">
                         <label class="custom-control-label form-check-label" for="exampleCheck1">Same as billing address</label>
                       </div>
                 </div>
@@ -103,7 +102,7 @@
                   <div class="col-lg-6">
                       <div class="form-group input-group">
                           <span class="has-float-label">  
-                              <input type="text" placeholder="First Name...*" class="form-control" id="first2" name="first_name" required >
+                              <input type="text" placeholder="First Name...*" class="form-control" formControlName='firstName2' id="first2" name="first_name" required >
                               <label for="first2">First Name...*</label>
                           </span>
                           
@@ -112,7 +111,7 @@
                   <div class="col-lg-6">
                       <div class="form-group input-group">
                           <span class="has-float-label">  
-                              <input type="text" placeholder="Last Name...*" class="form-control" id="last2" name="last_name" required >
+                              <input type="text" placeholder="Last Name...*" formControlName='lastName2' class="form-control" id="last2" name="last_name" required >
                               <label for="last2">Last Name...*</label>
                           </span>
                           
@@ -121,7 +120,7 @@
                   <div class="col-lg-6">
                       <div class="form-group input-group">
                           <span class="has-float-label">  
-                              <input type="text" placeholder="Company Name...*" class="form-control" id="company2" name="company" required >
+                              <input type="text" placeholder="Company Name...*" formControlName='companyName1' class="form-control" id="company2" name="company" required >
                               <label for="company2">Company Name...*</label>
                           </span>
                           
@@ -130,7 +129,7 @@
                   <div class="col-lg-6">
                       <div class="form-group input-group">
                           <span class="has-float-label">  
-                              <input type="text" placeholder="Street Address...*" class="form-control" id="street2" name="street" required >
+                              <input type="text" placeholder="Street Address...*" formControlName='street2' class="form-control" id="street2" name="street" required >
                               <label for="street2">Street Address...*</label>
                           </span>
                           
@@ -139,7 +138,7 @@
                   <div class="col-lg-6">
                       <div class="form-group input-group">
                           <span class="has-float-label">  
-                              <input type="text" placeholder="Town/City...*" class="form-control" id="city2" name="city" required >
+                              <input type="text" placeholder="Town/City...*" class="form-control" formControlName='city2' id="city2" name="city" required >
                               <label for="city2">Town/City...*</label>
                           </span>
                           
@@ -149,7 +148,7 @@
                   <div class="col-lg-6">
                       <div class="form-group input-group">
                           <span class="has-float-label">  
-                              <input type="text" placeholder="Country...*" class="form-control" id="ct2" name="ct" required >
+                              <input type="text" placeholder="Country...*" class="form-control" formControlName='country2' id="ct2" name="ct" required >
                               <label for="ct2">Country...*</label>
                           </span>
                           
