@@ -51,6 +51,7 @@ import { NotfoundComponent } from './notfound/notfound.component';
 import { NgwWowModule } from 'ngx-wow';
 
 
+
 const appRoutes: Routes = [
   {
     path: '', component: Homeve2Component,
@@ -171,7 +172,7 @@ const appRoutes: Routes = [
   {
     path: 'cart',
     loadChildren: () => import('app/cart/cart.module').then(m => m.CartModule),
-    canActivate: []
+    canActivate: [BuyerRouterService]
   },
   {
     path: 'verification/:userid/:code',
@@ -418,6 +419,10 @@ const appRoutes: Routes = [
     // canActivate: [AdminRouterService]
   },
   {
+    path: 'faq',
+    loadChildren: () => import('app/faq/faq.module').then(m => m.FaqModule),
+  },
+  {
     path: '404', component: NotfoundComponent
   },
   {
@@ -454,8 +459,7 @@ export function jokesProviderFactory(provider: CDNCheck) {
     ProductManagmentComponent,
     AccountComponent,
     Homeve2Component,
-    NotfoundComponent
-      ],
+    NotfoundComponent      ],
   imports: [
     BrowserAnimationsModule,
     SharedModule,
@@ -480,7 +484,7 @@ export function jokesProviderFactory(provider: CDNCheck) {
     OwlDateTimeModule,
     OwlNativeDateTimeModule,
     NgwWowModule
-  ],
+    ],
   exports: [
     SharedModule,
     TranslateModule
