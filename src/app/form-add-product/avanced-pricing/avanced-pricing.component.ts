@@ -100,6 +100,9 @@ export class AvancedPricingComponent implements OnInit {
   @Input() events: Observable<void>;
   private eventsSubscription: Subscription;
   private speciesSelected = "";
+
+  public currency = 'USD';
+
   constructor(
     public parentForm: FormGroupDirective,
     private productService: ProductService,
@@ -323,6 +326,8 @@ export class AvancedPricingComponent implements OnInit {
         this.waitChange3Seconds = null;
       }, 3000, it);
 
+      if (it.currency)
+        this.currency = it.currency;
     });
 
 

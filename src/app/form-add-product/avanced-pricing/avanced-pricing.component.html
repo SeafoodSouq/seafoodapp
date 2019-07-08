@@ -83,7 +83,7 @@
                   [options]="weights.on[keySelect][i].options"></ng5-slider>
               </div>
               <div class="col-4" [formGroupName]="getIdentifier(keySelect)">
-                $<input type="number"
+                {{currency==='USD'?'$':''}}<input type="number"
                   [ngClass]="getControl(keySelect, i).valid===false&&parentForm.submitted===true?'error-price':''"
                   placeholder="Price"
                   [class.errorname]="controls()[keySelect+ '_arr']&&controls()[keySelect+ '_arr'].controls[i].invalid&&parentForm.submitted"
@@ -125,7 +125,7 @@
                   [options]="weights.off[keySelect][i].options"></ng5-slider>
               </div>
               <div class="col-4" [formGroupName]="getIdentifier(keySelect)">
-                $<input [ngClass]="getControl(keySelect, i).valid===false&&parentForm.submitted===true?'error-price':''"
+                {{currency==='USD'?'$':''}}<input [ngClass]="getControl(keySelect, i).valid===false&&parentForm.submitted===true?'error-price':''"
                   type="number" placeholder="Price"
                   [class.errorname]="controls()[keySelect+ '_arr'].controls[i].invalid&&parentForm.submitted"
                   [formControlName]="i" [(ngModel)]="weights.off[keySelect][i].price">/{{weightType}}
@@ -168,7 +168,7 @@
                   [options]="weightsFilleted[i].options"></ng5-slider>
               </div>
               <div class="col-4" [formGroupName]="nameFilleted">
-                $<input
+                {{currency==='USD'?'$':''}}<input
                   [ngClass]="getControlFilleted(i, price).valid===false&&parentForm.submitted===true?'error-price':''"
                   type="number" placeholder="Price"
                   [class.errorname]="controls()[nameFilleted]&&controls()[nameFilleted].controls[i].invalid&&parentForm.submitted"
@@ -211,7 +211,7 @@
                   [options]="weightsPackaged[i].options"></ng5-slider>
               </div>
               <div class="col-4" [formGroupName]="namePackaged">
-                $<input
+                {{currency==='USD'?'$':''}}<input
                   [ngClass]="getControlPackaged(i, price).valid===false&&parentForm.submitted===true?'error-price':''"
                   type="number" placeholder="Price"
                   [class.errorname]="controls()[namePackaged]&&controls()[namePackaged].controls[i].invalid&&parentForm.submitted"
@@ -270,7 +270,7 @@
                   [options]="trimWeights[keySelectTrim][i].options"></ng5-slider>
               </div>
               <div class="col-4" [formGroupName]="getIdentifierTrim(keySelectTrim)">
-                $<input type="number"
+                {{currency==='USD'?'$':''}}<input type="number"
                   [ngClass]="getControlTrim(keySelectTrim, price).valid===false&&parentForm.submitted===true?'error-price':''"
                   placeholder="Price" [formControlName]="getNameTrim(price)"
                   [class.errorname]="controls()[keySelectTrim+ '_trim']&&controls()[keySelectTrim+ '_trim'].controls[i].invalid&&parentForm.submitted"

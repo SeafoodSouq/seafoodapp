@@ -226,6 +226,7 @@ export class CreateProductComponent implements OnInit {
             maximumorder,
             price: data["price"] ? (data["price"].value / this.currentExchangeRate).toFixed(2) : 0,
             perBoxes: data['perBox'],
+            currency: data['currency'],
             // acceptableSpoilageRate: data["acceptableSpoilageRate"] || "",
             raised: data["raised"].id || "",
             treatment: data["treatment"].id || "",
@@ -601,6 +602,7 @@ export class CreateProductComponent implements OnInit {
             'type': "kg",
             'value': 5
           },
+          'currency': product.currency,
           "foreign_fish": product.foreignfish,
           'perBox': product.perBoxes,
           'perBoxes': product.perBoxes,

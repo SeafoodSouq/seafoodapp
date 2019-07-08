@@ -413,6 +413,34 @@
           </h1>
         </div>
 
+        <div class="col-lg-6 fish-group selections-fill">
+          <label> <span class="selectionable" [ngClass]="controls().currency.value==='USD'?'select':''"
+              (click)="assingUploadCurrency('USD')">UPLOAD IN USD</span>
+            |
+            <span (click)="assingUploadCurrency('AED')" class="selectionable"
+              [ngClass]="controls().currency.value==='AED'?'select':''">UPLOAD IN AED</span> <img tooltip="..."
+              [hidden]="parentSelectedType===crustaceansId" placement="right" show-delay="0"
+              src="../../../assets/svg/question.svg" alt="" width="22"> </label>
+        </div>
+        <div class="col-lg-6 fish-group">
+          <div class="row check-row">
+            <div class="col-12">
+              <div class="form-check">
+                <input class="form-check-input" formControlName="perBoxes" type="checkbox"
+                  id="customControlValidation1">
+                <label class="form-check-label" for="customControlValidation1">
+                  SELL PRODUCT IN BOXES
+                </label>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div hidden>
+          <input type="text" formControlName='currency'>
+        </div>
+
         <div class="col-lg-6">
           <div class="form-group input-group"
             [ngClass]="{'has-danger': controls().unitOfSale.invalid && (controls().unitOfSale.dirty || controls().unitOfSale.touched),'has-success': controls().unitOfSale.valid && (controls().unitOfSale.dirty || controls().unitOfSale.touched)}">
@@ -432,36 +460,12 @@
             <button type="button" class="question-btn" tabIndex="-1" tooltip="The Unit of measurement of the product."
               placement="right" show-delay="0"><img src="../../../assets/svg/question.svg" alt=""></button>
           </div>
-          <div class="custom-control custom-checkbox mb-3" style="max-width: 400px; margin: 0 auto;">
+          <!-- <div class="custom-control custom-checkbox mb-3" style="max-width: 400px; margin: 0 auto;">
             <input type="checkbox" formControlName="perBoxes" class="custom-control-input form-control"
               id="customControlValidation1">
             <label class="custom-control-label" for="customControlValidation1">Enable if you would like to sell you
               product in boxes.</label>
-          </div>
-        </div>
-
-
-
-        <div class="col-lg-6" [hidden]="!showAverageUnit">
-
-          <div class="form-group input-group"
-            [ngClass]="{'has-danger': controls().averageUnitWeight.invalid && (controls().averageUnitWeight.dirty || controls().averageUnitWeight.touched),'has-success': controls().averageUnitWeight.valid && (controls().averageUnitWeight.dirty || controls().averageUnitWeight.touched)}">
-            <span class="has-float-label">
-              <input id="averageunit" type="number" class="form-control"
-                placeholder="Average Unit Weight ({{weightType}})...*" formControlName="averageUnitWeight" required>
-              <label for="averageunit">Average Unit Weight ({{weightType}})...*</label>
-              <div class="form-control-feedback" *ngIf="controls().averageUnitWeight.errors&&parentForm.submitted">
-                <p *ngIf="controls().averageUnitWeight.errors.required">
-                  {{'CreateProduct.averageUnitWeight' | translate}}
-                  {{'CreateProduct.required' | translate}}
-                </p>
-              </div>
-            </span>
-            <button tabIndex="-1" type="button" class="question-btn" tabIndex="-1"
-              tooltip="Please use the common name of the product in the market (E.g. Filleted Norwegian Salmon)"
-              placement="right" show-delay="0"><img src="../../../assets/svg/question.svg" alt=""></button>
-          </div>
-
+          </div> -->
         </div>
 
         <div class="col-lg-6">
@@ -502,6 +506,28 @@
               placement="right" show-delay="0"><img src="../../../assets/svg/question.svg" alt=""></button>
 
           </div>
+        </div>
+
+        <div class="col-lg-6" [hidden]="!showAverageUnit">
+
+          <div class="form-group input-group"
+            [ngClass]="{'has-danger': controls().averageUnitWeight.invalid && (controls().averageUnitWeight.dirty || controls().averageUnitWeight.touched),'has-success': controls().averageUnitWeight.valid && (controls().averageUnitWeight.dirty || controls().averageUnitWeight.touched)}">
+            <span class="has-float-label">
+              <input id="averageunit" type="number" class="form-control"
+                placeholder="Average Unit Weight ({{weightType}})...*" formControlName="averageUnitWeight" required>
+              <label for="averageunit">Average Unit Weight ({{weightType}})...*</label>
+              <div class="form-control-feedback" *ngIf="controls().averageUnitWeight.errors&&parentForm.submitted">
+                <p *ngIf="controls().averageUnitWeight.errors.required">
+                  {{'CreateProduct.averageUnitWeight' | translate}}
+                  {{'CreateProduct.required' | translate}}
+                </p>
+              </div>
+            </span>
+            <button tabIndex="-1" type="button" class="question-btn" tabIndex="-1"
+              tooltip="Please use the common name of the product in the market (E.g. Filleted Norwegian Salmon)"
+              placement="right" show-delay="0"><img src="../../../assets/svg/question.svg" alt=""></button>
+          </div>
+
         </div>
 
       </div>

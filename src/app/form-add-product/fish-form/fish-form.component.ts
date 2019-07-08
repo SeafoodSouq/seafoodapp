@@ -158,7 +158,8 @@ export class FishFormComponent implements OnInit {
       priceShow: new FormControl(true, Validators.nullValidator),
       foreignfish: new FormControl(false, Validators.required),
       commingSoon: new FormControl(false, Validators.required),
-      status: new FormControl('')
+      status: new FormControl(''),
+      currency: new FormControl('USD', Validators.required)
     }));
 
     (this.parentForm.form.controls.product as FormGroup).valueChanges.subscribe(it => {
@@ -197,7 +198,8 @@ export class FishFormComponent implements OnInit {
       if (it.parentSelectedType === this.crustaceansId) {
         this.wholeFishAction = 'si';
       } else
-        this.wholeFishAction = it.wholeFishAction; 
+        this.wholeFishAction = it.wholeFishAction;
+
     });
 
   }
@@ -727,6 +729,10 @@ export class FishFormComponent implements OnInit {
       this.wholeFishAction = re;
       this.setValue({ wholeFishAction: this.wholeFishAction });
     }
+  }
+
+  public assingUploadCurrency(re) {
+    this.setValue({ currency: re });
   }
 
   private setValueFeatures(value) {
