@@ -11,9 +11,7 @@
                 <label>{{'ItemStatus.status' | translate}}</label>
                 <select class="form-control" name="status" [(ngModel)]="status" (change)="getOrders()" [value]='0' >
                     <option value="0" selected="selected">Select an Option</option>
-                    <option value="5c017b3c47fb07027943a409"> Delivered</option>
-                    <option value="5c017b5a47fb07027943a40c"> Buyer Cancelled Order</option>
-                    <option value="5c06f4bf7650a503f4b731fd"> Seller Cancelled Order</option>
+                    <option [value]="status.id" *ngFor='let status of statuscancels'> {{status.status}}</option>
                 </select>
               </div>
           
@@ -50,8 +48,8 @@
                   <!--<select class="form-control" name="status" #device (change)="confirmUpdatestatus($event.target.value, item.id)" >
                       <option *ngFor="let sitem of orderStatus;" [selected]="item.status.id == sitem.id" [ngValue]="sitem.id"> {{sitem.status}}</option>
                   </select>-->
-                  <button *ngIf="item.status.id == '5c017ae247fb07027943a404' || item.status.id == '5c017af047fb07027943a405'" (click)="cancelItem(item.id)" class="btn-red-a">{{'ItemStatus.cancelItem' | translate}}</button>
-                  
+                  <button *ngIf="item.status.id == pending_seller_confirmation || item.status.id == pending_fulfillment" (click)="cancelItem(item.id)" class="btn-red-a">{{'ItemStatus.cancelItem' | translate}}</button>
+                   
                 </div>
               </div>
             </div>

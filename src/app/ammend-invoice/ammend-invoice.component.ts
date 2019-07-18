@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from './../../environments/environment';
 import * as moment from 'moment';
 import { isNumber } from 'util';
+import { InventoryService } from '../services/inventory.service';
 
 @Component({
   selector: 'app-ammend-invoice',
@@ -24,15 +25,16 @@ export class AmmendInvoiceComponent implements OnInit {
   //indicate if calcs are starts
   public calcNews = false;
   public textSave = 'amend invoice';
-  
-  public idDelivered = '5c017b3c47fb07027943a409';
-  public idCancelledOrder = '5c017b5a47fb07027943a40c';
-  public idSellerCancelledOrder = '5c06f4bf7650a503f4b731fd';
+
+  public idDelivered = '';
+  public idCancelledOrder = '';
+  public idSellerCancelledOrder = '';
 
   constructor(
     private router: ActivatedRoute,
     private http: HttpClient,
-    private route: Router
+    private route: Router,
+    private invent: InventoryService
   ) { }
 
   ngOnInit() {
@@ -57,6 +59,11 @@ export class AmmendInvoiceComponent implements OnInit {
       //for calculate amount, vat and total of items
       for (let i = 0; i < this.items.length; i++) { this.changeValue(this.items[i], i); }
       this.invoiceReady = true;
+    });
+    this.invent.getIdentifier('orderstatus.delivered.cancelled_order.seller_cancelled_order').subscribe(it => {
+      this.idDelivered = it['orderstatus']['delivered']['id'];
+      this.idCancelledOrder = it['orderstatus']['cancelled_order']['id'];
+      this.idSellerCancelledOrder = it['orderstatus']['seller_cancelled_order']['id'];
     });
   }
 

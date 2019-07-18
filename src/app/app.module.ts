@@ -374,7 +374,7 @@ const appRoutes: Routes = [
     loadChildren: () => import('app/payments/payments.module').then(m => m.PaymentsModule),
     canActivate: [AdminRouterService]
   },
-  {
+  { 
     path: 'manage-orders',
     loadChildren: () => import('app/manage-orders/manage-orders.module').then(m => m.ManageOrdersModule),
     canActivate: [AdminRouterService]

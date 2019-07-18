@@ -13,6 +13,10 @@ export class InventoryService {
     return this.http.get(`api/user/sellers`)
   }
 
+  getIdentifier(names){
+    return this.http.get(`api/v2/get-data?name='${names}'`);
+  }
+
   getSellersSkus( seller_id ) {
     return this.http.get(`api/variation/skus/${seller_id}`)
   }
