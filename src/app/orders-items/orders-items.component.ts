@@ -7,6 +7,7 @@ import { ToastrService } from '../toast.service';
 import { DomSanitizer, SafeResourceUrl, SafeUrl, SafeStyle } from '@angular/platform-browser';
 import { environment } from '../../environments/environment';
 import { OrderService } from '../services/orders.service';
+import { InventoryService } from '../services/inventory.service';
 @Component({
   selector: 'app-orders-items',
   templateUrl: './orders-items.component.html',
@@ -28,14 +29,20 @@ export class OrdersItemsComponent implements OnInit {
   subtotal: number = 0;
   totalShipping: number = 0;
   totalOther: number = 0;
-  constructor(private productService: ProductService, private router: ActivatedRoute, private auth: AuthenticationService,
-    private fb: FormBuilder, private toast: ToastrService, private sanitizer: DomSanitizer, private orderService: OrderService) {  }
+  public pending_seller_confirmation = '';
 
- ngOnInit() {
+  constructor(private productService: ProductService, private router: ActivatedRoute, private auth: AuthenticationService,
+    private fb: FormBuilder, private toast: ToastrService, private sanitizer: DomSanitizer, private orderService: OrderService,
+    private invent: InventoryService) { }
+
+  ngOnInit() {
     this.user = this.auth.getLoginData();
     this.router.params.subscribe(params => {
       this.shoppingCartId = this.router.snapshot.params['id'];
       this.getItems();
+    });
+    this.invent.getIdentifier('orderstatus.pending_seller_confirmation').subscribe(it => {
+      this.pending_seller_confirmation = it['orderstatus']['pending_seller_confirmation']['id'];
     });
   }
   getItems() {
@@ -44,12 +51,12 @@ export class OrdersItemsComponent implements OnInit {
         this.products = result;
         console.log("Productos", result);
         this.getTotal();
-        console.log( 'Order', this.products );
+        console.log('Order', this.products);
         this.showLoading = false;
         this.showData = true;
         this.getImages();
       },
-      e => { console.log( e ); }
+      e => { console.log(e); }
     );
   }
   getImages() {
@@ -150,20 +157,20 @@ export class OrdersItemsComponent implements OnInit {
         this.totalOther = other;
         this.totalShipping = shipping;
         this.subtotal = subtotal;
-        this.total =  subtotal + this.totalOther + this.totalShipping;
+        this.total = subtotal + this.totalOther + this.totalShipping;
       }
     });
   }
 
-  cancelOrder( itemID: string ) {
-    this.orderService.updateStatus ( '5c017b5a47fb07027943a40c', itemID, this.user ).subscribe(
+  cancelOrder(itemID: string) {
+    this.orderService.updateStatus(this.pending_seller_confirmation, itemID, this.user).subscribe(
       res => {
         this.toast.success('The item was cancelled', 'Well Done', { positionClass: 'toast-top-right' });
         this.getItems();
       },
       error => {
-        this.toast.error( 'Something wrong happened, Please try again', 'Error', { positionClass: 'toast-top-right' } );
-        console.log( error );
+        this.toast.error('Something wrong happened, Please try again', 'Error', { positionClass: 'toast-top-right' });
+        console.log(error);
       }
     );
   }

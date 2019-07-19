@@ -48,7 +48,7 @@
 							
 						</div>
 						<div class="col-md-2">
-							<button *ngIf="product.status.id== '5c017ae247fb07027943a404'" (click)="cancelOrder(product.id)" class="btn-red-a">{{'Orders-items.cancel-item' | translate}}</button>
+							<button *ngIf="product.status.id== pending_seller_confirmation" (click)="cancelOrder(product.id)" class="btn-red-a">{{'Orders-items.cancel-item' | translate}}</button>
 						</div>
 					  </div>
 					</div>

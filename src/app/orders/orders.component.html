@@ -56,7 +56,7 @@
 													<td *ngIf="item.fish.perBox == true">{{item.quantity.value / item?.fish?.boxWeight}} boxes</td>
 
 													<td>{{(item.price).toFixed(2)}}</td>
-													<td>{{(item.total).toFixed(2)}} <button *ngIf="item.status.id == '5c017ae247fb07027943a404'" (click)="cancelOrder(item.id)" class="clear-btn btn-text">CANCEL</button></td>
+													<td>{{(item.total).toFixed(2)}} <button *ngIf="item.status.id == pending_seller_confirmation" (click)="cancelOrder(item.id)" class="clear-btn btn-text">CANCEL</button></td>
 											</tr>
 											
 										</tbody>
@@ -240,7 +240,7 @@
 															</tr>
 															<tr >
 																<td><button (click)="hideChildMobile()" class="clear-btn" style="float:left;"><img src="../../assets/svg/arrow-left.svg" alt=""></button></td>
-																<td><button *ngIf="item.status.id == '5c017ae247fb07027943a404'" (click)="cancelOrder(item.id)" class="clear-btn btn-text">CANCEL</button></td>
+																<td><button *ngIf="item.status.id == pending_seller_confirmation" (click)="cancelOrder(item.id)" class="clear-btn btn-text">CANCEL</button></td>
 															</tr>
 															
 														</tbody>

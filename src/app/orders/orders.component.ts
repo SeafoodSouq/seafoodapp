@@ -5,6 +5,7 @@ import { AuthenticationService } from '../services/authentication.service';
 import { environment } from '../../environments/environment';
 import { ToastrService } from '../toast.service';
 import { OrderService } from '../services/orders.service';
+import { InventoryService } from '../services/inventory.service';
 @Component({
   selector: 'app-orders',
   templateUrl: './orders.component.html',
@@ -28,22 +29,26 @@ export class OrdersComponent implements OnInit {
   selectedStatus: string;
   selectedItemID: string;
   showNoData: boolean = false;
-  items:any = [];
+  items: any = [];
   subtotal: any = 0;
   shipping: any = 0;
   fees: any = 0;
   total: any = 0;
+  public pending_seller_confirmation = '';
   constructor(private productService: ProductService, private Cart: CartService, private auth: AuthenticationService,
     private orderService: OrderService,
-    private toast: ToastrService,) { }
+    private toast: ToastrService, private invent: InventoryService) { }
 
- ngOnInit() {
+  ngOnInit() {
 
     this.userData = this.auth.getLoginData();
     this.getCartPaid();
     this.statusHistorical = '0';
     this.getStatus();
     this.getOrders();
+    this.invent.getIdentifier('orderstatus.pending_seller_confirmation').subscribe(it => {
+      this.pending_seller_confirmation = it['orderstatus']['pending_seller_confirmation']['id'];
+    });
   }
   getCartPaid() {
     this.productService.getData(`api/orders/open/${this.userData.id}`).subscribe(
@@ -151,7 +156,7 @@ export class OrdersComponent implements OnInit {
         this.orderStatus = res;
       },
       error => {
-        console.log( error );
+        console.log(error);
         this.toast.error('Something happend, please refresh the page', 'System Error', { positionClass: 'toast-top-right' });
       }
     );
@@ -163,10 +168,10 @@ export class OrdersComponent implements OnInit {
     console.log('orderNumber', this.orderNumber);
 
     if (
-        ( this.statusHistorical === undefined && this.orderNumber === undefined) ||
-        ( this.statusHistorical === '0' && ( this.orderNumber === undefined || this.orderNumber === '' ) )
-      ) {
-      this.orderService.getCanceledDeliveredOrders( this.userData['id'] ).subscribe(
+      (this.statusHistorical === undefined && this.orderNumber === undefined) ||
+      (this.statusHistorical === '0' && (this.orderNumber === undefined || this.orderNumber === ''))
+    ) {
+      this.orderService.getCanceledDeliveredOrders(this.userData['id']).subscribe(
         res => {
           if (res['length'] > 0) {
             this.orders = res;
@@ -177,12 +182,12 @@ export class OrdersComponent implements OnInit {
           }
         },
         error => {
-          console.log( error );
+          console.log(error);
           this.toast.error('Something happend, please refresh the page', 'System Error', { positionClass: 'toast-top-right' });
         }
       );
-    } else if ( this.status !== '0' && ( this.orderNumber === undefined || this.orderNumber === '' ) ) {// by status
-      this.orderService.getOrdersBuyerByStatus( this.userData['id'], this.status ).subscribe(
+    } else if (this.status !== '0' && (this.orderNumber === undefined || this.orderNumber === '')) {// by status
+      this.orderService.getOrdersBuyerByStatus(this.userData['id'], this.status).subscribe(
         res => {
           if (res['length'] > 0) {
             this.orders = res;
@@ -192,15 +197,15 @@ export class OrdersComponent implements OnInit {
           } else {
             this.showNoData = true;
           }
-          console.log( res );
+          console.log(res);
         },
         error => {
-          console.log( error );
+          console.log(error);
           this.toast.error('Something happend, please refresh the page', 'System Error', { positionClass: 'toast-top-right' });
         }
       );
-    } else if ( ( this.orderNumber !== undefined || this.orderNumber > 0 ) &&  this.statusHistorical === '0' ) {// by order number
-      this.orderService.getOrdersBuyerByNumber( this.userData['id'], this.orderNumber ).subscribe(
+    } else if ((this.orderNumber !== undefined || this.orderNumber > 0) && this.statusHistorical === '0') {// by order number
+      this.orderService.getOrdersBuyerByNumber(this.userData['id'], this.orderNumber).subscribe(
         res => {
           if (res['length'] > 0) {
             this.orders = res;
@@ -210,15 +215,15 @@ export class OrdersComponent implements OnInit {
           } else {
             this.showNoData = true;
           }
-          console.log( res );
+          console.log(res);
         },
         error => {
-          console.log( error );
+          console.log(error);
           this.toast.error('Something happend, please refresh the page', 'System Error', { positionClass: 'toast-top-right' });
         }
       );
-    } else if ( this.statusHistorical !== '0' && this.orderNumber !== undefined || this.orderNumber !== '' ) {
-      this.orderService.getOrdersBuyerByStatusAndNumber( this.userData['id'], this.statusHistorical, this.orderNumber ).subscribe(
+    } else if (this.statusHistorical !== '0' && this.orderNumber !== undefined || this.orderNumber !== '') {
+      this.orderService.getOrdersBuyerByStatusAndNumber(this.userData['id'], this.statusHistorical, this.orderNumber).subscribe(
         res => {
           if (res['length'] > 0) {
             this.orders = res;
@@ -228,10 +233,10 @@ export class OrdersComponent implements OnInit {
           } else {
             this.showNoData = true;
           }
-          console.log( res );
+          console.log(res);
         },
         error => {
-          console.log( error );
+          console.log(error);
           this.toast.error('Something happend, please refresh the page', 'System Error', { positionClass: 'toast-top-right' });
         }
       );
@@ -246,10 +251,10 @@ export class OrdersComponent implements OnInit {
           } else {
             this.showNoData = true;
           }
-          console.log( res );
+          console.log(res);
         },
         error => {
-          console.log( error );
+          console.log(error);
           this.toast.error('Something happend, please refresh the page', 'System Error', { positionClass: 'toast-top-right' });
         }
       );
@@ -259,53 +264,53 @@ export class OrdersComponent implements OnInit {
 
   //OPEN ITEMS OF AN ORDER
 
-  openChild(items, subtotal, shipping, fees, total){
+  openChild(items, subtotal, shipping, fees, total) {
     this.items = items;
     this.subtotal = subtotal;
     this.shipping = shipping;
     this.fees = fees;
     this.total = total;
-    jQuery('#open-table').hide(); 
+    jQuery('#open-table').hide();
     jQuery('#child-table').show();
 
   }
-  hideChild(){
-    jQuery('#child-table').hide(); 
+  hideChild() {
+    jQuery('#child-table').hide();
     jQuery('#open-table').show();
   }
 
-  openChildMobile(items, subtotal, shipping, fees, total){
+  openChildMobile(items, subtotal, shipping, fees, total) {
     this.items = items;
     this.subtotal = subtotal;
     this.shipping = shipping;
     this.fees = fees;
     this.total = total;
-    jQuery('#open-table-mobile').hide(); 
+    jQuery('#open-table-mobile').hide();
     jQuery('#child-table-mobile').show();
 
   }
 
-  hideChildMobile(){
-    jQuery('#child-table-mobile').hide(); 
+  hideChildMobile() {
+    jQuery('#child-table-mobile').hide();
     jQuery('#open-table-mobile').show();
   }
 
   //CANCELING A SINGLE ORDER ITEM
-  cancelOrder( itemID: string ) {
-    this.orderService.updateStatus ( '5c017b5a47fb07027943a40c', itemID, this.userData ).subscribe(
+  cancelOrder(itemID: string) {
+    this.orderService.updateStatus(this.pending_seller_confirmation, itemID, this.userData).subscribe(
       res => {
         this.toast.success('The item was cancelled', 'Well Done', { positionClass: 'toast-top-right' });
       },
       error => {
-        this.toast.error( 'Something wrong happened, Please try again', 'Error', { positionClass: 'toast-top-right' } );
-        console.log( error );
+        this.toast.error('Something wrong happened, Please try again', 'Error', { positionClass: 'toast-top-right' });
+        console.log(error);
       }
     );
   }
 
   //PRINT ORDER
-  print(invoice_pdf){
-    const pdf_url:any = `${this.API}/api/shoppingcart/PDF/${invoice_pdf}/pdf_invoices`;
+  print(invoice_pdf) {
+    const pdf_url: any = `${this.API}/api/shoppingcart/PDF/${invoice_pdf}/pdf_invoices`;
     window.open(pdf_url, '_blank');
 
   }

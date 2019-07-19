@@ -14,6 +14,7 @@ import { CountriesService } from '../services/countries.service';
 import { ToastrService } from '../toast.service';
 import { environment } from '../../environments/environment';
 import { PricingChargesService } from '../services/pricing-charges.service';
+import { InventoryService } from '../services/inventory.service';
 
 declare var jQuery:any;
 
@@ -31,15 +32,22 @@ export class PendingProductsComponent implements OnInit {
   imageURL:string = environment.apiURLImg;
   currentPrincingCharges: any = [];
   currentExchangeRate: number;
+  public approved = '';
+  public not_approved = '';
+
   constructor(
     private toast: ToastrService,
     private productService: ProductService,
-    private pricingChargesService: PricingChargesService) {}
+    private pricingChargesService: PricingChargesService, private invent:InventoryService ) {}
 
  ngOnInit() {
     this.getCurrentPricingCharges();
     this.getPendingProducts();
     this.createForm();
+    this.invent.getIdentifier('fishstatus.approved.not_approved').subscribe(it=>{
+      this.approved = it['fishstatus']['approved']['id'];
+      this.not_approved = it['fishstatus']['not_approved']['id'];
+    });
   }
   getCurrentPricingCharges() {
     this.pricingChargesService.getCurrentPricingCharges().subscribe(
@@ -74,7 +82,7 @@ export class PendingProductsComponent implements OnInit {
   }
   confirm( val ){
     if(val){
-      this.productService.patchStatus( this.id, '5c0866f9a0eda00b94acbdc2', { message: '' } )
+      this.productService.patchStatus( this.id, this.approved, { message: '' } )
       .subscribe(
         result => {
           this.getPendingProducts();
@@ -96,7 +104,7 @@ export class PendingProductsComponent implements OnInit {
     let productID = this.selectedProductID;
     let message =   this.deniedProductGroup.value.denialMessage;
     
-    this.productService.patchStatus( productID, '5c0866f2a0eda00b94acbdc1', { message: message } )
+    this.productService.patchStatus( productID, this.not_approved, { message: message } )
     .subscribe(
       result => {
         this.getPendingProducts();
