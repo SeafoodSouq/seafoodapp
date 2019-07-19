@@ -5,6 +5,7 @@ import { ToastrService } from '../toast.service';
 import { FormGroup, FormControl, Validators, FormBuilder, FormArray } from '@angular/forms';
 import { NgProgress } from 'ngx-progressbar';
 import { environment } from '../../environments/environment';
+import { InventoryService } from '../services/inventory.service';
 declare var jQuery: any;
 
 @Component({
@@ -69,9 +70,10 @@ export class RecentPurchasesComponent implements OnInit {
   deliverySunindex: any;
   public selectedMoment: any = new Date();
   private currency = 'AED';
+  public seller_cancelled_order = '';
 
   constructor(private productS: ProductService, private toast: ToastrService, private auth: AuthenticationService, public ngProgress: NgProgress, private formBuilder: FormBuilder,
-    private zone: NgZone
+    private zone: NgZone, private invent: InventoryService
   ) {
     this.min.setDate(this.today.getDate());
     this.max.setDate(this.today.getDate() + 90);
@@ -87,6 +89,9 @@ export class RecentPurchasesComponent implements OnInit {
       console.log(this.currency);
     });
     this.getStore();
+    this.invent.getIdentifier('orderstatus.seller_cancelled_order').subscribe(it => {
+      this.seller_cancelled_order = it['orderstatus']['seller_cancelled_order']['id'];
+    });
   }
 
   chargeJS() {
@@ -400,7 +405,7 @@ export class RecentPurchasesComponent implements OnInit {
   cancelOrder(itemId: string) {
     const status = {
       'id': itemId,
-      'status': '5c06f4bf7650a503f4b731fd'
+      'status': this.seller_cancelled_order
     };
 
     this.productS.updateData(`api/itemshopping/${status.id}/${status.status}`,
@@ -863,7 +868,7 @@ export class RecentPurchasesComponent implements OnInit {
       return 'not available';
     }
 
-      return result + this.currency;
+    return result + this.currency;
   }
 
   logCalendar() {

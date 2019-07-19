@@ -5,6 +5,7 @@ import { ToastrService } from '../toast.service';
 import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { environment } from '../../environments/environment';
+import { InventoryService } from '../services/inventory.service';
 declare var jQuery: any;
 @Component({
 	selector: 'app-order-purchase',
@@ -33,12 +34,16 @@ export class OrderPurchaseComponent implements OnInit {
 	max = new Date();
 	index: any;
 
+	public seller_cancelled_order = '';
+	public pending_fulfillment = '';
+
 	constructor(
 		private fb: FormBuilder,
 		private route: ActivatedRoute,
 		private productS: ProductService,
 		private toast: ToastrService,
-		private auth: AuthenticationService) {  
+		private auth: AuthenticationService,
+		private invent: InventoryService) {
 		this.min.setDate(this.today.getDate());
 		this.max.setDate(this.today.getDate() + 90);
 
@@ -50,6 +55,10 @@ export class OrderPurchaseComponent implements OnInit {
 	ngOnInit() {
 		this.user = this.auth.getLoginData();
 		this.getItem();
+		this.invent.getIdentifier('orderstatus.seller_cancelled_order.pending_fulfillment').subscribe(it => {
+			this.seller_cancelled_order = it['orderstatus']['seller_cancelled_order']['id'];
+			this.pending_fulfillment = it['orderstatus']['pending_fulfillment']['id'];
+		});
 	}
 
 	private getItem() {
@@ -75,7 +84,7 @@ export class OrderPurchaseComponent implements OnInit {
 	cancelOrder(itemId: string) {
 		const status = {
 			'id': itemId,
-			'status': '5c06f4bf7650a503f4b731fd'
+			'status': this.seller_cancelled_order
 		};
 
 		this.productS.updateData(`api/itemshopping/${status.id}/${status.status}`,
@@ -92,31 +101,31 @@ export class OrderPurchaseComponent implements OnInit {
 					this.toast.error('Something wrong happened, please try again', 'Error', { positionClass: 'toast-top-right' });
 				});
 	}
- 
+
 	confirmOrder(itemId: string) {
 		let index = this.index;
 		let sellerETA = jQuery(`#epa${itemId}`).val();
 
 		this.productS.updateData('api/itemshopping/' + itemId + '/5c017af047fb07027943a405',
-		{ userEmail: this.user['email'], userID: this.user['id'], sellerExpectedDeliveryDate: sellerETA }).subscribe(
-			res => {
-				jQuery('#confirm').modal('hide');
-				console.log(res);
+			{ userEmail: this.user['email'], userID: this.user['id'], sellerExpectedDeliveryDate: sellerETA }).subscribe(
+				res => {
+					jQuery('#confirm').modal('hide');
+					console.log(res);
 					this.toast.success(res['message'], 'Alert', { positionClass: 'toast-top-right' });
 					this.items[index].status['id'] = res['item'][0].status['id'];
 					this.items[index].status['status'] = res['item'][0].status['status'];
 					this.items[index].updateInfo = res['item'][0].updateInfo;
-				
-			
 
-			},
-			e => {
-				this.toast.error('Something wrong happened, please try again', 'Error', { positionClass: 'toast-top-right' });
-			}
-		);
-		
 
-		
+
+				},
+				e => {
+					this.toast.error('Something wrong happened, please try again', 'Error', { positionClass: 'toast-top-right' });
+				}
+			);
+
+
+
 	}
 
 
@@ -236,11 +245,7 @@ export class OrderPurchaseComponent implements OnInit {
 	}
 
 	public stateValidForCancelnOrder(citem) {
-		// console.log(citem);
-		// console.log(citem.status.id !== '5c017ae247fb07027943a404' || citem.status.id !== '5c017af047fb07027943a405' || citem.status.id !== '5c06f4bf7650a503f4b731fd');
-		// console.log(citem.status.id !== '5c017ae247fb07027943a404' && citem.status.id !== '5c017af047fb07027943a405' && citem.status.id !== '5c06f4bf7650a503f4b731fd');
-		// return citem.status.id !== '5c017ae247fb07027943a404' && citem.status.id !== '5c017af047fb07027943a405' && citem.status.id !== '5c06f4bf7650a503f4b731fd';
-		return citem.status.id === '5c017af047fb07027943a405';
+		return citem.status.id === this.pending_fulfillment;
 	}
 }
 

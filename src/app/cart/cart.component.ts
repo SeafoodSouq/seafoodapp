@@ -8,6 +8,7 @@ import { OrderService } from '../services/orders.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { CountriesService } from '../services/countries.service';
 import { CartService } from '../core/cart/cart.service';
+import { InventoryService } from '../services/inventory.service';
 declare var jQuery:any;
 @Component({
   selector: 'app-cart',
@@ -53,9 +54,13 @@ export class CartComponent implements OnInit {
   staticField: any;
   showSnackBar:boolean = false;
   itemsDeleted: any =  [];
+
+  public head_on_gutted = '';
+
   constructor(private auth: AuthenticationService, private productService: ProductService,
     private toast:ToastrService, private router:Router, private cartService:OrderService, 
-    private sanitizer: DomSanitizer, private countriesService: CountriesService, private cService: CartService) { }
+    private sanitizer: DomSanitizer, private countriesService: CountriesService, 
+    private cService: CartService, private invent:InventoryService) { }
 
 
   async ngOnInit() {
@@ -67,6 +72,9 @@ export class CartComponent implements OnInit {
     await this.getPreparation();
     await this.validateCart();
     this.getTotal();
+    this.invent.getIdentifier('fishpreparation.head_on_gutted').subscribe(it=>{
+      this.head_on_gutted = it['fishpreparation']['head_on_gutted']['id'];
+    });
   }
 
 

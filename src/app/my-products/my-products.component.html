@@ -36,13 +36,13 @@
                     <div class="product-single-img" [style.background-image]="image[i]">
                       <div class="product-overlay"></div>
                       <div *ngIf="product.status != null">
-                        <div class="product-status accepted-status" *ngIf="product.status.id == '5c0866f9a0eda00b94acbdc2'">
+                        <div class="product-status accepted-status" *ngIf="product.status.id == approved"> 
                           {{product.status.status}}
                       </div>
-                      <div class="product-status denied-status" *ngIf="product.status.id == '5c0866f2a0eda00b94acbdc1'">
+                      <div class="product-status denied-status" *ngIf="product.status.id == not_approved">
                           denied
                       </div>
-                      <div class="product-status" *ngIf="product.status.id == '5c0866e4a0eda00b94acbdc0'">
+                      <div class="product-status" *ngIf="product.status.id == pending">
                           {{product.status.status}}
                       </div>
                       </div>

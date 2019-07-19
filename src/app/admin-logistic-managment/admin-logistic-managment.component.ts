@@ -5,6 +5,7 @@ import { AuthenticationService } from '../services/authentication.service';
 import { ToastrService } from '../toast.service';
 import * as moment from 'moment';
 import { environment } from '../../environments/environment';
+import { InventoryService } from '../services/inventory.service';
 declare var jQuery: any;
 
 @Component({
@@ -24,7 +25,7 @@ export class AdminLogisticManagmentComponent implements OnInit {
   showNoData: boolean = false;
   rows: any = [];
   public useFilterDate = false;
-   API:any = environment.apiURL;
+  API: any = environment.apiURL;
 
   public date1 = new Date();
   public date2 = new Date();
@@ -33,19 +34,23 @@ export class AdminLogisticManagmentComponent implements OnInit {
   public limit = 20;
   public paginationNumbers = [];
   public type = "cod";
+  public orderStatusclose = '';
 
   constructor(
     private orderService: OrderService,
     private productService: ProductService,
     private toast: ToastrService,
-    private auth: AuthenticationService) { }
+    private auth: AuthenticationService, private invent: InventoryService) { }
 
- ngOnInit() {
-    this.date2.setMonth(new Date().getMonth()+ 1);
+  ngOnInit() {
+    this.date2.setMonth(new Date().getMonth() + 1);
     this.user = this.auth.getLoginData();
     this.status = '0';
     this.getManagement(true);
     this.getStatus();
+    this.invent.getIdentifier('orderstatus.close').subscribe(it => {
+      this.orderStatusclose = it['orderstatus']['close']['id'];
+    });
   }
 
   getStatus() {
@@ -62,7 +67,7 @@ export class AdminLogisticManagmentComponent implements OnInit {
 
 
   getManagement(pagination?) {
-    if(pagination)
+    if (pagination)
       this.page = 1;
     this.productService.getData(`api/v2/shoppingcart/orderlogistic?page=${this.page}&limit=${this.limit}&type=${this.type}`).subscribe(data => {
       this.calcPagination(data["pageAvailables"]);
@@ -71,13 +76,13 @@ export class AdminLogisticManagmentComponent implements OnInit {
         if (typeof it.paidDateTime === 'string' && it.paidDateTime !== "")
           it.paidDateTime = new Date(it.paidDateTime);
 
-        return it; 
+        return it;
       });
     })
 
   }
 
-  public getOrdersPage(page){
+  public getOrdersPage(page) {
     this.page = page;
     this.getManagement();
   }
@@ -97,10 +102,10 @@ export class AdminLogisticManagmentComponent implements OnInit {
 
   public previousPage() {
     this.paginationNumbers = [];
-      if (this.page > 1) {
-        this.page--;
-      }
-      this.getManagement();
+    if (this.page > 1) {
+      this.page--;
+    }
+    this.getManagement();
   }
 
   updateStatus() {
@@ -137,7 +142,7 @@ export class AdminLogisticManagmentComponent implements OnInit {
     jQuery('#confirmUpdateStatus').modal('show');
   }
 
-  public filterDateChange(){
+  public filterDateChange() {
   }
 
   //funcion solo para recargar el bind de los elementos
@@ -155,7 +160,7 @@ export class AdminLogisticManagmentComponent implements OnInit {
       if (item.items.length === statusItems) status = false;
     }
     //Ahora hacemos filtros por date paid
-    if(status === true && this.useFilterDate === true){
+    if (status === true && this.useFilterDate === true) {
       let date = moment(item.paidDateTime);
       status = date.isBetween(this.date1, this.date2);
     }
@@ -179,7 +184,7 @@ export class AdminLogisticManagmentComponent implements OnInit {
   public mapDocs(doc) {
     let file = doc.split("/");
     if (file[3] != undefined) {
-  
+
       return `<a download href="${this.API}api/itemshopping/${file[2]}/shipping-documents/${file[3]}/"><i class="fa fa-file-o" aria-hidden="true"></i> ${file[3]}</a>`
     }
   }

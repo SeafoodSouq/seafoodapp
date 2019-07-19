@@ -9,6 +9,7 @@ import { Options, ChangeContext } from 'ng5-slider';
 import { CountriesService } from '../services/countries.service';
 import { Router } from '@angular/router';
 import { CartService } from '../core/cart/cart.service';
+import { InventoryService } from '../services/inventory.service';
 
 declare var jQuery;
 @Component({
@@ -73,34 +74,36 @@ export class ShopComponent implements OnInit {
   disabledInputs: boolean = false;
   public loading: boolean = true;
 
-  public isChange:any = {};
-  staticField:any;
-  showSnackBar:boolean = false;
-  itemsDeleted: any =  [];
-  page:number = 1;
-  pQty:number = 6;
-  showScrollanimation:boolean = false;
-  enableScroll:boolean = false;
+  public isChange: any = {};
+  staticField: any;
+  showSnackBar: boolean = false;
+  itemsDeleted: any = [];
+  page: number = 1;
+  pQty: number = 6;
+  showScrollanimation: boolean = false;
+  enableScroll: boolean = false;
+  public head_on_gutted = '';
 
   constructor(private auth: AuthenticationService, private productService: ProductService,
     private sanitizer: DomSanitizer, private toast: ToastrService, private cartService: OrderService,
-    private countryservice: CountriesService, private router: Router, private cService: CartService) {
+    private countryservice: CountriesService, private router: Router, private cService: CartService,
+    private invent: InventoryService) {
 
-      jQuery(document).ready(function () {
-        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-          console.log("Es movil");
-          jQuery('#filterCollapse').collapse('hide');
-        }
-      });
+    jQuery(document).ready(function () {
+      if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+        console.log("Es movil");
+        jQuery('#filterCollapse').collapse('hide');
+      }
+    });
   }
 
-  ngAfterViewInit(){
+  ngAfterViewInit() {
     jQuery('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
       e.target // newly activated tab
       e.relatedTarget // previous active tab
       console.log(e);
     })
-  
+
   }
   async ngOnInit() {
 
@@ -141,6 +144,10 @@ export class ShopComponent implements OnInit {
       this.disabledInputs = true;
       this.showClear = true;
       this.filterProducts();
+    });
+    this.invent.getIdentifier('fishpreparation.head_on_gutted').subscribe(it => {
+      this.head_on_gutted = it['fishpreparation']['head_on_gutted']['id'];
+      console.log(this.head_on_gutted);
     });
   }
   //Create pills
@@ -198,13 +205,13 @@ export class ShopComponent implements OnInit {
     jQuery(document).on('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
       let tab = e.target.attributes.id.value; // newly activated tab
       let newTab = tab.split("-");
-      let currentTab:any = '#nav-footer-' + newTab[2];
+      let currentTab: any = '#nav-footer-' + newTab[2];
       let footerHolder = jQuery(currentTab).parent('.multiple-bottom');
       console.log(footerHolder[0].id);
       jQuery("#" + footerHolder[0].id + " .product-footer").removeClass('active');;
       jQuery(currentTab).tab('show');
     })
-    jQuery('.toast').toast({autohide: false})
+    jQuery('.toast').toast({ autohide: false })
 
     jQuery('.input-preparation:checkbox').on('change', (e) => {
       this.disabledInputs = true;
@@ -293,16 +300,16 @@ export class ShopComponent implements OnInit {
   }
 
   //VALIDATING CART 
-  async validateCart(){
+  async validateCart() {
     await new Promise((resolve, reject) => {
-      this.cartService.validateCart(this.buyerId).subscribe(val =>{
+      this.cartService.validateCart(this.buyerId).subscribe(val => {
         console.log("Cart Validation", val);
-        if(val['items'].length > 0){
+        if (val['items'].length > 0) {
           this.itemsDeleted = val['items'];
           this.showSnackBar = true;
         }
         resolve();
-      }, error =>{
+      }, error => {
         reject();
       })
     });
@@ -388,12 +395,12 @@ export class ShopComponent implements OnInit {
     this.productService.listProduct(data).subscribe(result => {
       this.isClearButton = false;
 
-      if(result['variationsGrouped'] != undefined){
-        var array:any = Object.entries(result['variationsGrouped']);
+      if (result['variationsGrouped'] != undefined) {
+        var array: any = Object.entries(result['variationsGrouped']);
         this.enableScroll = true;
         array.forEach(item => {
           this.products.push(item);
-        }); 
+        });
         console.log('Productos', array);
 
       }
@@ -471,9 +478,9 @@ export class ShopComponent implements OnInit {
           console.log("es mayor al max", parseInt(classes[10]));
           jQuery('#amount-' + classes[7]).val(max);
           jQuery('#cart-amount-' + classes[7]).val(max);
-          if(classes[16]){
+          if (classes[16]) {
             this.products[classes[6]][1].variations[classes[16]].qty = max;
-          }else{
+          } else {
             this.products[classes[6]][1].variations[0].qty = max;
           }
 
@@ -481,9 +488,9 @@ export class ShopComponent implements OnInit {
           jQuery('#amount-' + classes[7]).val(min);
           jQuery('#cart-amount-' + classes[7]).val(min);
 
-          if(classes[16]){
+          if (classes[16]) {
             this.products[classes[6]][1].variations[classes[16]].qty = min;
-          }else{
+          } else {
             this.products[classes[6]][1].variations[0].qty = min;
           }
 
@@ -493,9 +500,9 @@ export class ShopComponent implements OnInit {
           jQuery('#amount-' + classes[7]).val(val);
           jQuery('#cart-amount-' + classes[7]).val(val);
 
-          if(classes[16]){
+          if (classes[16]) {
             this.products[classes[6]][1].variations[classes[16]].qty = val;
-          }else{
+          } else {
             this.products[classes[6]][1].variations[0].qty = val;
           }
 
@@ -506,7 +513,7 @@ export class ShopComponent implements OnInit {
         // jQuery('#qty-kg-' + classes[7]).css('display', 'block');
         this.showQty = true;
         console.log("Stock", classes[15]);
-        if((classes[4] != 'coming-true' && classes[15] != 'true')){
+        if ((classes[4] != 'coming-true' && classes[15] != 'true')) {
           this.getShippingRates(val, classes[8], classes[7], classes[6]);
         }
       }
@@ -625,17 +632,17 @@ export class ShopComponent implements OnInit {
     return element.value === '';
   }
 
-  public getTag(product, id){
+  public getTag(product, id) {
     let element = document.querySelector('#' + id) as HTMLInputElement;
     if (element === null) return '';
-    try{
+    try {
       let val = Number(element.value);
-      if(val <= 1 && product.perBox === true) {
+      if (val <= 1 && product.perBox === true) {
         return 'box';
       }
-      return product.perBox === true ? 'boxes' : 'kg'; 
+      return product.perBox === true ? 'boxes' : 'kg';
     }
-    catch(e){
+    catch (e) {
       console.log(e);
       return '';
     }
@@ -748,12 +755,12 @@ export class ShopComponent implements OnInit {
       this.image = [];
       this.productService.filterFish(cat, subcat, specie, variant, country, raised, preparation, treatment, minPrice, maxPrice, minimumOrder, maximumOrder, cooming_soon).subscribe(result => {
         this.showLoading = false;
-        var array:any = Object.entries(result);
+        var array: any = Object.entries(result);
 
         this.products = array;
         console.log("Resultado", result);
         this.disabledInputs = false;
-        
+
         if (result === undefined || Object.keys(result).length === 0) {
           this.showNotFound = true;
         }
@@ -790,7 +797,7 @@ export class ShopComponent implements OnInit {
             break;
           case 2:
             this.searchSubSpecie = item.fishTypes;
-            break; 
+            break;
           case 3:
             this.searchDescriptor = item.fishTypes;
             break;
@@ -947,7 +954,7 @@ export class ShopComponent implements OnInit {
   deleteItem(i, id) {
     this.productService.deleteData(`itemshopping/${id}`).subscribe(result => {
       this.productsCart.splice(i, 1);
-      this.getItems(); 
+      this.getItems();
       this.closeCart();
       this.toast.success('Item removed from cart!', 'Well Done', { positionClass: 'toast-top-right' });
     }, e => {
@@ -961,7 +968,7 @@ export class ShopComponent implements OnInit {
     };
     this.productService.saveData("shoppingcart", cart).subscribe(result => {
       this.cService.setCart(result);
-      console.log(' calcular totales', result); 
+      console.log(' calcular totales', result);
     }, e => { console.log(e); });
   }
   // GET PARENTS CATEROGIES
@@ -1063,41 +1070,40 @@ export class ShopComponent implements OnInit {
     return parseInt(number);
   }
 
-  closeSnackBar(){
+  closeSnackBar() {
     this.showSnackBar = false;
   }
 
 
-   // When scroll down the screen  
-   onScroll()  
-   {  
-     if(this.enableScroll == true){
-      console.log("Scrolled");  
+  // When scroll down the screen  
+  onScroll() {
+    if (this.enableScroll == true) {
+      console.log("Scrolled");
 
-      this.page = this.page + 1;  
-      this.getProducts(this.pQty, this.page);  
+      this.page = this.page + 1;
+      this.getProducts(this.pQty, this.page);
       this.showScrollanimation = true;
-     }else{
-       console.log("scroll deshabilitado");
-     }
-    
-   } 
+    } else {
+      console.log("scroll deshabilitado");
+    }
+
+  }
 
 
-   loadImage(data){
-      // this.isChange[data.variation.id] = { status: false, kg: 0 }; 
-      if (data.imagePrimary && data.imagePrimary !== '') {
-        return this.sanitizer.bypassSecurityTrustStyle(`url(${this.API}${data.imagePrimary})`);
-      }
-      else if (data.images && data.images.length > 0) {
-        let src = data['images'][0].src ? data['images'][0].src : data['images'][0];
-        return this.sanitizer.bypassSecurityTrustStyle(`url(${this.API}${src})`);
-      }
-      else {
-        return this.sanitizer.bypassSecurityTrustStyle('url(../../assets/default-img-product.jpg)');
-      }
-  
-   }
+  loadImage(data) {
+    // this.isChange[data.variation.id] = { status: false, kg: 0 }; 
+    if (data.imagePrimary && data.imagePrimary !== '') {
+      return this.sanitizer.bypassSecurityTrustStyle(`url(${this.API}${data.imagePrimary})`);
+    }
+    else if (data.images && data.images.length > 0) {
+      let src = data['images'][0].src ? data['images'][0].src : data['images'][0];
+      return this.sanitizer.bypassSecurityTrustStyle(`url(${this.API}${src})`);
+    }
+    else {
+      return this.sanitizer.bypassSecurityTrustStyle('url(../../assets/default-img-product.jpg)');
+    }
+
+  }
 }
 
 

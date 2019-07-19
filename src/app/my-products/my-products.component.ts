@@ -6,6 +6,7 @@ import { DomSanitizer, SafeResourceUrl, SafeUrl, SafeStyle } from '@angular/plat
 import { environment } from '../../environments/environment';
 import { PricingChargesService } from '../services/pricing-charges.service';
 import { Router } from '@angular/router';
+import { InventoryService } from '../services/inventory.service';
 
 @Component({
   selector: 'app-my-products',
@@ -22,6 +23,9 @@ export class MyProductsComponent implements OnInit {
   user: any;
   currentPrincingCharges: any = [];
   currentExchangeRate: number;
+  public approved = '';
+  public not_approved = '';
+  public pending = '';
 
   constructor(
     private auth: AuthenticationService,
@@ -29,20 +33,24 @@ export class MyProductsComponent implements OnInit {
     private toast: ToastrService,
     private pricingChargesService: PricingChargesService,
     private sanitizer: DomSanitizer,
-    private router: Router) {
+    private router: Router,
+    private invent: InventoryService) {
 
-     }
+  }
 
- ngOnInit() {
-    
-
+  ngOnInit() {
     this.user = this.auth.getLoginData();
     console.log("user", this.user);
-    if(this.user == null || this.user['role'] != 1){
+    if (this.user == null || this.user['role'] != 1) {
       this.router.navigate(["/"]);
     }
     this.getCurrentPricingCharges();
     this.getMyData();
+    this.invent.getIdentifier('fishstatus.approved.not_approved.pending').subscribe(it => {
+      this.approved = it['fishstatus']['approved']['id'];
+      this.not_approved = it['fishstatus']['not_approved']['id'];
+      this.pending = it['fishstatus']['pending']['id'];
+    });
   }
 
   getMyData() {
@@ -78,7 +86,7 @@ export class MyProductsComponent implements OnInit {
     if (this.user.role === 0) {
       this.productService.getData('store/allProducts').subscribe(result => {
         this.products = result;
-        setTimeout(() =>  this.replaceImgBySvg(), 1000);
+        setTimeout(() => this.replaceImgBySvg(), 1000);
 
         // working on the images to use like background
         this.products.forEach((data, index) => {
@@ -96,7 +104,7 @@ export class MyProductsComponent implements OnInit {
       this.productService.getData('store/' + this.store.id).subscribe(result => {
         this.products = result['fishs'];
         console.log("Products seller", this.products);
-        setTimeout(() =>  this.replaceImgBySvg(), 1000);
+        setTimeout(() => this.replaceImgBySvg(), 1000);
 
         // working on the images to use like background
         this.products.forEach((data, index) => {
@@ -115,41 +123,41 @@ export class MyProductsComponent implements OnInit {
   }
 
 
-  replaceImgBySvg(){
-    jQuery('img.icon-action').each(function(){
+  replaceImgBySvg() {
+    jQuery('img.icon-action').each(function () {
       var $img = jQuery(this);
       var imgID = $img.attr('id');
       var imgClass = $img.attr('class');
       var imgURL = $img.attr('src');
-  
-      jQuery.get(imgURL, function(data) {
-          // Get the SVG tag, ignore the rest
-          var $svg = jQuery(data).find('svg');
-  
-          // Add replaced image's ID to the new SVG
-          if(typeof imgID !== 'undefined') {
-              $svg = $svg.attr('id', imgID);
-          }
-          // Add replaced image's classes to the new SVG
-          if(typeof imgClass !== 'undefined') {
-              $svg = $svg.attr('class', imgClass+' replaced-svg');
-          }
-  
-          // Remove any invalid XML tags as per http://validator.w3.org
-          $svg = $svg.removeAttr('xmlns:a');
-          
-          // Check if the viewport is set, else we gonna set it if we can.
-          if(!$svg.attr('viewBox') && $svg.attr('height') && $svg.attr('width')) {
-              $svg.attr('viewBox', '0 0 ' + $svg.attr('height') + ' ' + $svg.attr('width'))
-          }
-       
-          
-          // Replace image with new SVG
-          $img.replaceWith($svg);
-  
+
+      jQuery.get(imgURL, function (data) {
+        // Get the SVG tag, ignore the rest
+        var $svg = jQuery(data).find('svg');
+
+        // Add replaced image's ID to the new SVG
+        if (typeof imgID !== 'undefined') {
+          $svg = $svg.attr('id', imgID);
+        }
+        // Add replaced image's classes to the new SVG
+        if (typeof imgClass !== 'undefined') {
+          $svg = $svg.attr('class', imgClass + ' replaced-svg');
+        }
+
+        // Remove any invalid XML tags as per http://validator.w3.org
+        $svg = $svg.removeAttr('xmlns:a');
+
+        // Check if the viewport is set, else we gonna set it if we can.
+        if (!$svg.attr('viewBox') && $svg.attr('height') && $svg.attr('width')) {
+          $svg.attr('viewBox', '0 0 ' + $svg.attr('height') + ' ' + $svg.attr('width'))
+        }
+
+
+        // Replace image with new SVG
+        $img.replaceWith($svg);
+
       }, 'xml');
-  
-  });
+
+    });
   }
 
   smallDesc(str) {

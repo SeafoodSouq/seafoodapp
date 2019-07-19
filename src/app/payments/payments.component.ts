@@ -5,6 +5,7 @@ import { AuthenticationService } from '../services/authentication.service';
 import { PricingChargesService } from '../services/pricing-charges.service';
 import { ToastrService } from '../toast.service';
 import { environment } from '../../environments/environment';
+import { InventoryService } from '../services/inventory.service';
 declare var jQuery: any;
 
 @Component({
@@ -28,18 +29,25 @@ export class PaymentsComponent implements OnInit {
   public limit = 20;
   public paginationNumbers = [];
   public searchActive = false;
+  public seller_cancelled_order = '';
+  public cancelled_order = '';
 
   constructor(
     private orderService: OrderService,
     private toast: ToastrService,
     private auth: AuthenticationService,
-    private pricingService: PricingChargesService) { }
+    private pricingService: PricingChargesService,
+    private invent: InventoryService) { }
 
- ngOnInit() {
+  ngOnInit() {
     this.user = this.auth.getLoginData();
     this.getExchangeRates();
     this.getPayments(true);
     this.getPaymentStatus();
+    this.invent.getIdentifier('orderstatus.seller_cancelled_order.cancelled_order').subscribe(it => {
+      this.seller_cancelled_order = it['orderstatus']['seller_cancelled_order']['id'];
+      this.cancelled_order = it['orderstatus']['cancelled_order']['id'];
+    });
   }
 
   getPayments(pagination?) {
@@ -101,7 +109,7 @@ export class PaymentsComponent implements OnInit {
   getPaymentStatus() {
     this.orderService.getPaymentStatus().subscribe(
       res => {
-        this.orderStatus = res; 
+        this.orderStatus = res;
       },
       error => {
         console.log(error);
@@ -135,7 +143,7 @@ export class PaymentsComponent implements OnInit {
   }
 
   isCancelled(status: string) {
-    if (status === '5c06f4bf7650a503f4b731fd' || status === '5c017b5a47fb07027943a40c') {
+    if (status === this.seller_cancelled_order || status === this.cancelled_order) {
       return true;
     } else {
       return false;
@@ -161,7 +169,7 @@ export class PaymentsComponent implements OnInit {
           console.log(e);
         }
       );
-    }else {
+    } else {
       this.getPayments(true);
       this.searchActive = false;
       this.showNoData = false;
@@ -192,7 +200,7 @@ export class PaymentsComponent implements OnInit {
   }
 
   confirmUpdatestatus(selectedStatus, selectedItemID) {
-    let nameIndex = this.orderStatus.findIndex(it=>{
+    let nameIndex = this.orderStatus.findIndex(it => {
       return it.id === selectedStatus;
     });
     this.selectedStatusName = nameIndex === -1 ? '' : this.orderStatus[nameIndex].status;
