@@ -595,7 +595,7 @@
                         </div>
                       </div>
                       <div class="row manual-slider" *ngIf="keySelect!==''">
-                        <div class="col-8">
+                        <div class="" [ngClass]='isAdmin==true?"col-6":"col-8"'>
                           <ng5-slider [manualRefresh]="manualRefresh" (userChangeEnd)="addPricing()"
                             [(value)]="exampleValues.min" [(highValue)]="exampleValues.max" [options]="options">
                           </ng5-slider>
