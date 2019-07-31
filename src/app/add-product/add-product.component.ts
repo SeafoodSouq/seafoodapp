@@ -65,7 +65,7 @@ export class AddProductComponent implements OnInit {
   images: FormControl;
   public imagesTmp = [];
   imagesSend: FormControl;
-  deletedImages: FormControl;
+  deletedImages = [];
   private indexImage = 0;
   tabsArray: any = [];
   keySelect: any = '';
@@ -342,7 +342,6 @@ export class AddProductComponent implements OnInit {
     this.childPreparation = new FormControl('', [Validators.required]);
     this.images = new FormControl('', Validators.nullValidator);
     this.imagesSend = new FormControl('', Validators.nullValidator);
-    this.deletedImages = new FormControl('', Validators.nullValidator);
     this.price = new FormControl('', [Validators.required]);
     this.kgConversionRate = new FormControl('', Validators.nullValidator);
 
@@ -375,7 +374,6 @@ export class AddProductComponent implements OnInit {
       childPreparation: this.childPreparation,
       images: this.images,
       imagesSend: this.imagesSend,
-      deletedImages: this.deletedImages,
       price: this.price,
       kgConversionRate: this.kgConversionRate
     });
@@ -1269,7 +1267,7 @@ export class AddProductComponent implements OnInit {
   private async uploadImagesAction(product, result) {
     if (product.imagesSend !== undefined && product.imagesSend !== '') {
       let images = JSON.parse(product.imagesSend),
-        deletedImages = product.deletedImages;
+        deletedImages = this.deletedImages;
       // Si se esta actualizando un producto
       // se filtra las imagenes, las que tiene url son
       // las nuevas imagenes
@@ -1293,7 +1291,7 @@ export class AddProductComponent implements OnInit {
             }
           }
           // secondary images are uploaded on background
-          this.productService.updateData('api/fish/images/delete/' + this.productID, { deletedImages }).toPromise();
+          this.productService.updateData('api/fish/images/delete', { deletedImages }).toPromise();
           this.productService.updateImages(files, this.productID).toPromise();
         } catch (e) {
           console.error(e);
@@ -1446,5 +1444,72 @@ export class AddProductComponent implements OnInit {
   filterByValue(array, string) {
     return array.filter(o =>
       Object.keys(o).some(k => o[k].toString().toLowerCase().includes(string.toLowerCase())));
+  }
+
+  public async setDefaultImage(i) {
+    //Buscamos la imagen primary anterior para ponerle un change y la guarde
+    let indexPrimary = this.imagesTmp.findIndex(it => {
+      return it.type === "primary";
+    });
+    for (let k = 0; k < this.imagesTmp.length; k++) {
+      this.imagesTmp[k].type = "secundary";
+    }
+    this.imagesTmp[i].type = "primary";
+
+    //agrego la imagen a deletedImages
+    //pero solo cuando se esta actualizando un producto y tiene url
+    //y no es la imagen default initial
+    let indexRepeat = 0, arr = this.deletedImages;
+    console.log(this.imagesTmp[i].url !== undefined, this.imagesTmp[i].url !== null, this.imagesTmp[i].defaultInial !== true, this.imagesTmp[i]);
+    if (this.productID !== "" &&
+      this.imagesTmp[i].url !== undefined && this.imagesTmp[i].url !== null &&
+      this.imagesTmp[i].defaultInial !== true) {
+      indexRepeat = arr.findIndex(it => {
+        return it === this.imagesTmp[i].url;
+      });
+      console.log("indexRepeat", indexRepeat);
+      if (indexRepeat === -1) arr.push(this.imagesTmp[i].url);
+
+    }
+
+    //buscamos si la imagen default anterior estaba en lista de borrar
+    //si esta la sacamos porque ahora sera secundary como antes
+    indexRepeat = arr.findIndex(it => {
+      return it === this.imagesTmp[indexPrimary].url;
+    });
+    if (indexRepeat !== -1) {
+      if (arr.length > 1)
+        arr.splice(indexRepeat, 1);
+      else
+        arr = [];
+    }
+    this.deletedImages = arr;
+
+    if (indexPrimary !== -1 && this.imagesTmp[indexPrimary].defaultInial === true) {
+      delete this.imagesTmp[indexPrimary].url;
+      this.imagesTmp[indexPrimary].change = true;
+    }
+    console.log(arr, this.imagesTmp.map((it, i) => {
+      it = JSON.parse(JSON.stringify(it));
+      delete it.src;
+      it.i = i;
+      return it;
+    }));
+    this.reSavedImages();
+  }
+
+  public remove(i) {
+    if (this.imagesTmp[i].url !== undefined && this.imagesTmp[i].url !== null) {
+      let arr = this.deletedImages;
+      arr.push(this.imagesTmp[i].url);
+      this.deletedImages = arr;
+    }
+    if (this.imagesTmp.length === 1) {
+      this.imagesTmp = [];
+    } else {
+      this.imagesTmp.splice(i, 1);
+    }
+    this.indexImage = 0;
+    this.reSavedImages();
   }
 }
