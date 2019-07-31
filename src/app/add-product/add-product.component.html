@@ -251,7 +251,7 @@
 
             <div class="col-12">
               <div class="form-group file-input">
-                <label for="file"><img src="../../assets/svg/attachment.svg" alt=""> Upload your images...*</label>
+                <label for="file"><img src="../../assets/svg/attachment.svg" alt="">Click Here to upload images</label>
                 <input id="file" #myInput type="file" multiple class="form-control" (change)="onFileChange($event)"
                   accept="image/png,image/jpeg,image/jpg" formControlName="images"
                   [ngClass]="{'is-invalid':productForm.get('images').invalid && productForm.get('images').touched}">
@@ -267,7 +267,7 @@
             </div>
 
             <input type="text" hidden formControlName="imagesSend">
-            <input type="text" hidden formControlName="deletedImages">
+            <!-- <input type="text" hidden formControlName="deletedImages"> -->
 
             <div class="row gallery-container" *ngIf="imagesTmp.length===0">
               <div class="col-3">
