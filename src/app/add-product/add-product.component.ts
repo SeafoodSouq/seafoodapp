@@ -54,6 +54,7 @@ export class AddProductComponent implements OnInit {
   public typeLevel2 = [];
   public typeLevel3 = [];
   private productID = "";
+  private isEditProduct = false;
   fishPreparation: any = [];
   preparation: FormControl;
   preparationChilds: any = [];
@@ -64,7 +65,7 @@ export class AddProductComponent implements OnInit {
   images: FormControl;
   public imagesTmp = [];
   imagesSend: FormControl;
-  deletedImages: FormControl;
+  deletedImages = [];
   private indexImage = 0;
   tabsArray: any = [];
   keySelect: any = '';
@@ -76,6 +77,7 @@ export class AddProductComponent implements OnInit {
   private storeEndpoint: any = 'api/store/user/';
   public store: any;
   pricesDeleted: any = [];
+  variationsDeleted = [];
   public user: any = {};
   public manualRefresh: EventEmitter<void> = new EventEmitter<void>();
   weightType: any = 'KG';
@@ -100,8 +102,10 @@ export class AddProductComponent implements OnInit {
   public sellerChange: Subject<void> = new Subject<void>();
   public info: any;
   showSubPreparation: boolean = true;
-
-
+  public summitted = false;
+  public isAdmin = false;
+  public aed = true;
+  public idEvent = null;
 
   constructor(private toast: ToastrService, private countryService: CountriesService,
     private productService: ProductService, private sanitizer: DomSanitizer,
@@ -133,10 +137,16 @@ export class AddProductComponent implements OnInit {
 
   }
 
+  public getInvantario() {
+
+  }
+
   getMyData() {
     this.info = this.auth.getLoginData();
     if (this.user['role'] !== 0) {
       this.getStore();
+    } else {
+      this.isAdmin = true;
     }
   }
   emitSellerSelectedToChild() {
@@ -167,13 +177,13 @@ export class AddProductComponent implements OnInit {
     this.parent = await this.getParent();
 
     this.productService.getProductDetailVariationsForEdit(this.productID).subscribe(async data => {
+      this.isEditProduct = true;
       this.product = JSON.parse(JSON.stringify(data));
       console.log("Producto", this.product);
       this.store = data['store'];
       this.selectedSeller = data['store']['owner'];
       this.getSeller(this.selectedSeller);
       this.setValues();
-
     })
   }
 
@@ -247,7 +257,7 @@ export class AddProductComponent implements OnInit {
     let cat = this.parent["level0"] ? this.parent["level0"].id : "";
     let speciesSelected = this.parent["level1"] ? this.parent["level1"].id : '';
     let subSpeciesSelected = this.parent["level2"] ? this.parent["level2"].id : '';
-    let descriptorSelected = this.product["descriptor"] ? this.product["descriptor"] : '';
+    let descriptorSelected = this.product["descriptor"] ? this.product["descriptor"] : ''; console.log(descriptorSelected, subSpeciesSelected, "deldefe");
     this.productForm.controls['name'].setValue(this.product.name);
     this.productForm.controls['brand'].setValue(this.product.brandname);
     this.productForm.controls['raised'].setValue(this.product.raised.id);
@@ -273,8 +283,8 @@ export class AddProductComponent implements OnInit {
     this.productForm.controls['childPreparation'].setValue(this.product.variations[0].fishPreparation.id);
     this.weightType = this.product.unitOfSale;
     console.log("ACA", this.weightType);
-    
-   
+
+
     if (this.user['role'] != 0) {
       this.productForm.controls['name'].disable();
       this.productForm.controls['raised'].disable();
@@ -293,8 +303,8 @@ export class AddProductComponent implements OnInit {
     } else {
       this.updateProcess(subSpeciesSelected);
     }
-    this.setvariations();
-    this.getKgs();
+    // this.setvariations();
+    // this.getKgs();
     let images = await this.getImages(this.product);
     this.productForm.controls['imagesSend'].setValue(images.forForm);
     this.addVariationsToPricing(this.product.variations, this.product);
@@ -334,7 +344,6 @@ export class AddProductComponent implements OnInit {
     this.childPreparation = new FormControl('', [Validators.required]);
     this.images = new FormControl('', Validators.nullValidator);
     this.imagesSend = new FormControl('', Validators.nullValidator);
-    this.deletedImages = new FormControl('', Validators.nullValidator);
     this.price = new FormControl('', [Validators.required]);
     this.kgConversionRate = new FormControl('', Validators.nullValidator);
 
@@ -367,7 +376,6 @@ export class AddProductComponent implements OnInit {
       childPreparation: this.childPreparation,
       images: this.images,
       imagesSend: this.imagesSend,
-      deletedImages: this.deletedImages,
       price: this.price,
       kgConversionRate: this.kgConversionRate
     });
@@ -377,16 +385,19 @@ export class AddProductComponent implements OnInit {
   }
 
   submit() {
-    console.log(this.productForm.value);
-    if (this.productForm.valid) {
-      console.log("Valido");
-      this.onSubmit();
-    } else {
-      console.log("Invalido");
-      this.validateAllFormFields(this.productForm);
-      this.showError("Please fix all required fields");
-      this.scrollToError();
-    }
+    this.refreshSlider();
+    setTimeout(() => {
+      console.log(this.productForm.valid);
+      if (this.productForm.valid) {
+        console.log("Valido");
+        this.onSubmit();
+      } else {
+        console.log("Invalido");
+        this.validateAllFormFields(this.productForm);
+        this.showError("Please fix all required fields");
+        this.scrollToError();
+      }
+    }, 700);
   }
 
 
@@ -510,7 +521,7 @@ export class AddProductComponent implements OnInit {
           val.minOrder = val.averageUnitWeight;
           this.productForm.controls['minOrder'].setValue(val.averageUnitWeight);
         }
-      } else { 
+      } else {
         this.showAverageUnit = false;
       }
 
@@ -667,7 +678,7 @@ export class AddProductComponent implements OnInit {
           this.raisedArray = result['raisedInfo'];
           this.treatments = result['treatmentInfo'];
           this.measurements = result['unitOfMeasureInfo'];
-          if(result.hasOwnProperty('unitOfMeasure')){
+          if (result.hasOwnProperty('unitOfMeasure')) {
             this.productForm.controls['unitOfMeasurement'].setValue(result['unitOfMeasure']);
             this.setConversionRate(result['unitOfMeasure']);
           }
@@ -676,12 +687,12 @@ export class AddProductComponent implements OnInit {
           } else {
             this.fishPreparation = [];
           }
-        }else{
-          if(!this.createProduct){
+          this.setvariations();
+          this.getKgs();
+        } else {
+          if (!this.createProduct) {
             this.selectedType = this.productForm.get('subspecie').value;
             this.updateProcess(this.selectedType);
-            this.setvariations();
-            this.getKgs();
           }
         }
 
@@ -713,12 +724,12 @@ export class AddProductComponent implements OnInit {
     let preparation = this.productForm.get('childPreparation').value;
     this.productService.getData(`fishvariations/type/${this.selectedType}/preparation/${preparation}`).subscribe(res => {
       console.log("KGS", res);
-      if(this.createProduct){
+      if (this.createProduct) {
         this.tabsArray = [];
         this.weights = { keys: [] };
       }
-
-      this.variationInfo = res['variationInfo'];
+      if (res && res['variationInfo'])
+        this.variationInfo = res['variationInfo'];
     });
   }
 
@@ -820,27 +831,44 @@ export class AddProductComponent implements OnInit {
   }
 
   pushTab(whole, $event) {
+    //if no is checkend the add to tabs arrar
     if (this.isSelecChecked(whole.id, false) === false) {
       this.tabsArray.push(whole);
       this.weights['keys'].push(whole.id)
       console.log(this.tabsArray, $event);
       this.keySelect = whole.id;
       if (this.weights[this.keySelect] === undefined) {
-        this.weights[this.keySelect] = [{ min: this.options.floor, max: this.options.ceil, price: "", options: Object.assign({}, this.options) }];
+        this.weights[this.keySelect] = [{ min: this.options.floor, max: this.options.ceil, price: "", priceDelivered: '', options: Object.assign({}, this.options) }];
       }
     } else {
       //delete index of tabs
-      if (this.tabsArray.length === 1) {
-        this.tabsArray = [];
-      } else {
-        let index = this.tabsArray.findIndex(it => {
-          return it.id === whole.id;
-        });
-        if (index !== -1) {
+      let index = this.tabsArray.findIndex(it => {
+        return it.id === whole.id;
+      });
+      if (index !== -1) {
+        //in tbasarray is have idVariation
+        let varia = JSON.parse(JSON.stringify(this.tabsArray[index]));
+        if (this.tabsArray.length === 1)
+          this.tabsArray = [];
+        else
           this.tabsArray.splice(index, 1);
-        }
-      }
 
+        //check if add to variotionsDeleted and edit product
+        if (this.isEditProduct === true && varia.idVariation) {
+          index = this.variationsDeleted.findIndex(it => {
+            return it === varia.idVariation;
+          });
+          if (index === -1) {
+            this.variationsDeleted.push(varia.idVariation);
+            //for add id prices for delete on api
+            this.pricesDeleted = this.pricesDeleted.concat(this.weights[whole.id].filter(it => it.id).map(it => {
+              return it.id;
+            }))
+          }
+        }
+
+
+      }
       //delete index of keys
       if (this.weights['keys'].length === 1) {
         this.weights['keys'] = [];
@@ -857,12 +885,12 @@ export class AddProductComponent implements OnInit {
       if (this.tabsArray.length > 0)
         this.keySelect = this.tabsArray[0].id;
       delete this.weights[whole.id];
-
     }
 
 
 
   }
+
 
   public selectKey(k) {
     this.keySelect = k.id;
@@ -921,7 +949,7 @@ export class AddProductComponent implements OnInit {
     console.log(this.keySelect);
     let price = this.valueExample && this.valueExample.toString() !== "" && isNaN(this.valueExample) === false ? Number(this.valueExample) : "";
     console.log("Price", this.valueExample);
-    let it = { min: this.exampleValues.min, max: this.exampleValues.max, price, options: this.options };
+    let it = { min: this.exampleValues.min, max: this.exampleValues.max, price, priceDelivered: '', options: this.options };
     let index = 0;
     if (this.weights[this.keySelect] == undefined) {
       this.weights[this.keySelect] = [it];
@@ -998,11 +1026,10 @@ export class AddProductComponent implements OnInit {
   public deletePrice(headAction, i) {
     if (this.productID !== "" &&
       this.weights[this.keySelect][i].id !== null &&
-      this.weights[this.keySelect][i].id !== undefined
+      this.weights[this.keySelect][i].id !== undefined &&
+      this.isEditProduct === true
     ) {
-
       this.pricesDeleted.push(this.weights[this.keySelect][i].id);
-
     }
     if (this.weights[this.keySelect].length === 1) {
       this.weights[this.keySelect] = [];
@@ -1015,11 +1042,94 @@ export class AddProductComponent implements OnInit {
     this.refreshSlider();
   }
 
+  public _isNaN = function (value) {
+    if (value === '') return true;
+    return isNaN(value);
+  }
+
+  private validateSliders(key?: string) {
+    let valid: any = true;
+    //if there is key valid for only key
+    if (key) {
+      for (let price of this.weights[key]) {
+        if (this._isNaN(price.price) === true || (this.isAdmin === true && this._isNaN(price.priceDelivered) === true)) {
+          if (this.summitted === true) {
+            valid = false;
+            break;
+          }
+        }
+      }
+    } else {
+      //for all key o tabs
+      for (let key in this.weights) {
+        if (key === 'keys') continue;
+        //check if tabs has prices
+        if (Object.prototype.toString.call(this.weights[key]) !== '[object Array]' || this.weights[key].length === 0) {
+          let tab = this.tabsArray.find(it => it.id === key);
+          valid = {
+            valid: false,
+            message: tab ? tab.name : ''
+          };
+          valid.message += ' has no added prices';
+          break;
+        }
+        //check if all prices is number correct or not empty
+        for (let price of this.weights[key]) {
+          if (this._isNaN(price.price) === true) {
+            valid = {
+              valid: false,
+              message: 'Empty price fields'
+            };
+            break;
+          }
+        }
+        if (valid.valid && valid.valid === false) break;
+      }
+    }
+
+    return valid;
+  }
+
+  public getPriceSeller(index) {
+    //for execute after of 3 seconds
+    if(this.idEvent !== null){
+      clearTimeout(this.idEvent);
+      this.idEvent = null;
+    }
+    this.idEvent = setTimeout(this.executegetPriceSeller.bind(this), 3000, [index]);
+  }
+
+  private executegetPriceSeller(index){
+    if (this._isNaN(this.weights[this.keySelect][index].priceDelivered) === false && this.weights[this.keySelect][index].idVariation) {
+      let price = Number(this.weights[this.keySelect][index].priceDelivered);
+      console.log({
+        "variationID": this.weights[this.keySelect][index].idVariation,
+        "weight": this.weights[this.keySelect][index].min,
+        "deliveredPricePerKG": price
+      });
+      this.productService.saveData('reverse/price', {
+        "variationID": this.weights[this.keySelect][index].idVariation,
+        "weight": this.weights[this.keySelect][index].min,
+        "deliveredPricePerKG": price,
+        "in_AED": this.selectedSellerInfo && this.selectedSellerInfo.dataExtra && this.selectedSellerInfo.dataExtra.currencyTrade ?this.selectedSellerInfo.dataExtra.currencyTrade === 'AED' : true
+      }).subscribe(it => {
+        console.log(it);
+        if (it['price']) {
+          this.weights[this.keySelect][index].price = it['price'];
+        }
+      });
+    }
+  }
+
   async onSubmit() {
     console.log(this.productForm.value);
     console.log("Weights", this.weights);
     const value = this.productForm.value;
     let product: any = {};
+    this.summitted = true;
+    let validater = this.validateSliders();
+    if (validater.valid === false)
+      return this.toast.error(validater.message, 'Error', { positionClass: 'toast-top-right' });
 
     product.speciesSelected = value.specie;
     product.category = value.category;
@@ -1069,12 +1179,20 @@ export class AddProductComponent implements OnInit {
       for (const it of Object.keys(variations)) {
         const wholeFishWeight = it;
         console.log("wholefish", wholeFishWeight);
-        const itr = {
+        let itr: any = {
           fishPreparation,
           parentFishPreparation,
           wholeFishWeight,
           prices: variations[it].map(itereOptions)
         };
+        //if is edit get idVariations if have
+        if (this.isEditProduct === true) {
+          let varI = this.tabsArray.find(it => {
+            return it.id === itr.wholeFishWeight && it.idVariation;
+          });
+          if (varI)
+            itr.idVariation = varI.idVariation;
+        }
         variationsEnd.push(itr);
       }
     }
@@ -1107,7 +1225,7 @@ export class AddProductComponent implements OnInit {
       'perBox': value.perBoxes,
       'perBoxes': value.perBoxes,
       'unitOfSale': value.unitOfMeasurement,
-      'boxWeight':  value.averageUnitWeight,
+      'boxWeight': value.averageUnitWeight,
       'minimumOrder': value.minOrder,
       'maximumOrder': value.maxOrder,
       // "acceptableSpoilageRate": features.acceptableSpoilageRate,
@@ -1127,6 +1245,8 @@ export class AddProductComponent implements OnInit {
     };
     if (this.productID !== "") {
       data.idProduct = this.product.id;
+      // data.variationsDeleted = this.variationsDeleted;
+      // data.pricesDeleted = this.pricesDeleted;
     }
     console.log(data);
 
@@ -1159,7 +1279,7 @@ export class AddProductComponent implements OnInit {
   private async uploadImagesAction(product, result) {
     if (product.imagesSend !== undefined && product.imagesSend !== '') {
       let images = JSON.parse(product.imagesSend),
-        deletedImages = product.deletedImages;
+        deletedImages = this.deletedImages;
       // Si se esta actualizando un producto
       // se filtra las imagenes, las que tiene url son
       // las nuevas imagenes
@@ -1183,7 +1303,7 @@ export class AddProductComponent implements OnInit {
             }
           }
           // secondary images are uploaded on background
-          this.productService.updateData('api/fish/images/delete/' + this.productID, { deletedImages }).toPromise();
+          this.productService.updateData('api/fish/images/delete', { deletedImages }).toPromise();
           this.productService.updateImages(files, this.productID).toPromise();
         } catch (e) {
           console.error(e);
@@ -1287,7 +1407,7 @@ export class AddProductComponent implements OnInit {
     let keys = [];
     for (let varia of variations) {
       if (this.keySelect === '') this.keySelect = varia.wholeFishWeight.id;
-      this.tabsArray.push(varia.wholeFishWeight);
+      this.tabsArray.push(Object.assign(varia.wholeFishWeight, { idVariation: varia.id }));
       keys.push(varia.wholeFishWeight.id);
       this.weights[varia.wholeFishWeight.id] = varia.prices.sort((a, b) => {
         return a.min - b.min;
@@ -1295,14 +1415,18 @@ export class AddProductComponent implements OnInit {
         let price = {
           min: it.min,
           max: it.max,
-          price: it.price
+          price: it.price,
+          priceDelivered: this.isAdmin === true ? it.priceDelivered || '' : undefined,
+          id: it.id,
+          stock: varia.stock,
+          idVariation: varia.id
         };
         price = Object.assign(price, this.options);
         return price;
       });
     }
     this.weights['keys'] = keys;
-    console.log(this.weights);
+    console.log(this.weights, "tabs", this.tabsArray);
     let min = Number(minMax.minimunorder);
     let max = Number(minMax.maximumorder);
     if (min > 0 && max > 0) {
@@ -1321,7 +1445,7 @@ export class AddProductComponent implements OnInit {
     this.setOptionsInAll(true);
   }
 
-  setConversionRate(unidad){
+  setConversionRate(unidad) {
     let unit = unidad;
     let object = this.filterByValue(this.measurements, unit);
     console.log(object);
@@ -1329,10 +1453,75 @@ export class AddProductComponent implements OnInit {
 
   }
 
-   filterByValue(array, string) {
+  filterByValue(array, string) {
     return array.filter(o =>
-        Object.keys(o).some(k => o[k].toString().toLowerCase().includes(string.toLowerCase())));
-}
-}
+      Object.keys(o).some(k => o[k].toString().toLowerCase().includes(string.toLowerCase())));
+  }
 
+  public async setDefaultImage(i) {
+    //Buscamos la imagen primary anterior para ponerle un change y la guarde
+    let indexPrimary = this.imagesTmp.findIndex(it => {
+      return it.type === "primary";
+    });
+    for (let k = 0; k < this.imagesTmp.length; k++) {
+      this.imagesTmp[k].type = "secundary";
+    }
+    this.imagesTmp[i].type = "primary";
 
+    //agrego la imagen a deletedImages
+    //pero solo cuando se esta actualizando un producto y tiene url
+    //y no es la imagen default initial
+    let indexRepeat = 0, arr = this.deletedImages;
+    console.log(this.imagesTmp[i].url !== undefined, this.imagesTmp[i].url !== null, this.imagesTmp[i].defaultInial !== true, this.imagesTmp[i]);
+    if (this.productID !== "" &&
+      this.imagesTmp[i].url !== undefined && this.imagesTmp[i].url !== null &&
+      this.imagesTmp[i].defaultInial !== true) {
+      indexRepeat = arr.findIndex(it => {
+        return it === this.imagesTmp[i].url;
+      });
+      console.log("indexRepeat", indexRepeat);
+      if (indexRepeat === -1) arr.push(this.imagesTmp[i].url);
+
+    }
+
+    //buscamos si la imagen default anterior estaba en lista de borrar
+    //si esta la sacamos porque ahora sera secundary como antes
+    indexRepeat = arr.findIndex(it => {
+      return it === this.imagesTmp[indexPrimary].url;
+    });
+    if (indexRepeat !== -1) {
+      if (arr.length > 1)
+        arr.splice(indexRepeat, 1);
+      else
+        arr = [];
+    }
+    this.deletedImages = arr;
+
+    if (indexPrimary !== -1 && this.imagesTmp[indexPrimary].defaultInial === true) {
+      delete this.imagesTmp[indexPrimary].url;
+      this.imagesTmp[indexPrimary].change = true;
+    }
+    console.log(arr, this.imagesTmp.map((it, i) => {
+      it = JSON.parse(JSON.stringify(it));
+      delete it.src;
+      it.i = i;
+      return it;
+    }));
+    this.reSavedImages();
+  }
+
+  public remove(i) {
+    if (this.imagesTmp[i].url !== undefined && this.imagesTmp[i].url !== null) {
+      let arr = this.deletedImages;
+      arr.push(this.imagesTmp[i].url);
+      this.deletedImages = arr;
+    }
+    if (this.imagesTmp.length === 1) {
+      this.imagesTmp = [];
+    } else {
+      this.imagesTmp.splice(i, 1);
+    }
+    this.indexImage = 0;
+    this.reSavedImages();
+  }
+}

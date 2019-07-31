@@ -126,7 +126,7 @@
         }
     }
 
-    input.form-control.is-invalid {
+    input.form-control.is-invalid, input.error {
         border-bottom: solid 2px $red;
 
     }
@@ -1003,7 +1003,7 @@
 
     .table-title{
         font-family: 'Open Sans', sans-serif;
-            font-size: 21px;
+            font-size: 18px;
             line-height: 31px;
             color: $light_blue;
             font-weight: 300;
@@ -1084,4 +1084,51 @@
         font-weight: 400;
         font-size: 24px;
     }
+}
+
+div.error span, input.error {
+    border-bottom: solid 2px red !important;
+}
+
+
+.input-price{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    span{
+        font-family: 'Open Sans', sans-serif;
+        font-weight: 300;
+        font-size: 16px;
+        color: $black;
+        line-height: 22px;
+        border-bottom: 1px dashed $black;
+        input{
+            width: 40px;
+            background: none;
+            border: none;
+            font-family: 'Open Sans', sans-serif;
+            font-weight: 300;
+            font-size: 16px;
+            color: $black;
+            line-height: 22px;     
+        }
+    }
+
+    button{
+        position: absolute;
+        right: 5px;
+        background: none;
+        border: none;
+    }
+
+   
+}
+
+.slider-price{
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.span-disabled{
+    opacity: 0.5;
 }

@@ -46,16 +46,16 @@ import { AccountComponent } from './account/account.component';
 import { ToastrService } from './toast.service';
 import { CDNCheck } from './cdn-check';
 import { CookieService } from 'ngx-cookie-service';
-import { Homeve2Component } from './homeve2/homeve2.component';
 import { NotfoundComponent } from './notfound/notfound.component';
 import { NgwWowModule } from 'ngx-wow';
 import { ConversionPipe } from './conversion.pipe';
+import { Homev3Component } from './homev3/homev3.component';
 
 
 
 const appRoutes: Routes = [
   {
-    path: '', component: Homeve2Component,
+    path: '', component: Homev3Component,
   },
   {
     path: "login",
@@ -128,12 +128,12 @@ const appRoutes: Routes = [
   {
     path: 'product/:id',
     loadChildren: () => import('app/single-product/single-product.module').then(m => m.SingleProductModule),
-    canActivate: [NonsellerRouterService]
+    canActivate: []
   },
   {
     path: 'product/:id/:kg/:fishOption/:variationId',
     loadChildren: () => import('app/single-product/single-product.module').then(m => m.SingleProductModule),
-    canActivate: [NonsellerRouterService]
+    canActivate: []
   },
   {
     path: 'edit-product/:id',
@@ -483,9 +483,9 @@ export function jokesProviderFactory(provider: CDNCheck) {
     FeaturedStoreComponent,
     ProductManagmentComponent,
     AccountComponent,
-    Homeve2Component,
     NotfoundComponent,
     ConversionPipe,
+    Homev3Component,
   ],
   imports: [
     BrowserAnimationsModule,
