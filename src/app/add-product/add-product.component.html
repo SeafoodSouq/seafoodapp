@@ -570,20 +570,24 @@
                             [(highValue)]="weights[keySelect][i].max" (userChangeEnd)="refactorizeRanges(i)"
                             [options]="weights[keySelect][i].options"></ng5-slider>
                         </div>
-                        <div class="" [ngClass]='isAdmin==true?"col-3":"col-4"'>
+                        <div class="" [ngClass]='isAdmin==true?"col-3 input-price":"col-4"'>
+                          <span>
                           $<input type="number" placeholder="Price"
                             [ngClass]="_isNaN(weights[keySelect][i].price)===true&&summitted===true?'error':''"
                             [(ngModel)]="weights[keySelect][i].price"
                             [ngModelOptions]="{standalone: true}">/{{weightType}}
-                          <button *ngIf="isAdmin===false" type="button" (click)="deletePrice(true, i)"><img src="../../../assets/svg/close.svg"
+                          </span>
+                          <button *ngIf="isAdmin===false" type="button" (click)="deletePrice(true, i)"><img src="../../../assets/svg/close-blue.svg"
                                           alt=""></button>
                         </div>
-                        <div class="col-3" *ngIf="isAdmin===true">
+                        <div class="col-3 input-price" *ngIf="isAdmin===true">
+                          <span [class.span-disabled]="weights[keySelect][i].stock===0">
                           <input type="number" placeholder="Price Delivered"
                             [(ngModel)]="weights[keySelect][i].priceDelivered" (input)="getPriceSeller(i)"
                             [ngModelOptions]="{standalone: true}" [disabled]="weights[keySelect][i].stock===0">/{{weightType}}
+                          </span>
                             
-                          <button type="button" (click)="deletePrice(true, i)"><img src="../../../assets/svg/close.svg"
+                          <button type="button" (click)="deletePrice(true, i)"><img src="../../../assets/svg/close-blue.svg"
                               alt=""></button>
                         </div>
                       </div>
