@@ -10,6 +10,7 @@
         <div class="form-group">
           <label>Type Order</label>
           <select class="form-control" name="type" [(ngModel)]="type" (change)="getOrdersPage(page)">
+            <option value="all">All</option>
             <option value="cc">CC</option>
             <option value="cod">Cash on Delivery</option>
           </select>
