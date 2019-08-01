@@ -87,6 +87,13 @@ form{
         background: white;
         box-shadow: 2px 5px 20px -4px black;
         z-index: 10;
+        @media screen and (max-width: 992px){
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: none;
+            max-width: 100%;
+        }
     }
 }
 @media(max-width: 998px){
@@ -106,6 +113,10 @@ form{
     .left-side{
         text-align: center;
     }
+    #hero{
+        height: 100vh !important;
+    }
+
 }
 
 .seafoodFormContainer{
