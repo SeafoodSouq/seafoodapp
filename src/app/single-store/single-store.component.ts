@@ -159,7 +159,8 @@ export class SingleStoreComponent implements OnInit {
   }
   private filterFish(store) {
     this.http.post(`fish/filter`, { store }).subscribe(fish => {
-      this.products = fish;
+      var array: any = Object.entries(fish);
+      this.products = array;
       this.products.forEach((data, index) => {
         if (data.imagePrimary && data.imagePrimary !== '') {
           this.productImage[index] = this.sanitizer.bypassSecurityTrustStyle(`url(${this.base}${data.imagePrimary})`);
