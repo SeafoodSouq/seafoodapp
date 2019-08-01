@@ -260,12 +260,14 @@ export class Homev3Component implements OnInit {
     let percentScroll;
 
     jQuery(path).each(function () {
+      console.log("percenscroll", this.getTotalLength());
+
       this.style.strokeDasharray = this.getTotalLength();
       this.style.strokeDashoffset = this.getTotalLength();
     });
 
-    percentScroll = window.pageYOffset / ((document.body.offsetHeight - window.innerHeight) - window.innerHeight);
 
+    percentScroll = window.pageYOffset / ((document.body.offsetHeight - window.innerHeight) - window.innerHeight);
     jQuery(path).each(function () {
       this.style.strokeDashoffset = Math.floor(this.getTotalLength() * (1 - percentScroll));
     });
