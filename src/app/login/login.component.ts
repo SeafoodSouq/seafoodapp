@@ -12,6 +12,7 @@ import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 
 declare var jQuery;
+declare var window;
 
 @Component({
   selector: 'app-login',
@@ -47,13 +48,35 @@ export class LoginComponent implements OnInit {
       this.verified = params['verified'];
 
     });
+
+    //Check if is an android browser
+    jQuery(document).ready(function ($) {
+
+      var _originalSize = $(window).width() + $(window).height()
+        $(window).resize(function(){
+          if($(window).width() < 992){
+            if($(window).width() + $(window).height() != _originalSize){
+              jQuery('.introductory-title').css('display', 'none');
+              jQuery('.login-nav-logo').css('display', 'none');
+            }else{
+              console.log("keyboard closed");
+              jQuery('.introductory-title').css('display', 'block');
+              jQuery('.login-nav-logo').css('display', 'flex');
+            }
+          }
+          
+  });
+
+    });
+     
   }
 
   ngOnInit() {
     this.createFormControls();
     this.createForm();
     this.setHeight(window.innerHeight);
-    this.nameField.nativeElement.focus();
+    this.nameField.nativeElement.focus(); 
+    
   }
 
 
