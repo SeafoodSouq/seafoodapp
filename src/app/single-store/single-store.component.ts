@@ -161,16 +161,17 @@ export class SingleStoreComponent implements OnInit {
     this.http.post(`fish/filter`, { store }).subscribe(fish => {
       var array: any = Object.entries(fish);
       this.products = array;
-      this.products.forEach((data, index) => {
-        if (data.imagePrimary && data.imagePrimary !== '') {
-          this.productImage[index] = this.sanitizer.bypassSecurityTrustStyle(`url(${this.base}${data.imagePrimary})`);
-        } else if (data.images && data.images.length > 0) {
-          let src = data['images'][0].src ? data['images'][0].src : data['images'][0];
-          this.productImage[index] = this.sanitizer.bypassSecurityTrustStyle(`url(${this.base}${src})`);
-        } else {
-          this.productImage[index] = this.sanitizer.bypassSecurityTrustStyle('url(../../assets/default-img-product.jpg)');
-        }
-      });
+      //this for add images to products, but no correct with new endpoint
+      // this.products.forEach((data, index) => {
+      //   if (data.imagePrimary && data.imagePrimary !== '') {
+      //     this.productImage[index] = this.sanitizer.bypassSecurityTrustStyle(`url(${this.base}${data.imagePrimary})`);
+      //   } else if (data.images && data.images.length > 0) {
+      //     let src = data['images'][0].src ? data['images'][0].src : data['images'][0];
+      //     this.productImage[index] = this.sanitizer.bypassSecurityTrustStyle(`url(${this.base}${src})`);
+      //   } else {
+      //     this.productImage[index] = this.sanitizer.bypassSecurityTrustStyle('url(../../assets/default-img-product.jpg)');
+      //   }
+      // });
     });
   }
   smallDesc(str) {
