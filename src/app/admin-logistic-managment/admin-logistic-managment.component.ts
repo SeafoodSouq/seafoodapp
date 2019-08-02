@@ -32,7 +32,7 @@ export class AdminLogisticManagmentComponent implements OnInit {
   public page = 1;
   public limit = 20;
   public paginationNumbers = [];
-  public type = "cod";
+  public type = "all";
 
   constructor(
     private orderService: OrderService,
