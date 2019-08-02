@@ -103,7 +103,7 @@ export class AddProductComponent implements OnInit {
   public info: any;
   showSubPreparation: boolean = true;
   public summitted = false;
-  public isAdmin = false;
+  public isAdminAndEdit = false;
   public aed = true;
   public idEvent = null;
 
@@ -145,8 +145,8 @@ export class AddProductComponent implements OnInit {
     this.info = this.auth.getLoginData();
     if (this.user['role'] !== 0) {
       this.getStore();
-    } else {
-      this.isAdmin = true;
+    } else if(typeof this.productID === 'string' && this.productID !== ''){
+      this.isAdminAndEdit = true;
     }
   }
   emitSellerSelectedToChild() {
@@ -1052,7 +1052,7 @@ export class AddProductComponent implements OnInit {
     //if there is key valid for only key
     if (key) {
       for (let price of this.weights[key]) {
-        if (this._isNaN(price.price) === true || (this.isAdmin === true && this._isNaN(price.priceDelivered) === true)) {
+        if (this._isNaN(price.price) === true || (this.isAdminAndEdit === true && this._isNaN(price.priceDelivered) === true)) {
           if (this.summitted === true) {
             valid = false;
             break;
@@ -1416,7 +1416,7 @@ export class AddProductComponent implements OnInit {
           min: it.min,
           max: it.max,
           price: it.price,
-          priceDelivered: this.isAdmin === true ? it.priceDelivered || '' : undefined,
+          priceDelivered: this.isAdminAndEdit === true ? it.priceDelivered || '' : undefined,
           id: it.id,
           stock: varia.stock,
           idVariation: varia.id
