@@ -590,7 +590,7 @@
                           <button type="button" (click)="deletePrice(true, i)"><img src="../../../assets/svg/close-blue.svg"
                               alt=""></button>
                         </div>
-                        <div class="col-6 offset-6" *ngIf='weights[keySelect][i].stock===0'>
+                        <div class="col-6 offset-6" [hidden]='weights[keySelect][i].stock!==0' *ngIf="isAdminAndEdit===true">
                           This variation does not have any inventory and cannot calculate a delivered price
                         </div>
                       </div>
