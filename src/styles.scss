@@ -1517,9 +1517,9 @@ button:focus {
       height: 50px !important;
       .st0{
         fill:$white;
-        // @media screen and (max-width: 992px) {
-        //   fill: $light_blue;
-        // }
+        @media screen and (max-width: 992px) {
+          fill: $light_blue;
+        }
       }
 	    .st1{fill:none !important;}
       @media screen and (max-width: 992px) {
@@ -1547,14 +1547,6 @@ button:focus {
       }
       .navbar-collapse{
           align-items: flex-start;
-      }
-
-      .plus-btn{
-        svg{
-          .a{
-            fill: $white;
-          }
-        }
       }
   
 }
