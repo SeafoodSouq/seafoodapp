@@ -56,12 +56,12 @@ export class LoginComponent implements OnInit {
         $(window).resize(function(){
           if($(window).width() < 992){
             if($(window).width() + $(window).height() != _originalSize){
-              jQuery('.introductory-title').css('display', 'none');
-              jQuery('.login-nav-logo').css('display', 'none');
+              jQuery('.introductory-title').css('opacity', '0');
+              // jQuery('.login-nav-logo').css('display', 'none');
             }else{
               console.log("keyboard closed");
-              jQuery('.introductory-title').css('display', 'block');
-              jQuery('.login-nav-logo').css('display', 'flex');
+              jQuery('.introductory-title').css('opacity', '1');
+              // jQuery('.login-nav-logo').css('display', 'flex');
             }
           }
           
