@@ -238,10 +238,12 @@
         margin-top: 50px;
         position: relative;
         font-style: italic;
+        margin-left: 10%;
         @media screen and (max-width: 992px){
             font-size: 28px;
             line-height: 33px;
             margin-top: 0;
+            margin-left: 20px;
         }
         span{
             font-weight: 400;
