@@ -243,7 +243,8 @@
                                       <div *ngIf="subp.cooming_soon" > <h4>Coming Soon</h4></div>
                                     </div>
                                    <div class="col-md-2 text-right">
-                                     <a id="btn-add-{{subp.variation.id}}" [ngClass]="isDisabled == true ? 'btn-add-disable' : 'btn-add-enable'"  (click)="addToCart(subp)"><img src="../../assets/svg/cart-arrow-down.svg" alt=""></a> 
+                                     <a *ngIf="userInfo !== null" id="btn-add-{{subp.variation.id}}" [ngClass]="isDisabled == true ? 'btn-add-disable' : 'btn-add-enable'"  (click)="addToCart(subp)"><img src="../../assets/svg/cart-arrow-down.svg" alt=""></a> 
+                                     <a *ngIf="userInfo === null" style="  cursor: not-allowed;" id="btn-add-{{subp.variation.id}}" [ngClass]="isDisabled == true ? 'btn-add-disable' : 'btn-add-enable'"  (click)="addToCart(subp)"><img src="../../assets/svg/cart-arrow-down-gray.svg" alt=""></a> 
                                    </div>
                                  </div>
                                 </div>
