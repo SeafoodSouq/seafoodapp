@@ -948,10 +948,13 @@ export class AddProductComponent implements OnInit {
 
 
   public addPricing() {
-    console.log(this.keySelect);
+    let varia = this.tabsArray.find(it=> { return it.id === this.keySelect && it.idVariation; });
+    console.log(this.keySelect, this.tabsArray, varia);
     let price = this.valueExample && this.valueExample.toString() !== "" && isNaN(this.valueExample) === false ? Number(this.valueExample) : "";
-    console.log("Price", this.valueExample);
-    let it = { min: this.exampleValues.min, max: this.exampleValues.max, price, priceDelivered: '', options: this.options };
+    let it:any = { min: this.exampleValues.min, max: this.exampleValues.max, price, priceDelivered: '', options: this.options };
+    if(varia && varia.idVariation)
+      it.idVariation = varia.idVariation;
+    console.log(it);
     let index = 0;
     if (this.weights[this.keySelect] == undefined) {
       this.weights[this.keySelect] = [it];
