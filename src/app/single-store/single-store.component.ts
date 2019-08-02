@@ -7,6 +7,7 @@ import { ToastrService } from '../toast.service';
 import { DomSanitizer, SafeResourceUrl, SafeUrl, SafeStyle } from '@angular/platform-browser';
 import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
+declare var jQuery;
 @Component({
   selector: 'app-single-store',
   templateUrl: './single-store.component.html',
@@ -45,15 +46,34 @@ export class SingleStoreComponent implements OnInit {
   brands: any = [];
   certs: any = [];
   errorLoadingLogo = false;
+  API: string = environment.apiURLImg;
+  userInfo: any;
+
 
   constructor(private route: ActivatedRoute,
     public productService: ProductService,
     private auth: AuthenticationService,
     public ngxSmartModalService: NgxSmartModalService,
     private toast: ToastrService, private sanitizer: DomSanitizer,
-    private http: HttpClient) { }
+    private http: HttpClient) {
+      jQuery(document).ready(function () {
+      
+    })
+     }
 
+     chargeJS(){
+      jQuery(document).on('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
+        let tab = e.target.attributes.id.value; // newly activated tab
+        let newTab = tab.split("-");
+        let currentTab: any = '#nav-footer-' + newTab[2];
+        let footerHolder = jQuery(currentTab).parent('.multiple-bottom');
+        console.log(footerHolder[0].id);
+        jQuery("#" + footerHolder[0].id + " .product-footer").removeClass('active');;
+        jQuery(currentTab).tab('show');
+      })
+     }
   ngOnInit() {
+    this.userInfo = this.auth.getLoginData();
     this.storeID = this.route.snapshot.params['id'];
     this.getPersonalData();
     this.getReview();
@@ -68,11 +88,16 @@ export class SingleStoreComponent implements OnInit {
     this.productService.getData(`api/store/${this.storeID}/brandscertifications`).subscribe(result => {
       console.log("Logos", result);
       if (result.hasOwnProperty('brands')) {
-        this.brands = result['brands'];
+        if(result['brands'] != null){
+          this.brands = result['brands'];
+
+        }
       }
 
       if (result.hasOwnProperty('certifications')) {
+        if(result['certifications'] != null){
         this.certs = result['certifications'];
+        }
       }
     });
   }
@@ -139,8 +164,11 @@ export class SingleStoreComponent implements OnInit {
         this.store.description = result['description'];
         this.store.location = result['location'];
         this.userID = result['owner'];
-        // this.products = result['fishs'];
-        this.filterFish(result['id']);
+        this.products = result['fishs'];
+        console.log("SHOP", this.products);
+        setTimeout(() => this.chargeJS(), 500);
+
+
 
         this.products.forEach((data, index) => {
           if (data.imagePrimary && data.imagePrimary !== '') {
@@ -200,6 +228,21 @@ export class SingleStoreComponent implements OnInit {
     const date = new Date(value);
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     return months[date.getMonth()] + ' ' + date.getDate() + ', ' + date.getFullYear();
+  }
+
+  loadImage(data) {
+    // this.isChange[data.variation.id] = { status: false, kg: 0 }; 
+    if (data.imagePrimary && data.imagePrimary !== '') {
+      return this.sanitizer.bypassSecurityTrustStyle(`url(${this.API}${data.imagePrimary})`);
+    }
+    else if (data.images && data.images.length > 0) {
+      let src = data['images'][0].src ? data['images'][0].src : data['images'][0];
+      return this.sanitizer.bypassSecurityTrustStyle(`url(${this.API}${src})`);
+    }
+    else {
+      return this.sanitizer.bypassSecurityTrustStyle('url(../../assets/default-img-product.jpg)');
+    }
+
   }
 
 }
