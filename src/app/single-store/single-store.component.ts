@@ -6,6 +6,7 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 import { ToastrService } from '../toast.service';
 import { DomSanitizer, SafeResourceUrl, SafeUrl, SafeStyle } from '@angular/platform-browser';
 import { environment } from '../../environments/environment';
+import { HttpClient } from '@angular/common/http';
 @Component({
   selector: 'app-single-store',
   templateUrl: './single-store.component.html',
@@ -43,35 +44,36 @@ export class SingleStoreComponent implements OnInit {
   productImage: any = [];
   brands: any = [];
   certs: any = [];
-  errorLoadingLogo = false; 
+  errorLoadingLogo = false;
 
   constructor(private route: ActivatedRoute,
     public productService: ProductService,
     private auth: AuthenticationService,
     public ngxSmartModalService: NgxSmartModalService,
-    private toast: ToastrService, private sanitizer: DomSanitizer) { }
+    private toast: ToastrService, private sanitizer: DomSanitizer,
+    private http: HttpClient) { }
 
- ngOnInit() {
+  ngOnInit() {
     this.storeID = this.route.snapshot.params['id'];
     this.getPersonalData();
     this.getReview();
     this.getLogos();
   }
 
-  public errorLoadLogo(e){
+  public errorLoadLogo(e) {
     e.target.src = 'https://via.placeholder.com/150';
   }
 
-  getLogos(){
+  getLogos() {
     this.productService.getData(`api/store/${this.storeID}/brandscertifications`).subscribe(result => {
-        console.log("Logos", result);
-        if(result.hasOwnProperty('brands')){
-          this.brands = result['brands'];
-        } 
+      console.log("Logos", result);
+      if (result.hasOwnProperty('brands')) {
+        this.brands = result['brands'];
+      }
 
-        if(result.hasOwnProperty('certifications')){
-          this.certs = result['certifications'];
-        } 
+      if (result.hasOwnProperty('certifications')) {
+        this.certs = result['certifications'];
+      }
     });
   }
   getPersonalData() {
@@ -137,7 +139,8 @@ export class SingleStoreComponent implements OnInit {
         this.store.description = result['description'];
         this.store.location = result['location'];
         this.userID = result['owner'];
-        this.products = result['fishs'];
+        // this.products = result['fishs'];
+        this.filterFish(result['id']);
 
         this.products.forEach((data, index) => {
           if (data.imagePrimary && data.imagePrimary !== '') {
@@ -152,6 +155,23 @@ export class SingleStoreComponent implements OnInit {
       } else {
         this.empty = true;
       }
+    });
+  }
+  private filterFish(store) {
+    this.http.post(`fish/filter`, { store }).subscribe(fish => {
+      var array: any = Object.entries(fish);
+      this.products = array;
+      //this for add images to products, but no correct with new endpoint
+      // this.products.forEach((data, index) => {
+      //   if (data.imagePrimary && data.imagePrimary !== '') {
+      //     this.productImage[index] = this.sanitizer.bypassSecurityTrustStyle(`url(${this.base}${data.imagePrimary})`);
+      //   } else if (data.images && data.images.length > 0) {
+      //     let src = data['images'][0].src ? data['images'][0].src : data['images'][0];
+      //     this.productImage[index] = this.sanitizer.bypassSecurityTrustStyle(`url(${this.base}${src})`);
+      //   } else {
+      //     this.productImage[index] = this.sanitizer.bypassSecurityTrustStyle('url(../../assets/default-img-product.jpg)');
+      //   }
+      // });
     });
   }
   smallDesc(str) {
