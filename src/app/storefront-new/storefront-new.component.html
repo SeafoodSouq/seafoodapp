@@ -120,18 +120,10 @@
                   <div class="single-product-box" style="margin-bottom: 0;">
                     <div class="product-header">
                       <div class="row">
-                        <div class="col-md-10">
+                        <div class="col-md-12 text-uppercase">
+                          <h5>{{'SingleStore.location' | translate}}: {{product.country}}</h5>
 
-
-                          <!-- form -->
-
-                          <div
-                            *ngIf="!subp.cooming_soon && ( subp.outOfStock || ( (getFixedNumber(subp.max) == 0 && subp.perBox !== true ) || ( subp.perBox == true && getFixedNumber(subp.maxBox) == 0 ) ) )">
-                            <h4>Out of Stock</h4>
-                          </div>
-                          <div *ngIf="subp.cooming_soon">
-                            <h4>Coming Soon</h4>
-                          </div>
+        
                         </div>
                       </div>
                     </div>
@@ -165,7 +157,7 @@
               </div>
 
             </div>
-            <div class="nav nav-tabs" id="nav-tab-{{product[0]}}" role="tablist">
+            <div *ngIf="product.variations.length > 1" class="nav nav-tabs" id="nav-tab-{{product[0]}}" role="tablist">
               <a *ngFor="let subp of product.variations; let vari = index;" class="nav-item nav-link"
                 [class.active]="vari == 0" id="nav-tab-{{subp?.id}}" data-toggle="tab"
                 href="#nav-footer-{{subp?.id}}" role="tab" aria-controls="nav-home"

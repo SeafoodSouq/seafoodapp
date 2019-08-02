@@ -57,6 +57,11 @@ export class SingleStoreComponent implements OnInit {
     private toast: ToastrService, private sanitizer: DomSanitizer,
     private http: HttpClient) {
       jQuery(document).ready(function () {
+      
+    })
+     }
+
+     chargeJS(){
       jQuery(document).on('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
         let tab = e.target.attributes.id.value; // newly activated tab
         let newTab = tab.split("-");
@@ -66,9 +71,7 @@ export class SingleStoreComponent implements OnInit {
         jQuery("#" + footerHolder[0].id + " .product-footer").removeClass('active');;
         jQuery(currentTab).tab('show');
       })
-    })
      }
-
   ngOnInit() {
     this.userInfo = this.auth.getLoginData();
     this.storeID = this.route.snapshot.params['id'];
@@ -85,11 +88,16 @@ export class SingleStoreComponent implements OnInit {
     this.productService.getData(`api/store/${this.storeID}/brandscertifications`).subscribe(result => {
       console.log("Logos", result);
       if (result.hasOwnProperty('brands')) {
-        this.brands = result['brands'];
+        if(result['brands'] != null){
+          this.brands = result['brands'];
+
+        }
       }
 
       if (result.hasOwnProperty('certifications')) {
+        if(result['certifications'] != null){
         this.certs = result['certifications'];
+        }
       }
     });
   }
@@ -158,6 +166,8 @@ export class SingleStoreComponent implements OnInit {
         this.userID = result['owner'];
         this.products = result['fishs'];
         console.log("SHOP", this.products);
+        setTimeout(() => this.chargeJS(), 500);
+
 
 
         this.products.forEach((data, index) => {
