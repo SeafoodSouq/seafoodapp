@@ -106,6 +106,7 @@ export class AddProductComponent implements OnInit {
   public isAdminAndEdit = false;
   public aed = true;
   public idEvent = null;
+  submitDisabled:boolean = false;
 
   constructor(private toast: ToastrService, private countryService: CountriesService,
     private productService: ProductService, private sanitizer: DomSanitizer,
@@ -390,6 +391,7 @@ export class AddProductComponent implements OnInit {
       console.log(this.productForm.valid);
       if (this.productForm.valid) {
         console.log("Valido");
+        this.submitDisabled = true;
         this.onSubmit();
       } else {
         console.log("Invalido");
@@ -1137,12 +1139,14 @@ export class AddProductComponent implements OnInit {
     if (value.imagesSend === '') {
       // this.loading = false;
       // this.ngProgress.done();
+      this.submitDisabled = false;
       return this.toast.error('Add the images of your product', 'Error', { positionClass: 'toast-top-right' });
     } else {
       const imagesSend = JSON.parse(value.imagesSend);
       if (imagesSend.length === 0) {
         // this.loading = false;
         // this.ngProgress.done();
+        this.submitDisabled = false;
         return this.toast.error('Add the images of your product', 'Error', { positionClass: 'toast-top-right' });
       }
     }
@@ -1155,6 +1159,7 @@ export class AddProductComponent implements OnInit {
       if (index === -1) {
         // this.loading = false;
         // this.ngProgress.done();
+        this.submitDisabled = false;
         return this.toast.error('Select a default image', 'Error', { positionClass: 'toast-top-right' });
       }
     }
@@ -1200,6 +1205,7 @@ export class AddProductComponent implements OnInit {
     if (variationsEnd.length === 0) {
       // this.loading = false;
       // this.ngProgress.done();
+      this.submitDisabled = false;
       return this.toast.error('You have to add at least one price', 'Error', { positionClass: 'toast-top-right' });
     }
 
@@ -1256,6 +1262,7 @@ export class AddProductComponent implements OnInit {
       }, err => {
         // this.loading = false;
         // this.ngProgress.done();
+        this.submitDisabled = false;
         this.toast.error('Error when saving the product returns try', 'Error', { positionClass: 'toast-top-right' });
       });
     } else {
@@ -1265,6 +1272,7 @@ export class AddProductComponent implements OnInit {
         // this.showError = false;
         // this.loading = false;
         // this.ngProgress.done();
+        this.submitDisabled = false;
         this.toast.error('Error when saving the product returns try', 'Error', { positionClass: 'toast-top-right' });
       });
 
@@ -1323,6 +1331,7 @@ export class AddProductComponent implements OnInit {
   }
 
   private finish() {
+    this.submitDisabled = false;
     if (this.productID === '') {
       this.toast.success('Product added successfully!', 'Well Done', { positionClass: 'toast-top-right' });
     } else {
