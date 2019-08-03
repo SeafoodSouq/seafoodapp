@@ -82,6 +82,8 @@
   
 .home-container {
     background-color: $white;
+    width: 100%;
+    overflow-x: hidden;
   }
 
   section {
@@ -240,10 +242,12 @@
         font-style: italic;
         margin-left: 10%;
         @media screen and (max-width: 992px){
-            font-size: 28px;
+            font-size: 21px;
             line-height: 33px;
             margin-top: 0;
             margin-left: 20px;
+            display: flex;
+            flex-wrap: nowrap;
         }
         span{
             font-weight: 400;
